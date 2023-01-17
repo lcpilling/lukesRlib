@@ -10,6 +10,8 @@ Luke's library of R functions I sometimes find useful
   - [tidy_ci()](#tidy_ci)
   - [carrec()](#carrec)
   - [inv_norm()](#inv_norm)
+  - [get_extreme_p()](#get_extreme_p)
+  - [get_neglog10_p()](#get_neglog10_p)
 
 ## installation
 To install `lukeslibrary` from GitHub use the `remotes` package:
@@ -100,13 +102,18 @@ carrec(x, "1:5=0;6:10=1")
 #>  [1] 0 0 0 0 0 1 1 1 1 1
 ```
 
-## inv_norm()
+## get_extreme_p()
 
-Inverse (quantile) normalize a numeric vector
+Return a p-value even if <1*10-324 (returns a string) -- provide a z or statistic
 
 ```r
-x_in = inv_norm(x)
+get_extreme_p(z)
+```
 
-## equivalent to 
-x_in = qnorm( (rank(x, na.last="keep") - 0.5) / length(na.omit(x)) )
+## get_neglog10_p()
+
+Returns the -log10 p-value. Provide a beta, se, and n (sample size)
+
+```r
+get_neglog10_p(beta, se, n)
 ```

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tidy_ci.R
 \name{tidy_ci}
 \alias{tidy_ci}
-\title{tidy_ci}
+\title{Get tidy model output with fast CIs}
 \usage{
 tidy_ci(
   x = stop("Provide a model fit object"),
@@ -35,8 +35,6 @@ tidy_ci(
 Returns a tibble - summary statistics from a model
 }
 \description{
-Function to get tidy model output with fast CIs 
-
 By default the (amazing) `broom` package uses the `confint()` function to calculate CIs. 
 For GLMs this calculates confidence intervals via profile likelihood by default. 
 When using large datasets this takes a long time and does not meaningfully alter the CIs 

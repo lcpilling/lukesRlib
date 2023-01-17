@@ -3,5 +3,7 @@
 export(.squeeze_blanks)
 export(carr)
 export(carrec)
+export(get_extreme_p)
+export(get_neglog10_p)
 export(inv_norm)
 export(tidy_ci)

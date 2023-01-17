@@ -2,7 +2,7 @@
 % Please edit documentation in R/inv_norm.R
 \name{inv_norm}
 \alias{inv_norm}
-\title{inv_norm}
+\title{Inverse normalize a variable}
 \usage{
 inv_norm(x = stop("Provide a vector"))
 }
@@ -13,7 +13,7 @@ inv_norm(x = stop("Provide a vector"))
 Returns a vector
 }
 \description{
-Inverse normalize a variable
+Inverse normalize a variable (force a normal distribution)
 }
 \examples{
 inv_norm(x)
