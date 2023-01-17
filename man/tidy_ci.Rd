@@ -58,7 +58,7 @@ tidy_ci(fit_linear)
 
 fit_logistic = glm(current_smoker_vs_never ~ age + sex + bmi, data = d, family = binomial(link="logit"))
 tidy_ci(fit_logistic)   # detect model and exponentiate automatically
-tidy_ci(fit_logistic, check_family=FALSE)  # override auto checking to get untransformed estimates
+tidy_ci(fit_logistic, check_model=FALSE)  # override auto checking to get untransformed estimates
 
 fit_coxph = coxph(Surv(time_to_event, diagnosis_bin) ~ age + sex + bmi + as.factor(smoking_status), data = d)
 tidy_ci(fit_coxph)
