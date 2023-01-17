@@ -1,5 +1,5 @@
 # lukeslibrary
-Experimental R package with functions I sometimes find useful
+Luke's library of R functions I sometimes find useful
 
 [![](https://img.shields.io/badge/version-0.1.0-informational.svg)](https://github.com/lukepilling/lukeslibrary)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukeslibrary.svg)](https://github.com/lukepilling/lukeslibrary/commits/master)
