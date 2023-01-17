@@ -29,23 +29,7 @@ tidy_ci(
 
 \item{n}{{default=NA} the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required}
 
-\item{...}{Other `tidy()` options
-
-Examples
-
-library(tidyverse)
-library(broom)
-source("https://raw.githubusercontent.com/lukepilling/tidy_ci/main/tidy_ci.R")
-
-fit_linear = glm(bmi ~ age + sex + as.factor(smoking_status), data = d)
-tidy_ci(fit_linear)
-
-fit_logistic = glm(current_smoker_vs_never ~ age + sex + bmi, data = d, family = binomial(link="logit"))
-tidy_ci(fit_logistic)   # detect model and exponentiate automatically
-tidy_ci(fit_logistic, check_family=FALSE)  # override auto checking to get untransformed estimates
-
-fit_coxph = coxph(Surv(time_to_event, diagnosis_bin) ~ age + sex + bmi + as.factor(smoking_status), data = d)
-tidy_ci(fit_coxph)}
+\item{...}{Other `tidy()` options}
 }
 \value{
 Returns a tibble - summary statistics from a model
@@ -67,6 +51,18 @@ exponentiates the estimates.
 Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()`
 
 v0.20230109
+}
+\examples{
+fit_linear = glm(bmi ~ age + sex + as.factor(smoking_status), data = d)
+tidy_ci(fit_linear)
+
+fit_logistic = glm(current_smoker_vs_never ~ age + sex + bmi, data = d, family = binomial(link="logit"))
+tidy_ci(fit_logistic)   # detect model and exponentiate automatically
+tidy_ci(fit_logistic, check_family=FALSE)  # override auto checking to get untransformed estimates
+
+fit_coxph = coxph(Surv(time_to_event, diagnosis_bin) ~ age + sex + bmi + as.factor(smoking_status), data = d)
+tidy_ci(fit_coxph)
+
 }
 \author{
 Luke Pilling
