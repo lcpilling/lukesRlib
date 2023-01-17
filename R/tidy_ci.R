@@ -1,6 +1,6 @@
-#' Get tidy model output with fast CIs 
+#' tidy_ci
 #'
-#' @description Function to run `broom::tidy()` and calculate CIs.
+#' Function to get tidy model output with fast CIs 
 #'
 #' By default the (amazing) \pkg{broom} package uses the `confint()` function to calculate CIs. 
 #' For GLMs this calculates confidence intervals via profile likelihood by default. 
