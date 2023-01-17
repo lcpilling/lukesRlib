@@ -31,12 +31,7 @@
 #' @param n {default=NA} the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required
 #' @param ... Other `tidy()` options
 #'
-#' Examples
-#'
-#' library(tidyverse)
-#' library(broom)
-#' source("https://raw.githubusercontent.com/lukepilling/tidy_ci/main/tidy_ci.R")
-#' 
+#' @examples
 #' fit_linear = glm(bmi ~ age + sex + as.factor(smoking_status), data = d)
 #' tidy_ci(fit_linear)
 #' 
