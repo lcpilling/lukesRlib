@@ -41,13 +41,8 @@ Not tested for models other than `glm()` and `survival::coxph()` where it seems 
 ### Examples
 
 ```R
-library(dplyr)
-library(broom)
-source("https://raw.githubusercontent.com/lukepilling/tidy_ci/main/tidy_ci.R")
-
 fit_linear = glm(bmi ~ age + sex + as.factor(smoking_status), data = d)
 tidy_ci(fit_linear)
-
 ## A tibble: 4 x 8
 #  term                       estimate std.error statistic   p.value conf.low conf.high neglog10p
 #  <chr>                         <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl>     <dbl>
@@ -58,7 +53,6 @@ tidy_ci(fit_linear)
 
 fit_logistic = glm(current_smoker_vs_never ~ age + sex + bmi, data = d, family = binomial(link="logit"))
 tidy_ci(fit_logistic)   ## automatically identifies a logistic model and exponentiates estimate/CIs
-
 ## A tibble: 3 x 8
 #  term  estimate std.error statistic   p.value conf.low conf.high neglog10p
 #  <chr>    <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl>     <dbl>
@@ -69,7 +63,6 @@ tidy_ci(fit_logistic)   ## automatically identifies a logistic model and exponen
 library(survival)
 fit_coxph = coxph(Surv(time_to_event, diagnosis_bin) ~ age + sex + bmi + as.factor(smoking_status), data = d)
 tidy_ci(fit_coxph)   ## automatically identifies a coxph model and exponentiates estimate/CIs
-
 ## A tibble: 5 x 8
 #  term                       estimate std.error statistic  p.value conf.low conf.high neglog10p
 #  <chr>                         <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
