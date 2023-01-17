@@ -60,8 +60,8 @@ tidy_ci = function(x = stop("Provide a model fit object"),
 		   conf.int = FALSE,     ## tidy() option
 		   ...) {
 	
-	require(dplyr)
-	require(broom)
+	#require(dplyr)
+	#require(broom)
 	
 	## use `tidy()` CI method?  Only if not using the 1.96*SE method
 	if (ci) conf.int = FALSE
