@@ -10,24 +10,24 @@ tidy_ci(
   exp = FALSE,
   intercept = FALSE,
   neglog10p = TRUE,
-  check_family = TRUE,
+  check_model = TRUE,
   n = NA,
   conf.int = FALSE,
   ...
 )
 }
 \arguments{
-\item{ci}{{default=TRUE} calculate CIs using 1.96*SE method}
+\item{ci}{calculate CIs using 1.96*SE method (default=TRUE)}
 
-\item{exp}{{default=FALSE} exponentiate estimate and CIs -- also see `check_family`}
+\item{exp}{exponentiate estimate and CIs -- also see `check_family` (default=FALSE)}
 
-\item{intercept}{{default=FALSE} Exclude intercept for tidier output}
+\item{intercept}{Exclude intercept for tidier output (default=FALSE)}
 
-\item{neglog10p}{{default=TRUE} Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override)}
+\item{neglog10p}{Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=TRUE)}
 
-\item{check_family}{{default=TRUE} set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed}
+\item{check_model}{set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)}
 
-\item{n}{{default=NA} the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required}
+\item{n}{the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)}
 
 \item{...}{Other `tidy()` options}
 }
@@ -35,10 +35,9 @@ tidy_ci(
 Returns a tibble - summary statistics from a model
 }
 \description{
-Function to get tidy model output with fast CIs
-}
-\details{
-By default the (amazing) \pkg{broom} package uses the `confint()` function to calculate CIs. 
+Function to get tidy model output with fast CIs 
+
+By default the (amazing) `broom` package uses the `confint()` function to calculate CIs. 
 For GLMs this calculates confidence intervals via profile likelihood by default. 
 When using large datasets this takes a long time and does not meaningfully alter the CIs 
 compared to simply calculating using 1.96*SE.

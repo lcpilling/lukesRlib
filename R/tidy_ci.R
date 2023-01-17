@@ -23,12 +23,12 @@
 #'
 #' @name tidy_ci
 #'
-#' @param ci {default=TRUE} calculate CIs using 1.96*SE method
-#' @param intercept {default=FALSE} Exclude intercept for tidier output
-#' @param neglog10p {default=TRUE} Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override)
-#' @param exp {default=FALSE} exponentiate estimate and CIs -- also see `check_family`
-#' @param check_family {default=TRUE} set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed
-#' @param n {default=NA} the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required
+#' @param ci calculate CIs using 1.96*SE method (default=TRUE)
+#' @param intercept Exclude intercept for tidier output (default=FALSE)
+#' @param neglog10p Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=TRUE)
+#' @param exp exponentiate estimate and CIs -- also see `check_family` (default=FALSE)
+#' @param check_model set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)
+#' @param n the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)
 #' @param ... Other `tidy()` options
 #'
 #' @examples
@@ -50,7 +50,7 @@ tidy_ci = function(x = stop("Provide a model fit object"),
 		   exp = FALSE, 
 		   intercept = FALSE, 
 		   neglog10p = TRUE, 
-		   check_family = TRUE,
+		   check_model = TRUE,
 		   n = NA, 
 		   conf.int = FALSE,     ## tidy() option
 		   ...) {
@@ -81,7 +81,7 @@ tidy_ci = function(x = stop("Provide a model fit object"),
 	}
 	
 	## exponentiate estimate and CIs?
-	if (check_family & !exp)  {
+	if (check_model & !exp)  {
 		model = ""
 		if ("glm" %in% class(x)) {
 			if (x$family$family == "binomial") {
