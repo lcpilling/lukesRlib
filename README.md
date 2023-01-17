@@ -9,6 +9,7 @@ Luke's library of R functions I sometimes find useful
   - [installation](#installation)
   - [tidy_ci()](#tidy_ci)
   - [carrec()](#carrec)
+  - [inv_norm()](#inv_norm)
 
 ## installation
 To install `lukeslibrary` from GitHub use the `remotes` package:
@@ -83,8 +84,7 @@ Stolen straight from Steve Miller's package https://github.com/svmiller/stevemis
 `car::recode()` that I put in this package because of various function
 clashes in the `{car}` package. For those who cut their teeth on Stata,
 this package offers Stata-like recoding features that are tough to find
-in the R programming language. It comes with a shortcut as well,
-`carr()`.
+in the R programming language.
 
 For example, assume the following vector that is some variable of
 interest on a 1-10 scale. You want to code the variables that are 6 and
@@ -92,15 +92,21 @@ above to be 1 and code the variables of 1-5 to be 0. Here’s how you
 would do that.
 
 ``` r
-library(tidyverse)
-library(stevemisc)
 x <- seq(1, 10)
 x
 #>  [1]  1  2  3  4  5  6  7  8  9 10
 
 carrec(x, "1:5=0;6:10=1")
 #>  [1] 0 0 0 0 0 1 1 1 1 1
-carr(x, "1:5=0;6:10=1")
-#>  [1] 0 0 0 0 0 1 1 1 1 1
 ```
 
+## inv_norm()
+
+Inverse (quantile) normalize a numeric vector
+
+```r
+x_in = inv_norm(x)
+
+## equivalent to 
+x_in = qnorm( (rank(x, na.last="keep") - 0.5) / length(na.omit(x)) )
+```

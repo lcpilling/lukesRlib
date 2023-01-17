@@ -3,4 +3,5 @@
 export(.squeeze_blanks)
 export(carr)
 export(carrec)
+export(inv_norm)
 export(tidy_ci)
