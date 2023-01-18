@@ -118,9 +118,9 @@ df = df |> mutate(x_in = inv_norm(x))
 Z-transform a quantitative trait (vector) i.e., convert to mean=0 and sd=1, maintaining original distribution
 
 ```r
-x_in = inv_norm(x)
+x_z = z_trans(x)
 
-df = df |> mutate(x_in = inv_norm(x))
+df = df |> mutate(x_z = z_trans(x))
 ```
 
 ## get_extreme_p()
