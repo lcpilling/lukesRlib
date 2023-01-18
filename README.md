@@ -102,6 +102,16 @@ carrec(x, "1:5=0;6:10=1")
 #>  [1] 0 0 0 0 0 1 1 1 1 1
 ```
 
+## inv_norm()
+
+Inverse (quantile) normalise a quantitative trait (vector) i.e., transofmr to a normal distribution with mean=0 and sd=1
+
+```r
+x_in = inv_norm(x)
+
+df = df |> mutate(x_in = inv_norm(x))
+```
+
 ## get_extreme_p()
 
 Return a p-value even if <1*10-324 (returns a string) -- provide a z or statistic
