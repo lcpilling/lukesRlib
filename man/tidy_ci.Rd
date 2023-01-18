@@ -19,7 +19,7 @@ tidy_ci(
 \arguments{
 \item{ci}{calculate CIs using 1.96*SE method (default=TRUE)}
 
-\item{exp}{exponentiate estimate and CIs -- also see `check_family` (default=FALSE)}
+\item{exp}{exponentiate estimate and CIs -- also see `check_model` (default=FALSE)}
 
 \item{intercept}{Exclude intercept for tidier output (default=FALSE)}
 

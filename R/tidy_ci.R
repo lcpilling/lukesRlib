@@ -24,7 +24,7 @@
 #' @param ci calculate CIs using 1.96*SE method (default=TRUE)
 #' @param intercept Exclude intercept for tidier output (default=FALSE)
 #' @param neglog10p Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=TRUE)
-#' @param exp exponentiate estimate and CIs -- also see `check_family` (default=FALSE)
+#' @param exp exponentiate estimate and CIs -- also see `check_model` (default=FALSE)
 #' @param check_model set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)
 #' @param n the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)
 #' @param ... Other `tidy()` options
