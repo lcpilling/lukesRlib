@@ -43,18 +43,15 @@
 #' @export
 #'
 
-tidy_ci = function(x = stop("Provide a model fit object"), 
-		   ci = TRUE, 
-		   exp = FALSE, 
-		   intercept = FALSE, 
-		   neglog10p = TRUE, 
-		   check_model = TRUE,
-		   n = NA, 
-		   conf.int = FALSE,     ## tidy() option
-		   ...) {
-	
-	#require(dplyr)
-	#require(broom)
+tidy_ci = function(x, 
+                   ci = TRUE, 
+                   exp = FALSE, 
+                   intercept = FALSE, 
+                   neglog10p = TRUE, 
+                   check_model = TRUE,
+                   n = NA, 
+                   conf.int = FALSE,     ## tidy() option
+                   ...) {
 	
 	## use `tidy()` CI method?  Only if not using the 1.96*SE method
 	if (ci) conf.int = FALSE

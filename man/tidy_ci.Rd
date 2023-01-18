@@ -5,7 +5,7 @@
 \title{Get tidy model output with fast CIs}
 \usage{
 tidy_ci(
-  x = stop("Provide a model fit object"),
+  x,
   ci = TRUE,
   exp = FALSE,
   intercept = FALSE,

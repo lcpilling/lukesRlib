@@ -10,6 +10,7 @@ Luke's library of R functions I sometimes find useful
   - [tidy_ci()](#tidy_ci)
   - [carrec()](#carrec)
   - [inv_norm()](#inv_norm)
+  - [z_trans()](#z_trans)
   - [get_extreme_p()](#get_extreme_p)
   - [get_neglog10_p()](#get_neglog10_p)
 
@@ -104,7 +105,17 @@ carrec(x, "1:5=0;6:10=1")
 
 ## inv_norm()
 
-Inverse (quantile) normalise a quantitative trait (vector) i.e., transofmr to a normal distribution with mean=0 and sd=1
+Inverse (quantile) normalise a quantitative trait (vector) i.e., transform to a normal distribution with mean=0 and sd=1
+
+```r
+x_in = inv_norm(x)
+
+df = df |> mutate(x_in = inv_norm(x))
+```
+
+## z_trans()
+
+Z-transform a quantitative trait (vector) i.e., convert to mean=0 and sd=1, maintaining original distribution
 
 ```r
 x_in = inv_norm(x)

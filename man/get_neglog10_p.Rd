@@ -4,7 +4,7 @@
 \alias{get_neglog10_p}
 \title{Get -log10 p-value}
 \usage{
-get_neglog10_p(z = stop("Provide a z statistics"), n = stop("Provide a n"))
+get_neglog10_p(z, n)
 }
 \arguments{
 \item{z}{a z (or t) statistic}

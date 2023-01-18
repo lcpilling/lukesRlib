@@ -18,7 +18,7 @@
 #' @export
 #'
 
-get_extreme_p <- function(z = stop("Provide a z statistic")) {
+get_extreme_p <- function(z) {
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	log.pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
 	log10.pvalue = log.pvalue/log(10) ## from natural log to log10
@@ -51,7 +51,7 @@ get_extreme_p <- function(z = stop("Provide a z statistic")) {
 #' @export
 #'
 
-get_neglog10_p <- function(z = stop("Provide a z statistics"), n = stop("Provide a n")) {
+get_neglog10_p <- function(z, n) {
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	if (!is.numeric(n))  stop("n needs to be numeric")
 	neglog10_p=-1*(pt(abs(z),df=n,lower.tail=F,log.p=T) + log(2))/log(10)

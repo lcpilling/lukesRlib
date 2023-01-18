@@ -16,15 +16,36 @@
 #' @export
 #'
 
-inv_norm = function(x = stop("Provide a vector")) {
-	
+inv_norm = function(x) {
 	if (!is.numeric(x))  stop("x needs to be numeric")
-	
 	if (length(x)<500)  warning("x has length<500 -- this may not produce 'nice' output")
-	
 	x_in = qnorm( (rank(x, na.last="keep") - 0.5) / length(na.omit(x)) )
-	
-	## return vector
 	x_in
-	
 }
+
+#' Z-transform a variable
+#'
+#' @description Z-transform a variable. Mean=0, SD=1. Maintains original distribution.
+#'
+#' @return Returns a vector
+#'
+#' @author Luke Pilling
+#'
+#' @name z_trans
+#'
+#' @param x a numeric vector to be z-transformed
+#'
+#' @examples
+#' z_trans(x)
+#'
+#' @export
+#'
+
+z_trans = function(x) {
+	if (!is.numeric(x))  stop("x needs to be numeric")
+	x_zt = ( ( x - mean(x, na.rm=TRUE) ) / sd(x, na.rm=TRUE) )
+	x_zt
+}
+
+
+

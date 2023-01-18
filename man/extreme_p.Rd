@@ -5,7 +5,7 @@
 \alias{get_extreme_p}
 \title{Get extreme p-value}
 \usage{
-get_extreme_p(z = stop("Provide a z statistic"))
+get_extreme_p(z)
 }
 \arguments{
 \item{z}{a z (or t) statistic}
