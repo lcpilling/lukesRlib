@@ -135,6 +135,6 @@ carrec <- function(var, recodes, as_fac, as_num = TRUE, levels) {
 #' @rdname carrec
 #' @export
 
-carr <- function(...) lukeslibrary::carrec(...)
+carr <- function(...) lukesRlib::carrec(...)
 
 

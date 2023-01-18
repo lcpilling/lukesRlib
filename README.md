@@ -1,8 +1,8 @@
-# lukeslibrary
+# lukesRlib
 Luke's library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.1.0-informational.svg)](https://github.com/lukepilling/lukeslibrary)
-[![](https://img.shields.io/github/last-commit/lukepilling/lukeslibrary.svg)](https://github.com/lukepilling/lukeslibrary/commits/master)
+[![](https://img.shields.io/badge/version-0.1.0-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-9cf.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
 ## Table of Contents
@@ -14,9 +14,9 @@ Luke's library of R functions I sometimes find useful
   - [get_neglog10_p()](#get_neglog10_p)
 
 ## installation
-To install `lukeslibrary` from GitHub use the `remotes` package:
+To install `lukesRlib` from GitHub use the `remotes` package:
 
-`remotes::install_github("lukepilling/lukeslibrary")`
+`remotes::install_github("lukepilling/lukesRlib")`
 
 To update the package just run the above command again.
 
