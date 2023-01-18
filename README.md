@@ -47,7 +47,7 @@ Not tested for models other than `glm()` and `survival::coxph()` where it seems 
 ```R
 fit_linear = glm(bmi ~ age + sex, data = d)
 tidy_ci(fit_linear)
-#> # A tibble: 4 x 8
+#> # A tibble: 2 x 8
 #>   term                       estimate std.error statistic   p.value conf.low conf.high neglog10p
 #>   <chr>                         <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl>     <dbl>
 #> 1 age                          0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212     117. 
@@ -56,7 +56,7 @@ tidy_ci(fit_linear)
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
 tidy_ci(fit_coxph)
-#> # A tibble: 5 x 8
+#> # A tibble: 4 x 8
 #>   term                       estimate std.error statistic  p.value conf.low conf.high neglog10p
 #>   <chr>                         <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
 #> 1 age                           0.995  0.000837     -6.56 5.28e-11    0.993     0.996     10.3 
