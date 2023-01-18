@@ -13,19 +13,18 @@
 #' @examples
 #' z = 50
 #' get_extreme_p(z)
-#' #>  [1] "p value is 2.16 times 10^(-545)"
+#' #>  [1] "2.16e-545"
 #'
 #' @export
 #'
 
 get_extreme_p <- function(z) {
 	if (!is.numeric(z))  stop("z needs to be numeric")
-	log.pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
-	log10.pvalue = log.pvalue/log(10) ## from natural log to log10
-	mantissa     = 10^(log10.pvalue %% 1)
-	exponent     = log10.pvalue %/% 1
-	## or return(c(mantissa,exponent))
-	return(sprintf("p value is %1.2f times 10^(%d)",mantissa,exponent))
+	log_pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
+	log10_pvalue = log_pvalue/log(10) ## from natural log to log10
+	mantissa     = 10^(log10_pvalue %% 1)
+	exponent     = log10_pvalue %/% 1
+	return(sprintf("%1.2fe%d",mantissa,exponent))
 }
 
 

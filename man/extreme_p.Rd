@@ -19,7 +19,7 @@ Return p-value for any z (or t) statistic as a string
 \examples{
 z = 50
 get_extreme_p(z)
-#>  [1] "p value is 2.16 times 10^(-545)"
+#>  [1] "2.16e-545"
 
 }
 \author{

@@ -8,8 +8,8 @@
 #' calculated as EST +/- 1.96*SE.
 #'
 #' The function also does a few other nice/useful things to the output: hides the intercept by 
-#' default, calculates -log10 p-values, and automatically detects logistic/CoxPH/CRR models and 
-#' exponentiates the estimates.
+#' default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, 
+#' and if p=0 returns the extreme p as a string. Other optional outputs include -log10 p-values.
 #'
 #' Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()`
 #'
@@ -22,7 +22,8 @@
 #' @param x object containing model output to be tidied e.g., from a `glm()` or `survival::coxph()`
 #' @param ci calculate CIs using 1.96*SE method (default=TRUE)
 #' @param intercept Exclude intercept for tidier output (default=FALSE)
-#' @param neglog10p Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=TRUE)
+#' @param extreme_ps If p=0 then return "extreme p-values" as strings (default=TRUE)
+#' @param neglog10p Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=FALSE)
 #' @param exp exponentiate estimate and CIs -- also see `check_model` (default=FALSE)
 #' @param check_model set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)
 #' @param n the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)
@@ -46,7 +47,8 @@ tidy_ci = function(x,
                    ci = TRUE, 
                    exp = FALSE, 
                    intercept = FALSE, 
-                   neglog10p = TRUE, 
+                   extreme_ps = TRUE,
+                   neglog10p = FALSE, 
                    check_model = TRUE,
                    n = NA, 
                    conf.int = FALSE,     ## tidy() option
@@ -71,6 +73,13 @@ tidy_ci = function(x,
 		if (!is.na(n)) {
 			ret = ret |> dplyr::mutate(neglog10p=-1*(pt(abs(estimate/std.error),df=!!n,lower.tail=F,log.p=T) + log(2))/log(10))
 			cat(paste0("N=", n, "\n"))
+		}
+	}
+	
+	## get extreme p-values?
+	if (extreme_ps)  {
+		if (any(ret$p.value==0))  {
+			ret = ret |> mutate(p.extreme=if_else(p.value==0, lukesRlib::get_extreme_p(statistic), NA_character_))
 		}
 	}
 	

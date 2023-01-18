@@ -29,12 +29,13 @@ By default the (amazing) `broom` package uses the `confint()` function to calcul
 
 This function `tidy_ci()` runs `broom::tidy()` and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
 
-Also does a few other nice/useful things to the output: hides the intercept by default, calculates -log10 p-values, and automatically detects logistic/CoxPH/CRR models and exponentiates the estimates
+Also does a few other nice/useful things to the output by default: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates and if p=0 returns the extreme p as a string. Other optional outputs include -log10 p-values.
 
 ### Options:
  - `ci` {default=TRUE} calculate CIs using 1.96*SE method
  - `intercept` {default=FALSE} Exclude intercept for tidier output
- - `neglog10p` {default=TRUE} Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override)
+ - `extreme_ps` {default=TRUE} If p=0 then return "extreme p-values" as strings
+ - `neglog10p` {default=FALSE} Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override)
  - `exp` {default=FALSE} exponentiate estimate and CIs -- also see `check_family`
  - `check_family` {default=TRUE} set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed
  - `n` {default=NA} the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required
@@ -48,14 +49,14 @@ Not tested for models other than `glm()` and `survival::coxph()` where it seems 
 fit_linear = glm(bmi ~ age + sex, data = d)
 tidy_ci(fit_linear)
 #> # A tibble: 2 x 8
-#>   term                       estimate std.error statistic   p.value conf.low conf.high neglog10p
-#>   <chr>                         <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl>     <dbl>
-#> 1 age                          0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212     117. 
-#> 2 sex                          0.703   0.0137       51.4  0           0.676     0.729      574. 
+#>  term                       estimate std.error statistic   p.value conf.low conf.high p.extreme
+#>  <chr>                         <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <chr>    
+#>1 age                          0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212 NA       
+#>2 sex                          0.703   0.0137       51.4  0           0.676     0.729  9.39e-576
 
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
-tidy_ci(fit_coxph)
+tidy_ci(fit_coxph, neglog10p=TRUE)
 #> # A tibble: 4 x 8
 #>   term                       estimate std.error statistic  p.value conf.low conf.high neglog10p
 #>   <chr>                         <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
@@ -120,7 +121,7 @@ Return a p-value even if <1*10-324 (returns a string) -- provide a z (or t) stat
 ```r
 z = 50
 get_extreme_p(z)
-#>  [1] "p value is 2.16 times 10^(-545)"
+#>  [1] "2.16e-545"
 ```
 
 ## get_neglog10_p()

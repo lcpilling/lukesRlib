@@ -9,7 +9,8 @@ tidy_ci(
   ci = TRUE,
   exp = FALSE,
   intercept = FALSE,
-  neglog10p = TRUE,
+  extreme_ps = TRUE,
+  neglog10p = FALSE,
   check_model = TRUE,
   n = NA,
   conf.int = FALSE,
@@ -25,7 +26,9 @@ tidy_ci(
 
 \item{intercept}{Exclude intercept for tidier output (default=FALSE)}
 
-\item{neglog10p}{Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=TRUE)}
+\item{extreme_ps}{If p=0 then return "extreme p-values" as strings (default=TRUE)}
+
+\item{neglog10p}{Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=FALSE)}
 
 \item{check_model}{set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)}
 
@@ -45,8 +48,8 @@ This function `tidy_ci()` runs `broom::tidy()` and returns the tidy estimates wi
 calculated as EST +/- 1.96*SE.
 
 The function also does a few other nice/useful things to the output: hides the intercept by 
-default, calculates -log10 p-values, and automatically detects logistic/CoxPH/CRR models and 
-exponentiates the estimates.
+default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, 
+and if p=0 returns the extreme p as a string. Other optional outputs include -log10 p-values.
 
 Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()`
 }
