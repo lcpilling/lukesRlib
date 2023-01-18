@@ -114,16 +114,21 @@ df = df |> mutate(x_in = inv_norm(x))
 
 ## get_extreme_p()
 
-Return a p-value even if <1*10-324 (returns a string) -- provide a z or statistic
+Return a p-value even if <1*10-324 (returns a string) -- provide a z (or t) statistic
 
 ```r
+z = 50
 get_extreme_p(z)
+#>  [1] "p value is 2.16 times 10^(-545)"
 ```
 
 ## get_neglog10_p()
 
-Returns the -log10 p-value. Provide a beta, se, and n (sample size)
+Returns the -log10 p-value. Provide a z (or t) statistic and n (sample size)
 
 ```r
-get_neglog10_p(beta, se, n)
+z = 50
+n = 100000
+get_neglog10_p(z, n)
+#>  [1] 537.9851
 ```

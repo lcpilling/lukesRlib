@@ -8,18 +8,18 @@
 get_extreme_p(z = stop("Provide a z statistic"))
 }
 \arguments{
-\item{z}{a z or t statistic}
+\item{z}{a z (or t) statistic}
 }
 \value{
 Returns a string (p-value)
 }
 \description{
-Return p-value for any Z as a string
+Return p-value for any z (or t) statistic as a string
 }
 \examples{
 extreme_p(z)
 
 }
 \author{
-Internet person
+The internet (anon)
 }

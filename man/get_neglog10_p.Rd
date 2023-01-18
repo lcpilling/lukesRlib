@@ -4,16 +4,10 @@
 \alias{get_neglog10_p}
 \title{Get -log10 p-value}
 \usage{
-get_neglog10_p(
-  beta = stop("Provide a beta"),
-  se = stop("Provide a se"),
-  n = stop("Provide a n")
-)
+get_neglog10_p(z = stop("Provide a z statistics"), n = stop("Provide a n"))
 }
 \arguments{
-\item{beta}{a beta/coefficient}
-
-\item{se}{the corresponding standard error to the provided beta}
+\item{z}{a z (or t) statistic}
 
 \item{n}{the sample size used to estimate the beta and se}
 }
@@ -21,12 +15,12 @@ get_neglog10_p(
 Returns a -log 10 p-value
 }
 \description{
-Get -log10 p-value from a provided beta, se and n
+Get -log10 p-value from a provided z statistic and n
 }
 \examples{
 get_neglog10_p(beta, se, n)
 
 }
 \author{
-Internet person
+The internet (anon)
 }

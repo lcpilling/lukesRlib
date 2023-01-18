@@ -1,14 +1,14 @@
 #' Get extreme p-value
 #'
-#' @description Return p-value for any Z as a string
+#' @description Return p-value for any z (or t) statistic as a string
 #'
 #' @return Returns a string (p-value)
 #'
-#' @author Internet person
+#' @author The internet (anon)
 #'
 #' @name extreme_p
 #'
-#' @param z a z or t statistic
+#' @param z a z (or t) statistic
 #'
 #' @examples
 #' extreme_p(z)
@@ -29,16 +29,15 @@ get_extreme_p <- function(z = stop("Provide a z statistic")) {
 
 #' Get -log10 p-value
 #'
-#' @description Get -log10 p-value from a provided beta, se and n
+#' @description Get -log10 p-value from a provided z statistic and n
 #'
 #' @return Returns a -log 10 p-value
 #'
-#' @author Internet person
+#' @author The internet (anon)
 #'
 #' @name get_neglog10_p
 #'
-#' @param beta a beta/coefficient
-#' @param se the corresponding standard error to the provided beta
+#' @param z a z (or t) statistic
 #' @param n the sample size used to estimate the beta and se
 #'
 #' @examples
@@ -47,10 +46,9 @@ get_extreme_p <- function(z = stop("Provide a z statistic")) {
 #' @export
 #'
 
-get_neglog10_p <- function(beta = stop("Provide a beta"), se = stop("Provide a se"), n = stop("Provide a n")) {
-	if (!is.numeric(beta))  stop("beta needs to be numeric")
-	if (!is.numeric(se))  stop("se needs to be numeric")
+get_neglog10_p <- function(z = stop("Provide a z statistics"), n = stop("Provide a n")) {
+	if (!is.numeric(z))  stop("z needs to be numeric")
 	if (!is.numeric(n))  stop("n needs to be numeric")
-	neglog10_p=-1*(pt(abs(beta/se),df=n,lower.tail=F,log.p=T) + log(2))/log(10)
+	neglog10_p=-1*(pt(abs(z),df=n,lower.tail=F,log.p=T) + log(2))/log(10)
 	neglog10_p
 }
