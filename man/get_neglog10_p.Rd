@@ -9,7 +9,7 @@ get_neglog10_p(z = stop("Provide a z statistics"), n = stop("Provide a n"))
 \arguments{
 \item{z}{a z (or t) statistic}
 
-\item{n}{the sample size used to estimate the beta and se}
+\item{n}{the sample size used to estimate the z (or t) statistic}
 }
 \value{
 Returns a -log 10 p-value
@@ -18,7 +18,10 @@ Returns a -log 10 p-value
 Get -log10 p-value from a provided z statistic and n
 }
 \examples{
-get_neglog10_p(beta, se, n)
+z = 50
+n = 100000
+get_neglog10_p(z, n)
+#>  [1] 537.9851
 
 }
 \author{

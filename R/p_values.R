@@ -11,7 +11,9 @@
 #' @param z a z (or t) statistic
 #'
 #' @examples
-#' extreme_p(z)
+#' z = 50
+#' get_extreme_p(z)
+#' #>  [1] "p value is 2.16 times 10^(-545)"
 #'
 #' @export
 #'
@@ -38,10 +40,13 @@ get_extreme_p <- function(z = stop("Provide a z statistic")) {
 #' @name get_neglog10_p
 #'
 #' @param z a z (or t) statistic
-#' @param n the sample size used to estimate the beta and se
+#' @param n the sample size used to estimate the z (or t) statistic
 #'
 #' @examples
-#' get_neglog10_p(beta, se, n)
+#' z = 50
+#' n = 100000
+#' get_neglog10_p(z, n)
+#' #>  [1] 537.9851
 #'
 #' @export
 #'
