@@ -17,6 +17,8 @@ tidy_ci(
 )
 }
 \arguments{
+\item{x}{object containing model output to be tidied e.g., from a `glm()` or `survival::coxph()`}
+
 \item{ci}{calculate CIs using 1.96*SE method (default=TRUE)}
 
 \item{exp}{exponentiate estimate and CIs -- also see `check_model` (default=FALSE)}
@@ -47,8 +49,6 @@ default, calculates -log10 p-values, and automatically detects logistic/CoxPH/CR
 exponentiates the estimates.
 
 Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()`
-
-v0.20230109
 }
 \examples{
 fit_linear = glm(bmi ~ age + sex + as.factor(smoking_status), data = d)
@@ -58,7 +58,7 @@ fit_logistic = glm(current_smoker_vs_never ~ age + sex + bmi, data = d, family =
 tidy_ci(fit_logistic)   # detect model and exponentiate automatically
 tidy_ci(fit_logistic, check_model=FALSE)  # override auto checking to get untransformed estimates
 
-fit_coxph = coxph(Surv(time_to_event, diagnosis_bin) ~ age + sex + bmi + as.factor(smoking_status), data = d)
+fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
 tidy_ci(fit_coxph)
 
 }
