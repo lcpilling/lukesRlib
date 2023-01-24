@@ -38,7 +38,7 @@
 #' factor,  `FALSE` otherwise
 #' @param as_num if `TRUE` (which is the default) and `as.factor` is `FALSE`,
 #' the result will be coerced to a numeric if all values in the result are numeric.
-#' This should be what you want in 99% of applications for regression analysis.
+#' This should be what you want in majority of applications for regression analysis.
 #' @param levels an optional argument specifying the order of the levels in the
 #' returned factor; the default is to use the sort order of the level names.
 #' @param ... optional, only to make the shortcut (`carr()`) work
