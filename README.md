@@ -13,6 +13,8 @@ Luke's library of R functions I sometimes find useful
   - [z_trans()](#z_trans)
   - [get_extreme_p()](#get_extreme_p)
   - [get_neglog10_p()](#get_neglog10_p)
+  - [get_p()](#get_p)
+  - [get_z()](#get_z)
 
 ## installation
 To install `lukesRlib` from GitHub use the `remotes` package:
@@ -133,4 +135,26 @@ z = 50
 n = 100000
 get_neglog10_p(z, n)
 #>  [1] 537.9851
+```
+
+
+## get_p()
+
+Return a p-value from a z (or t) statistic
+
+```r
+z = 10
+get_p(z)
+#>  [1] 1.523971e-23
+```
+
+
+## get_z()
+
+Return a Z-statistics from a given p-value
+
+```r
+p = 1e-10
+get_z(p)
+#>  [1] 6.466951
 ```
