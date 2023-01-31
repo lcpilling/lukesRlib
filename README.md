@@ -11,10 +11,11 @@ Luke's library of R functions I sometimes find useful
   - [carrec()](#carrec)
   - [inv_norm()](#inv_norm)
   - [z_trans()](#z_trans)
-  - [get_extreme_p()](#get_extreme_p)
-  - [get_neglog10_p()](#get_neglog10_p)
   - [get_p()](#get_p)
   - [get_z()](#get_z)
+  - [get_p_extreme()](#get_p_extreme)
+  - [get_p_neglog10()](#get_p_neglog10)
+  - [get_p_neglog10_n()](#get_p_neglog10_n)
 
 ## installation
 To install `lukesRlib` from GitHub use the `remotes` package:
@@ -116,28 +117,6 @@ x_z = z_trans(x)
 df = df |> mutate(x_z = z_trans(x))
 ```
 
-## get_extreme_p()
-
-Return a p-value even if <1*10-324 (returns a string) -- provide a z (or t) statistic
-
-```r
-z = 50
-get_extreme_p(z)
-#>  [1] "2.16e-545"
-```
-
-## get_neglog10_p()
-
-Returns the -log10 p-value. Provide a z (or t) statistic and n (sample size)
-
-```r
-z = 50
-n = 100000
-get_neglog10_p(z, n)
-#>  [1] 537.9851
-```
-
-
 ## get_p()
 
 Return a p-value from a z (or t) statistic
@@ -157,4 +136,38 @@ Return a Z-statistics from a given p-value
 p = 1e-10
 get_z(p)
 #>  [1] 6.466951
+```
+
+
+## get_p_extreme()
+
+Return a p-value even if <1*10-324 (returns a string) -- provide a z (or t) statistic
+
+```r
+z = 50
+get_p_extreme(z)
+#>  [1] "2.16e-545"
+```
+
+
+## get_p_neglog10()
+
+Returns the -log10 p-value. Provide a z (or t) statistic
+
+```r
+z = 50
+get_p_neglog10(z, n)
+#>  [1] 544.0977
+```
+
+
+## get_p_neglog10_n()
+
+Returns the -log10 p-value. Provide a z (or t) statistic and n (sample size)
+
+```r
+z = 50
+n = 100000
+get_p_neglog10_n(z, n)
+#>  [1] 537.9851
 ```

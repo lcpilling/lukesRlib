@@ -1,63 +1,3 @@
-#' Get extreme p-value
-#'
-#' @description Return p-value for any z (or t) statistic as a string
-#'
-#' @return Returns a string (p-value)
-#'
-#' @author The internet (anon)
-#'
-#' @name get_extreme_p
-#'
-#' @param z a z (or t) statistic
-#'
-#' @examples
-#' z = 50
-#' get_extreme_p(z)
-#' #>  [1] "2.16e-545"
-#'
-#' @export
-#'
-
-get_extreme_p = function(z) {
-	if (!is.numeric(z))  stop("z needs to be numeric")
-	log_pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
-	log10_pvalue = log_pvalue/log(10) ## from natural log to log10
-	mantissa     = 10^(log10_pvalue %% 1)
-	exponent     = log10_pvalue %/% 1
-	return(sprintf("%1.2fe%d",mantissa,exponent))
-}
-
-
-#' Get -log10 p-value
-#'
-#' @description Get -log10 p-value from a provided z statistic and n
-#'
-#' @return Returns a -log 10 p-value
-#'
-#' @author The internet (anon)
-#'
-#' @name get_neglog10_p
-#'
-#' @param z a z (or t) statistic
-#' @param n the sample size used to estimate the z (or t) statistic
-#'
-#' @examples
-#' z = 50
-#' n = 100000
-#' get_neglog10_p(z, n)
-#' #>  [1] 537.9851
-#'
-#' @export
-#'
-
-get_neglog10_p = function(z, n) {
-	if (!is.numeric(z))  stop("z needs to be numeric")
-	if (!is.numeric(n))  stop("n needs to be numeric")
-	neglog10_p=-1*(pt(abs(z),df=n,lower.tail=F,log.p=T) + log(2))/log(10)
-	neglog10_p
-}
-
-
 #' Get p-value from Z-statistic
 #'
 #' @description Return p-value for a z (or t) statistic
@@ -108,4 +48,92 @@ get_z = function(p) {
 	z = abs(qnorm(p/2,0,1))
 	z
 }
+
+
+#' Get extreme p-value
+#'
+#' @description Return p-value for any z (or t) statistic as a string
+#'
+#' @return Returns a string (p-value)
+#'
+#' @author The internet (anon)
+#'
+#' @name get_p_extreme
+#'
+#' @param z a z (or t) statistic
+#'
+#' @examples
+#' z = 50
+#' get_p_extreme(z)
+#' #>  [1] "2.16e-545"
+#'
+#' @export
+#'
+
+get_p_extreme = function(z) {
+	if (!is.numeric(z))  stop("z needs to be numeric")
+	log_pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
+	log10_pvalue = log_pvalue/log(10) ## from natural log to log10
+	mantissa     = 10^(log10_pvalue %% 1)
+	exponent     = log10_pvalue %/% 1
+	return(sprintf("%1.2fe%d",mantissa,exponent))
+}
+
+
+#' Get -log10 p-value (using Z only)
+#'
+#' @description Get -log10 p-value from a provided z statistic
+#'
+#' @return Returns a -log 10 p-value
+#'
+#' @author The internet (anon)
+#'
+#' @name get_p_neglog10
+#'
+#' @param z a z (or t) statistic
+#'
+#' @examples
+#' z = 50
+#' get_p_neglog10(z)
+#' #>  [1] 544.0977
+#'
+#' @export
+#'
+
+get_p_neglog10 = function(z) {
+	if (!is.numeric(z))  stop("z needs to be numeric")
+	neglog10_p=-( 2 + pnorm(-abs( z ), log.p=T) ) / log(10)
+	neglog10_p
+}
+
+
+#' Get -log10 p-value (using Z & N)
+#'
+#' @description Get -log10 p-value from a provided z statistic and n
+#'
+#' @return Returns a -log 10 p-value
+#'
+#' @author The internet (anon)
+#'
+#' @name get_p_neglog10_n
+#'
+#' @param z a z (or t) statistic
+#' @param n the sample size used to estimate the z (or t) statistic
+#'
+#' @examples
+#' z = 50
+#' n = 100000
+#' get_p_neglog10_n(z, n)
+#' #>  [1] 537.9851
+#'
+#' @export
+#'
+
+get_p_neglog10_n = function(z, n) {
+	if (!is.numeric(z))  stop("z needs to be numeric")
+	if (!is.numeric(n))  stop("n needs to be numeric")
+	neglog10_p=-1*(pt(abs(z),df=n,lower.tail=F,log.p=T) + log(2))/log(10)
+	neglog10_p
+}
+
 

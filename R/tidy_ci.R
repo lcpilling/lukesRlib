@@ -71,7 +71,7 @@ tidy_ci = function(x,
 		if (is.na(n) & "tidycrr" %in% class(x))  n = x$cmprsk$n
 		if (is.na(n)) cat("To calculate -log10 p-values provide the sample size `n`\n")
 		if (!is.na(n)) {
-			ret = ret |> dplyr::mutate(neglog10p=-1*(pt(abs(estimate/std.error),df=!!n,lower.tail=F,log.p=T) + log(2))/log(10))
+			ret = ret |> dplyr::mutate(neglog10p=lukesRlib::get_p_neglog10_n(statistic, !!n))
 			cat(paste0("N=", n, "\n"))
 		}
 	}
@@ -79,7 +79,7 @@ tidy_ci = function(x,
 	## get extreme p-values?
 	if (extreme_ps)  {
 		if (any(ret$p.value==0))  {
-			ret = ret |> mutate(p.extreme=if_else(p.value==0, lukesRlib::get_extreme_p(statistic), NA_character_))
+			ret = ret |> mutate(p.extreme=if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 		}
 	}
 	
