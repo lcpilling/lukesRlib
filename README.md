@@ -156,7 +156,7 @@ Returns the -log10 p-value. Provide a z (or t) statistic
 
 ```r
 z = 50
-get_p_neglog10(z, n)
+get_p_neglog10(z)
 #>  [1] 544.0977
 ```
 
