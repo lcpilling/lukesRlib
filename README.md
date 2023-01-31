@@ -1,7 +1,7 @@
 # lukesRlib
 Luke's library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.1.1-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.1.2-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-9cf.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -11,8 +11,8 @@ Luke's library of R functions I sometimes find useful
   - [carrec()](#carrec)
   - [inv_norm()](#inv_norm)
   - [z_trans()](#z_trans)
-  - [get_p()](#get_p)
   - [get_z()](#get_z)
+  - [get_p()](#get_p)
   - [get_p_extreme()](#get_p_extreme)
   - [get_p_neglog10()](#get_p_neglog10)
   - [get_p_neglog10_n()](#get_p_neglog10_n)
@@ -117,17 +117,6 @@ x_z = z_trans(x)
 df = df |> mutate(x_z = z_trans(x))
 ```
 
-## get_p()
-
-Return a p-value from a z (or t) statistic
-
-```r
-z = 10
-get_p(z)
-#>  [1] 1.523971e-23
-```
-
-
 ## get_z()
 
 Return a Z-statistics from a given p-value
@@ -136,6 +125,17 @@ Return a Z-statistics from a given p-value
 p = 1e-10
 get_z(p)
 #>  [1] 6.466951
+```
+
+
+## get_p()
+
+Return a p-value from a z (or t) statistic
+
+```r
+z = 10
+get_p(z)
+#>  [1] 1.523971e-23
 ```
 
 
