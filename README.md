@@ -1,9 +1,13 @@
+<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/lukesRlib.png" width="200" />
+
 # lukesRlib
 Luke's library of R functions I sometimes find useful
 
 [![](https://img.shields.io/badge/version-0.1.2-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-9cf.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+
+<sub>Toolbox icon from https://vectorified.com/icon-tool-box</sub>
 
 ## Table of Contents
   - [installation](#installation)
