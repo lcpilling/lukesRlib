@@ -7,12 +7,14 @@
 tidy_ci(
   x,
   ci = TRUE,
+  ci_denominator = 1.96,
   exp = FALSE,
   intercept = FALSE,
   extreme_ps = TRUE,
   neglog10p = FALSE,
   check_model = TRUE,
   n = NA,
+  print_n = TRUE,
   conf.int = FALSE,
   ...
 )
@@ -21,6 +23,8 @@ tidy_ci(
 \item{x}{object containing model output to be tidied e.g., from a `glm()` or `survival::coxph()`}
 
 \item{ci}{calculate CIs using 1.96*SE method (default=TRUE)}
+
+\item{ci_denominator}{the standard error of the sample mean (default=1.96)}
 
 \item{exp}{exponentiate estimate and CIs -- also see `check_model` (default=FALSE)}
 
@@ -33,6 +37,8 @@ tidy_ci(
 \item{check_model}{set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)}
 
 \item{n}{the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)}
+
+\item{print_n}{print the N included in analysis - extracted automatically for `glm` or `coxph` objects (default=TRUE)}
 
 \item{...}{Other `tidy()` options}
 }

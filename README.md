@@ -17,6 +17,7 @@ Luke's library of R functions I sometimes find useful
   - [z_trans()](#z_trans)
   - [get_z()](#get_z)
   - [get_p()](#get_p)
+  - [get_se()](#get_se)
   - [get_p_extreme()](#get_p_extreme)
   - [get_p_neglog10()](#get_p_neglog10)
   - [get_p_neglog10_n()](#get_p_neglog10_n)
@@ -40,12 +41,14 @@ Also does a few other nice/useful things to the output by default: hides the int
 
 ### Options:
  - `ci` {default=TRUE} calculate CIs using 1.96*SE method
+ - `denominator` {default=1.96} the standard error of the sample mean (used to get CIs)
  - `intercept` {default=FALSE} Exclude intercept for tidier output
  - `extreme_ps` {default=TRUE} If p=0 then return "extreme p-values" as strings
  - `neglog10p` {default=FALSE} Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override)
  - `exp` {default=FALSE} exponentiate estimate and CIs -- also see `check_family`
  - `check_family` {default=TRUE} set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed
  - `n` {default=NA} the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required
+ - `print_n` {default=TRUE} print the N included in analysis - extracted automatically for `glm` or `coxph` objects
  - `...` Other `tidy()` options 
 
 Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()` (and therefore `tidycmprsk::crr()`)
@@ -123,7 +126,7 @@ df = df |> mutate(x_z = z_trans(x))
 
 ## get_z()
 
-Return a Z-statistics from a given p-value
+Return a Z-statistic from a given p-value
 
 ```r
 p = 1e-10
@@ -143,14 +146,27 @@ get_p(z)
 ```
 
 
-## get_p_extreme()
+## get_se()
 
-Return a p-value even if <1*10-324 (returns a string) -- provide a z (or t) statistic
+Return a Standard Error from the Confidence Intervals
 
 ```r
-z = 50
-get_p_extreme(z)
-#>  [1] "2.16e-545"
+lci = 0.1
+uci = 0.3
+get_se(lci, uci)
+#>  [1] 0.05102041
+```
+
+
+## get_p_extreme()
+
+Return a p-value even if p<1*10-324 (returns a string) -- provide a z (or t) statistic
+
+```r
+#' lci = 0.1
+#' uci = 0.3
+#' get_se(lci, uci)
+#' #>  [1] 0.05102041
 ```
 
 

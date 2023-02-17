@@ -2,12 +2,9 @@
 % Please edit documentation in R/carrec.R
 \name{carrec}
 \alias{carrec}
-\alias{carr}
 \title{Recode a Variable}
 \usage{
 carrec(var, recodes, as_fac, as_num = TRUE, levels)
-
-carr(...)
 }
 \arguments{
 \item{var}{numeric vector, character vector, or factor}
@@ -29,16 +26,15 @@ returned factor; the default is to use the sort order of the level names.}
 }
 \value{
 `carrec()` returns a vector, recoded to the specifications of the
-user. `carr()` is a simple shortcut for`carrec()`.
+user.
 }
 \description{
 Lifted straight from Steve Miller's {stevemisc} package (v1.4.1). 
 This recodes a numeric vector, character vector, or factor
 according to fairly simple recode specifications that former Stata users
-will appreciate. Yes, this is taken from John Fox's `recode()` unction in
+will appreciate. Yes, this is taken from John Fox's `recode()` function in
 his \pkg{car} package. I'm going with `carrec()` (i.e. shorthand for
-`car::recode()`, phonetically here: "car-wreck") for this package, with
-an additional shorthand of `carr` that does the same thing.
+`car::recode()`, phonetically here: "car-wreck") for this package.
 
 The goal here is to minimize the number of function clashes with
 multiple packages that I use in my workflow. For example: \pkg{car},

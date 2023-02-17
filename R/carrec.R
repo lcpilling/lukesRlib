@@ -3,10 +3,9 @@
 #' @description Lifted straight from Steve Miller's {stevemisc} package (v1.4.1). 
 #' This recodes a numeric vector, character vector, or factor
 #' according to fairly simple recode specifications that former Stata users
-#' will appreciate. Yes, this is taken from John Fox's `recode()` unction in
+#' will appreciate. Yes, this is taken from John Fox's `recode()` function in
 #' his \pkg{car} package. I'm going with `carrec()` (i.e. shorthand for
-#' `car::recode()`, phonetically here: "car-wreck") for this package, with
-#' an additional shorthand of `carr` that does the same thing.
+#' `car::recode()`, phonetically here: "car-wreck") for this package.
 #'
 #' The goal here is to minimize the number of function clashes with
 #' multiple packages that I use in my workflow. For example: \pkg{car},
@@ -21,7 +20,7 @@
 #' carried over to the result. NA is allowed on input and output.
 #'
 #' @return `carrec()` returns a vector, recoded to the specifications of the
-#' user. `carr()` is a simple shortcut for`carrec()`.
+#' user. 
 #'
 #' @author John Fox
 #'
@@ -54,7 +53,7 @@
 # I took these out: lo being -Inf and hi being Inf.
 # They didn't seem to do anything
 
-carrec <- function(var, recodes, as_fac, as_num = TRUE, levels) {
+carrec = function(var, recodes, as_fac, as_num = TRUE, levels) {
     recodes <- gsub("\n|\t", " ", recodes)
     rec_list <- rev(strsplit(recodes, ";")[[1]])
     is_fac <- is.factor(var)
@@ -126,15 +125,8 @@ carrec <- function(var, recodes, as_fac, as_num = TRUE, levels) {
 #' @export
 #' @noRd
 
-.squeeze_blanks <- function(text) {
+.squeeze_blanks = function(text) {
   gsub(" *", "", text)
 }
-
-
-
-#' @rdname carrec
-#' @export
-
-carr <- function(...) lukesRlib::carrec(...)
 
 

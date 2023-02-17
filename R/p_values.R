@@ -137,3 +137,37 @@ get_p_neglog10_n = function(z, n) {
 }
 
 
+#' Get Standard Error from Confidence Intervals
+#'
+#' @description Return SE from CIs
+#'
+#' @return Returns SE (numeric)
+#'
+#' @author The internet (anon)
+#'
+#' @name get_se
+#'
+#' @param lci the lower confidence interval
+#' @param uci the lower confidence interval
+#' @param log log the CI values? (default=FALSE)
+#' @param denominator the standard error of the sample mean (default=3.92 i.e., 1.96*2)
+#'
+#' @examples
+#' lci = 0.1
+#' uci = 0.3
+#' get_se(lci, uci)
+#' #>  [1] 0.05102041
+#'
+#' @export
+#'
+get_se = function(lci, uci, log=FALSE, denominator=3.92) {
+	if (!is.numeric(lci))  stop("`lci` needs to be numeric")
+	if (!is.numeric(uci))  stop("`uci` needs to be numeric")
+	if (lci > uci)         stop("`uci` needs to be greater than `lci` - something went wrong")
+	if (log)  {
+		lci = log(lci)
+		uci = log(uci)
+	}
+	se = (uci - lci) / denominator
+	se
+}
