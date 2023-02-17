@@ -3,7 +3,7 @@
 # lukesRlib
 Luke's library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.1.2-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.1.3-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-9cf.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -41,7 +41,7 @@ Also does a few other nice/useful things to the output by default: hides the int
 
 ### Options:
  - `ci` {default=TRUE} calculate CIs using 1.96*SE method
- - `denominator` {default=1.96} the standard error of the sample mean (used to get CIs)
+ - `ci_denominator` {default=1.96} the standard error of the sample mean (used to get CIs)
  - `intercept` {default=FALSE} Exclude intercept for tidier output
  - `extreme_ps` {default=TRUE} If p=0 then return "extreme p-values" as strings
  - `neglog10p` {default=FALSE} Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override)
@@ -163,10 +163,9 @@ get_se(lci, uci)
 Return a p-value even if p<1*10-324 (returns a string) -- provide a z (or t) statistic
 
 ```r
-#' lci = 0.1
-#' uci = 0.3
-#' get_se(lci, uci)
-#' #>  [1] 0.05102041
+z = 50
+get_p_extreme(z)
+#>  [1] "2.16e-545"
 ```
 
 
