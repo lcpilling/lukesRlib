@@ -34,7 +34,7 @@ Motivation: by default the [`broom`](https://broom.tidymodels.org/) package uses
 
 `tidy_ci()` does a few other nice things: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, and if p==0 returns the 'extreme p' as a string. Other options include -log10 p-values.
 
-See the [Wiki]((https://github.com/lukepilling/lukesRlib/wiki/tidy_ci())) page for more details 
+See the [`tidy_ci()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/tidy_ci()) page for more details 
 
 ### Examples
 
