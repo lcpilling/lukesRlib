@@ -145,7 +145,7 @@ get_p(z)
 
 ### get_p_extreme()
 
-Return a p-value even if p<1*10-324 (returns a string) -- provide a z (or t) statistic
+Normally R will round numbers < 1*10-324 to zero. This function returns the "extreme p-value" as a string. Provide a z (or t) statistic
 
 ```r
 z = 50
