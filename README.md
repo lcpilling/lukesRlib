@@ -42,10 +42,10 @@ See the [`tidy_ci()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/ti
 fit_linear = glm(bmi ~ age + sex, data = d)
 tidy_ci(fit_linear)
 #> # A tibble: 2 x 8
-#>  term                       estimate std.error statistic   p.value conf.low conf.high p.extreme
-#>  <chr>                         <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <chr>    
-#>1 age                          0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212 NA       
-#>2 sex                          0.703   0.0137       51.4  0           0.676     0.729  9.39e-576
+#>  term  estimate std.error statistic   p.value conf.low conf.high p.extreme
+#>  <chr>    <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <chr>    
+#>1 age     0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212 NA       
+#>2 sex     0.703   0.0137       51.4  0           0.676     0.729  9.39e-576
 
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
