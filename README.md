@@ -11,11 +11,11 @@ My library of R functions I sometimes find useful
 
 ## List of functions
   - [tidy_ci()](#tidy_ci)
-  - [Data Transformation](#data_transformation)
+  - [Data Transformation](#data-transformation)
     - [carrec()](#carrec)
     - [inv_norm()](#inv_norm)
     - [z_trans()](#z_trans)
-  - [Working with test statistics](#working_with_test_statistics)
+  - [Working with test statistics](#working-with-test-statistics)
     - [get_se()](#get_se), [get_z()](#get_z), and [get_p()](#get_p)
     - [get_p_extreme()](#get_p_extreme), [get_p_neglog10()](#get_p_neglog10), [get_p_neglog10_n()](#get_p_neglog10_n)
 
@@ -30,9 +30,9 @@ To update the package just run the above command again.
 ## tidy_ci()
 This function `tidy_ci()` runs [`broom::tidy()`](https://broom.tidymodels.org/) and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
 
-Motivation: by default the (amazing) [`broom`](https://broom.tidymodels.org/) package uses the `confint()` function to calculate CIs. For GLMs this calculates confidence intervals via profile likelihood by default. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to simply calculating using 1.96*SE
+Motivation: by default the [`broom`](https://broom.tidymodels.org/) package uses `confint()` to estimate CIs. For GLMs this calculates CIs via the profile likelihood method. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to calculating using 1.96*SE
 
-`tidy_ci()` also does a few other nice/useful things to the output by default: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, and if p=0 returns the extreme p as a string. Other optional outputs include -log10 p-values.
+`tidy_ci()` does a few other nice things: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, and if p==0 returns the 'extreme p' as a string. Other options include -log10 p-values.
 
 See the [Wiki]((https://github.com/lukepilling/lukesRlib/wiki/tidy_ci())) page for more details 
 
@@ -50,6 +50,7 @@ tidy_ci(fit_linear)
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
 tidy_ci(fit_coxph, neglog10p=TRUE)
+# CoxPH model :. estimate=exp()
 #> # A tibble: 4 x 8
 #>   term                       estimate std.error statistic  p.value conf.low conf.high neglog10p
 #>   <chr>                         <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
@@ -65,18 +66,11 @@ tidy_ci(fit_coxph, neglog10p=TRUE)
 
 ### carrec()
 
-Stolen straight from Steve Miller's package https://github.com/svmiller/stevemisc
+From Steve Miller's package https://github.com/svmiller/stevemisc
 
-`carrec()` (phonetically: “car-wreck”) is a simple port of
-`car::recode()` that I put in this package because of various function
-clashes in the `{car}` package. For those who cut their teeth on Stata,
-this package offers Stata-like recoding features that are tough to find
-in the R programming language.
+`carrec()` (phonetically: "car-wreck") is a simple port of `car::recode()` to avoid clashes in the `{car}` package. This package offers STATA-like recoding features for R.
 
-For example, assume the following vector that is some variable of
-interest on a 1-10 scale. You want to code the variables that are 6 and
-above to be 1 and code the variables of 1-5 to be 0. Here’s how you
-would do that.
+For example, assume a variable of interest is on a 1-10 scale. You want to code values 6 and above to be 1, and code values of 1-5 to be 0. Here’s how you would do that.
 
 ``` r
 x <- seq(1, 10)
@@ -111,15 +105,18 @@ df = df |> mutate(x_z = z_trans(x))
 
 ### get_se()
 
-Return a Standard Error from the Confidence Intervals. Default denominator is (1.96*2) equivalent to 95% confidence (p<0.05). 
+Calculate Standard Error from Confidence Intervals.  
 
 ```r
 lci = 0.1
 uci = 0.3
+
+# Default denominator is (1.96*2) equivalent to 95% confidence (p<0.05)
 get_se(lci, uci)
 #>  [1] 0.05102041
 
-get_se(lci, uci, denominator=lukesRlib::get_z(5e-8)*2)   ## e.g., if CIs correspond to a p-value 5*10-8
+# custom denominator e.g., if CIs correspond to a p-value 5*10-8
+get_se(lci, uci, denominator=lukesRlib::get_z(5e-8)*2)   
 #>  [1] 0.01834421
 ```
 
