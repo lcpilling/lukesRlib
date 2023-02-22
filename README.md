@@ -1,7 +1,7 @@
-<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/lukesRlib.png" width="200" />
+<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/lukesRlib.png" width="160" />
 
 # lukesRlib
-Luke's library of R functions I sometimes find useful
+My library of R functions I sometimes find useful
 
 [![](https://img.shields.io/badge/version-0.1.3-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
@@ -9,20 +9,17 @@ Luke's library of R functions I sometimes find useful
 
 <sub>Toolbox icon from https://vectorified.com/icon-tool-box</sub>
 
-## Table of Contents
-  - [installation](#installation)
+## List of functions
   - [tidy_ci()](#tidy_ci)
-  - [carrec()](#carrec)
-  - [inv_norm()](#inv_norm)
-  - [z_trans()](#z_trans)
-  - [get_z()](#get_z)
-  - [get_p()](#get_p)
-  - [get_se()](#get_se)
-  - [get_p_extreme()](#get_p_extreme)
-  - [get_p_neglog10()](#get_p_neglog10)
-  - [get_p_neglog10_n()](#get_p_neglog10_n)
+  - [Data Transformation](#data_transformation)
+    - [carrec()](#carrec)
+    - [inv_norm()](#inv_norm)
+    - [z_trans()](#z_trans)
+  - [Working with test statistics](#working_with_test_statistics)
+    - [get_se()](#get_se), [get_z()](#get_z), and [get_p()](#get_p)
+    - [get_p_extreme()](#get_p_extreme), [get_p_neglog10()](#get_p_neglog10), [get_p_neglog10_n()](#get_p_neglog10_n)
 
-## installation
+## Installation
 To install `lukesRlib` from GitHub use the `remotes` package:
 
 `remotes::install_github("lukepilling/lukesRlib")`
@@ -31,27 +28,13 @@ To update the package just run the above command again.
 
 
 ## tidy_ci()
-Function to run `broom::tidy()` and calculate CIs
+This function `tidy_ci()` runs [`broom::tidy()`](https://broom.tidymodels.org/) and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
 
-By default the (amazing) `broom` package uses the `confint()` function to calculate CIs. For GLMs this calculates confidence intervals via profile likelihood by default. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to simply calculating using 1.96*SE
+Motivation: by default the (amazing) [`broom`](https://broom.tidymodels.org/) package uses the `confint()` function to calculate CIs. For GLMs this calculates confidence intervals via profile likelihood by default. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to simply calculating using 1.96*SE
 
-This function `tidy_ci()` runs `broom::tidy()` and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
+`tidy_ci()` also does a few other nice/useful things to the output by default: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, and if p=0 returns the extreme p as a string. Other optional outputs include -log10 p-values.
 
-Also does a few other nice/useful things to the output by default: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates and if p=0 returns the extreme p as a string. Other optional outputs include -log10 p-values.
-
-### Options:
- - `ci` {default=TRUE} calculate CIs using 1.96*SE method
- - `ci_denominator` {default=1.96} the standard error of the sample mean (used to get CIs)
- - `intercept` {default=FALSE} Exclude intercept for tidier output
- - `extreme_ps` {default=TRUE} If p=0 then return "extreme p-values" as strings
- - `neglog10p` {default=FALSE} Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override)
- - `exp` {default=FALSE} exponentiate estimate and CIs -- also see `check_family`
- - `check_family` {default=TRUE} set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed
- - `n` {default=NA} the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required
- - `print_n` {default=TRUE} print the N included in analysis - extracted automatically for `glm` or `coxph` objects
- - `...` Other `tidy()` options 
-
-Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()` (and therefore `tidycmprsk::crr()`)
+See the [Wiki]((https://github.com/lukepilling/lukesRlib/wiki/tidy_ci())) page for more details 
 
 ### Examples
 
@@ -78,11 +61,11 @@ tidy_ci(fit_coxph, neglog10p=TRUE)
 # ^^ automatically identified the input as from a coxph model and exponentiated estimate/CIs
 ```
 
-## carrec()
+## Data Transformation
+
+### carrec()
 
 Stolen straight from Steve Miller's package https://github.com/svmiller/stevemisc
-
-### `carrec()`: A Port of `car::recode()`
 
 `carrec()` (phonetically: “car-wreck”) is a simple port of
 `car::recode()` that I put in this package because of various function
@@ -104,7 +87,7 @@ carrec(x, "1:5=0;6:10=1")
 #>  [1] 0 0 0 0 0 1 1 1 1 1
 ```
 
-## inv_norm()
+### inv_norm()
 
 Inverse (quantile) normalise a quantitative trait (vector) i.e., transform to a normal distribution with mean=0 and sd=1
 
@@ -114,7 +97,7 @@ x_in = inv_norm(x)
 df = df |> mutate(x_in = inv_norm(x))
 ```
 
-## z_trans()
+### z_trans()
 
 Z-transform a quantitative trait (vector) i.e., convert to mean=0 and sd=1, maintaining original distribution
 
@@ -124,7 +107,24 @@ x_z = z_trans(x)
 df = df |> mutate(x_z = z_trans(x))
 ```
 
-## get_z()
+## Working with test statistics
+
+### get_se()
+
+Return a Standard Error from the Confidence Intervals. Default denominator is (1.96*2) equivalent to 95% confidence (p<0.05). 
+
+```r
+lci = 0.1
+uci = 0.3
+get_se(lci, uci)
+#>  [1] 0.05102041
+
+get_se(lci, uci, denominator=lukesRlib::get_z(5e-8)*2)   ## e.g., if CIs correspond to a p-value 5*10-8
+#>  [1] 0.01834421
+```
+
+
+### get_z()
 
 Return a Z-statistic from a given p-value
 
@@ -135,7 +135,7 @@ get_z(p)
 ```
 
 
-## get_p()
+### get_p()
 
 Return a p-value from a z (or t) statistic
 
@@ -146,19 +146,7 @@ get_p(z)
 ```
 
 
-## get_se()
-
-Return a Standard Error from the Confidence Intervals
-
-```r
-lci = 0.1
-uci = 0.3
-get_se(lci, uci)
-#>  [1] 0.05102041
-```
-
-
-## get_p_extreme()
+### get_p_extreme()
 
 Return a p-value even if p<1*10-324 (returns a string) -- provide a z (or t) statistic
 
@@ -169,7 +157,7 @@ get_p_extreme(z)
 ```
 
 
-## get_p_neglog10()
+### get_p_neglog10()
 
 Returns the -log10 p-value. Provide a z (or t) statistic
 
@@ -180,7 +168,7 @@ get_p_neglog10(z)
 ```
 
 
-## get_p_neglog10_n()
+### get_p_neglog10_n()
 
 Returns the -log10 p-value. Provide a z (or t) statistic and n (sample size)
 
