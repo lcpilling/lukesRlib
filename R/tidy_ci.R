@@ -81,11 +81,7 @@ tidy_ci = function(x,
 	if (print_n & !is.na(n)) cat(paste0("N=", n, "\n"))
 	
 	## get extreme p-values?
-	if (extreme_ps)  {
-		if (any(ret$p.value==0))  {
-			ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
-		}
-	}
+	if (extreme_ps)  if (any(ret$p.value==0))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 	
 	## exponentiate estimate and CIs?
 	if (check_model & !exp)  {
@@ -95,7 +91,7 @@ tidy_ci = function(x,
 		if (any(c("crr","tidycrr") %in% class(x)))                   model = "CRR"
 		if (model != "")  {
 			exp = TRUE
-			cat(paste0(model, " model :: estimate=exp()\n"))
+			cat(paste0(model, " model :. estimate=exp()\n"))
 		}
 	}
 	if (exp) ret = ret |> dplyr::mutate(estimate=exp(estimate))

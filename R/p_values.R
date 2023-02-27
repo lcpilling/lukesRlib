@@ -163,7 +163,7 @@ get_p_neglog10_n = function(z, n) {
 get_se = function(lci, uci, log=FALSE, denominator=3.92) {
 	if (!is.numeric(lci))  stop("`lci` needs to be numeric")
 	if (!is.numeric(uci))  stop("`uci` needs to be numeric")
-	if (lci > uci)         stop("`uci` needs to be greater than `lci` - something went wrong")
+	if (lci > uci)         stop("`uci` needs to be greater than `lci`")
 	if (log)  {
 		lci = log(lci)
 		uci = log(uci)
