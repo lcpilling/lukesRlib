@@ -1,9 +1,9 @@
-<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/lukesRlib.png" width="160" />
+<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/lukesRlib.png" width="180" />
 
 # lukesRlib
 My library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.1.3-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.1.4-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-9cf.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -46,10 +46,10 @@ See the [`tidy_ci()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/ti
 fit_linear = glm(bmi ~ age + sex, data = d)
 tidy_ci(fit_linear)
 #> # A tibble: 2 x 8
-#>  term  estimate std.error statistic   p.value conf.low conf.high p.extreme
-#>  <chr>    <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <chr>    
-#>1 age     0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212 NA       
-#>2 sex     0.703   0.0137       51.4  0           0.676     0.729  9.39e-576
+#>   term  estimate std.error statistic   p.value conf.low conf.high p.extreme
+#>   <chr>    <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <chr>    
+#> 1 age     0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212 NA       
+#> 2 sex     0.703   0.0137       51.4  0           0.676     0.729  9.39e-576
 
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
@@ -76,29 +76,29 @@ To easily get tidy model output for a categorical or continuous exposure, includ
 ```R
 # for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
 get_assoc(y="weight", x="height", z="+age+sex", d=ukb)
-# A tibble: 1 x 10
-  outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
-  <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
-1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
+#  A tibble: 1 x 10
+#>   outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
+#>   <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
+#> 1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
 
 # categorical exposure and startified analysis, with note
 get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), logistic=TRUE, af=TRUE, note="Males only")
-# A tibble: 3 x 12
-  outcome  exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note      
-  <chr>    <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>     
-1 chd      smoking_status_0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males only
-2 chd      smoking_status_1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males only
-3 chd      smoking_status_2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males only
+#  A tibble: 3 x 12
+#>   outcome  exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note      
+#>   <chr>    <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>     
+#> 1 chd      smoking_status_0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males only
+#> 2 chd      smoking_status_1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males only
+#> 3 chd      smoking_status_2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males only
 
 # multiple exposures on single outcome, then combine output (i.e., a "PheWAS")
 x_vars = c("bmi","ldl","sbp_0_avg")
 res = do.call(rbind, lapply(x_vars, get_assoc, y="chd", z="+age+sex", d=ukb, logistic=TRUE))
-# A tibble: 3 x 11
-  outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
-  <chr>   <chr>        <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl> <int>   <int> <chr>   
-1 chd     bmi          1.08    0.0113      6.97  3.10e-12    1.06       1.11  4692     324 logistic
-2 chd     ldl          0.980   0.0689     -0.300 7.64e- 1    0.856      1.12  4498     311 logistic
-3 chd     sbp_0_avg    1.01    0.00333     3.53  4.23e- 4    1.01       1.02  4561     316 logistic
+#> # A tibble: 3 x 11
+#>   outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
+#>   <chr>   <chr>        <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl> <int>   <int> <chr>   
+#> 1 chd     bmi          1.08    0.0113      6.97  3.10e-12    1.06       1.11  4692     324 logistic
+#> 2 chd     ldl          0.980   0.0689     -0.300 7.64e- 1    0.856      1.12  4498     311 logistic
+#> 3 chd     sbp_0_avg    1.01    0.00333     3.53  4.23e- 4    1.01       1.02  4561     316 logistic
 ```
 
 
