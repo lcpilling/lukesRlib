@@ -29,6 +29,7 @@
 #' @param check_model set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)
 #' @param n the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)
 #' @param print_n print the N included in analysis - extracted automatically for `glm` or `coxph` objects (default=TRUE)
+#' @param quiet Logical. Suppress text output (default=FALSE)
 #' @param ... Other `tidy()` options
 #'
 #' @examples
@@ -56,6 +57,7 @@ tidy_ci = function(x,
                    n = NA, 
                    print_n = TRUE,
                    conf.int = FALSE,     ## tidy() option
+                   quiet = FALSE,
                    ...) {
 	
 	## use `tidy()` CI method?  Only if not using the 1.96*SE method
@@ -78,7 +80,7 @@ tidy_ci = function(x,
 	}
 	
 	## Print N?
-	if (print_n & !is.na(n)) cat(paste0("N=", n, "\n"))
+	if (print_n & !is.na(n) & !quiet) cat(paste0("N=", n, "\n"))
 	
 	## get extreme p-values?
 	if (extreme_ps)  if (any(ret$p.value==0))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
@@ -91,7 +93,7 @@ tidy_ci = function(x,
 		if (any(c("crr","tidycrr") %in% class(x)))                   model = "CRR"
 		if (model != "")  {
 			exp = TRUE
-			cat(paste0(model, " model :. estimate=exp()\n"))
+			if (!quiet)  cat(paste0(model, " model :. estimate=exp()\n"))
 		}
 	}
 	if (exp) ret = ret |> dplyr::mutate(estimate=exp(estimate))

@@ -4,10 +4,12 @@
 \alias{get_z}
 \title{Get Z-statistic from p-value}
 \usage{
-get_z(p)
+get_z(p, two_sided = TRUE)
 }
 \arguments{
 \item{p}{a p-value}
+
+\item{two_sided}{Logical, default=TRUE. Return two-sided z-value?}
 }
 \value{
 Returns a Z-statistic (numeric)

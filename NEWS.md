@@ -1,3 +1,7 @@
+# lukesRlib 0.1.4
+
+* Add new function `get_assoc()` to easily run PheWAS-like analysis using `tidy_ci()`
+
 # lukesRlib 0.1.3
 
 * Updates to `tidy_ci()` 

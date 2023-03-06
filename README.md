@@ -10,7 +10,9 @@ My library of R functions I sometimes find useful
 <sub>Toolbox icon from https://vectorified.com/icon-tool-box</sub>
 
 ## List of functions
-  - [tidy_ci()](#tidy_ci)
+  - [Hypothesis testing](#hypothesis-testing)
+    - [tidy_ci()](#tidy_ci)
+    - [get_assoc()](#get_assoc)
   - [Data Transformation](#data-transformation)
     - [carrec()](#carrec)
     - [inv_norm()](#inv_norm)
@@ -27,7 +29,9 @@ To install `lukesRlib` from GitHub use the `remotes` package:
 To update the package just run the above command again.
 
 
-## tidy_ci()
+## Hypothesis testing
+
+### tidy_ci()
 This function `tidy_ci()` runs [`broom::tidy()`](https://broom.tidymodels.org/) and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
 
 Motivation: by default the [`broom`](https://broom.tidymodels.org/) package uses `confint()` to estimate CIs. For GLMs this calculates CIs via the profile likelihood method. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to calculating using 1.96*SE
@@ -36,7 +40,7 @@ Motivation: by default the [`broom`](https://broom.tidymodels.org/) package uses
 
 See the [`tidy_ci()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/tidy_ci()) page for more details 
 
-### Examples
+#### Examples
 
 ```R
 fit_linear = glm(bmi ~ age + sex, data = d)
@@ -61,6 +65,42 @@ tidy_ci(fit_coxph, neglog10p=TRUE)
 
 # ^^ automatically identified the input as from a coxph model and exponentiated estimate/CIs
 ```
+
+
+### get_assoc()
+
+To easily get tidy model output for a categorical or continuous exposure, including sample size (and cases ig logistic), outcome, and model info. Idea is to make quick loops easy. For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category. See the [`get_assoc()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) page for details 
+
+#### Examples
+
+```R
+# for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
+get_assoc(y="weight", x="height", z="+age+sex", d=ukb)
+# A tibble: 1 x 10
+  outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
+  <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
+1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
+
+# categorical exposure and startified analysis, with note
+get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), logistic=TRUE, af=TRUE, note="Males only")
+# A tibble: 3 x 12
+  outcome  exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note      
+  <chr>    <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>     
+1 chd      smoking_status_0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males only
+2 chd      smoking_status_1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males only
+3 chd      smoking_status_2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males only
+
+# multiple exposures on single outcome, then combine output (i.e., a "PheWAS")
+x_vars = c("bmi","ldl","sbp_0_avg")
+res = do.call(rbind, lapply(x_vars, get_assoc, y="chd", z="+age+sex", d=ukb, logistic=TRUE))
+# A tibble: 3 x 11
+  outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
+  <chr>   <chr>        <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl> <int>   <int> <chr>   
+1 chd     bmi          1.08    0.0113      6.97  3.10e-12    1.06       1.11  4692     324 logistic
+2 chd     ldl          0.980   0.0689     -0.300 7.64e- 1    0.856      1.12  4498     311 logistic
+3 chd     sbp_0_avg    1.01    0.00333     3.53  4.23e- 4    1.01       1.02  4561     316 logistic
+```
+
 
 ## Data Transformation
 

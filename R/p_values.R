@@ -35,6 +35,7 @@ get_p = function(z) {
 #' @name get_z
 #'
 #' @param p a p-value
+#' @param two_sided Logical, default=TRUE. Return two-sided z-value?
 #'
 #' @examples
 #' p = 1e-10
@@ -43,9 +44,13 @@ get_p = function(z) {
 #'
 #' @export
 #'
-get_z = function(p) {
+get_z = function(p, two_sided=TRUE) {
 	if (!is.numeric(p))  stop("p needs to be numeric")
-	z = abs(qnorm(p/2,0,1))
+	if (two_sided)  {
+		z = abs(qnorm(p/2))
+	}  else  {
+		z = abs(qnorm(p))
+	}
 	z
 }
 

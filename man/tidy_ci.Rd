@@ -16,6 +16,7 @@ tidy_ci(
   n = NA,
   print_n = TRUE,
   conf.int = FALSE,
+  quiet = FALSE,
   ...
 )
 }
@@ -39,6 +40,8 @@ tidy_ci(
 \item{n}{the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)}
 
 \item{print_n}{print the N included in analysis - extracted automatically for `glm` or `coxph` objects (default=TRUE)}
+
+\item{quiet}{Logical. Suppress text output (default=FALSE)}
 
 \item{...}{Other `tidy()` options}
 }
