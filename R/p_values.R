@@ -155,7 +155,7 @@ get_p_neglog10_n = function(z, n) {
 #' @param lci the lower confidence interval
 #' @param uci the lower confidence interval
 #' @param log log the CI values? (default=FALSE)
-#' @param denominator the standard error of the sample mean (default=3.92 i.e., 1.96*2)
+#' @param denominator the standard error of the sample mean (default=3.92... well actually, 3.919928 from `2*get_z(0.05)`)
 #'
 #' @examples
 #' lci = 0.1
@@ -165,7 +165,7 @@ get_p_neglog10_n = function(z, n) {
 #'
 #' @export
 #'
-get_se = function(lci, uci, log=FALSE, denominator=3.92) {
+get_se = function(lci, uci, log=FALSE, denominator=3.919928) {
 	if (!is.numeric(lci))  stop("`lci` needs to be numeric")
 	if (!is.numeric(uci))  stop("`uci` needs to be numeric")
 	if (lci > uci)         stop("`uci` needs to be greater than `lci`")

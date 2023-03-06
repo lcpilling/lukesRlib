@@ -76,14 +76,14 @@ To easily get tidy model output for a categorical or continuous exposure, includ
 ```R
 # for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
 get_assoc(y="weight", x="height", z="+age+sex", d=ukb)
-#  A tibble: 1 x 10
+#> A tibble: 1 x 10
 #>   outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
 #>   <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
 #> 1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
 
 # categorical exposure and startified analysis, with note
 get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), logistic=TRUE, af=TRUE, note="Males only")
-#  A tibble: 3 x 12
+#> A tibble: 3 x 12
 #>   outcome  exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note      
 #>   <chr>    <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>     
 #> 1 chd      smoking_status_0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males only
@@ -93,6 +93,7 @@ get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), logist
 # multiple exposures on single outcome, then combine output (i.e., a "PheWAS")
 x_vars = c("bmi","ldl","sbp_0_avg")
 res = do.call(rbind, lapply(x_vars, get_assoc, y="chd", z="+age+sex", d=ukb, logistic=TRUE))
+res
 #> # A tibble: 3 x 11
 #>   outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
 #>   <chr>   <chr>        <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl> <int>   <int> <chr>   

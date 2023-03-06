@@ -1,6 +1,6 @@
-#' Get modified tidy model output
+#' Get tidy model output (just exposure of interest, with augmented output)
 #'
-#' @description To easily get tidy model output for a categorical or continuous exposure, including sample size (and cases ig logistic), outcome, and model info. Idea is to make quick loops easy.
+#' @description To easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
 #'
 #' For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category
 #'
@@ -15,50 +15,24 @@
 #' @param z A string. The covariate formula (e.g., " + age + sex"), found in `d`
 #' @param d A data.frame or tibble. The data
 #' @param logistic Logical. Default is FALSE. Include `family=binomial(link="logit")` in `glm()`?
-#' @param af Logical. Default is FALSE. Should `x` be treated included in formula as `as.factor(x)` i.e., categorical
+#' @param af Logical. Default is FALSE. Is `x` categorical? I.e., include in formula as `as.factor(x)`
 #' @param note A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
 #' @param ... Other `tidy_ci()` options
 #'
 #' @examples
+#' # for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
 #' get_assoc(y="weight", x="height", z="+age+sex", d=ukb)
-#' # A tibble: 1 x 10
-#'   outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
-#'   <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
-#' 1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
 #'
+#' # categorical exposure, binary outcome, and stratified analysis (with note)
 #' get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), logistic=TRUE, af=TRUE, note="Males only")
-#' # A tibble: 3 x 12
-#'   outcome  exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note      
-#'   <chr>    <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>     
-#' 1 chd      smoking_status_0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males only
-#' 2 chd      smoking_status_1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males only
-#' 3 chd      smoking_status_2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males only
 #'
 #' # multiple exposures on single outcome, then combine output
 #' x_vars = c("bmi","ldl","sbp_0_avg")
 #' res = do.call(rbind, lapply(x_vars, get_assoc, y="chd", z="+age+sex", d=ukb, logistic=TRUE))
-#' # A tibble: 3 x 11
-#'   outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
-#'   <chr>   <chr>        <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl> <int>   <int> <chr>   
-#' 1 chd     bmi          1.08    0.0113      6.97  3.10e-12    1.06       1.11  4692     324 logistic
-#' 2 chd     ldl          0.980   0.0689     -0.300 7.64e- 1    0.856      1.12  4498     311 logistic
-#' 3 chd     sbp_0_avg    1.01    0.00333     3.53  4.23e- 4    1.01       1.02  4561     316 logistic
 #'
 #' # one exposure on multiple outcomes, then combine output
 #' y_vars = c("bmi","ldl","sbp_0_avg")
 #' res = do.call(rbind, lapply(y_vars, function(y) get_assoc(x="smoking_status", y=y, z="+age+sex", d=ukb, af=TRUE)))
-#' # A tibble: 9 x 10
-#'   outcome   exposure         estimate std.error statistic    p.value conf.low conf.high     n model
-#'   <chr>     <chr>               <dbl>     <dbl>     <dbl>      <dbl>    <dbl>     <dbl> <dbl> <chr>
-#' 1 bmi       smoking_status_0  NA        NA         NA     NA          NA        NA       2666 lm   
-#' 2 bmi       smoking_status_1   0.593     0.147      4.04   0.0000534   0.306     0.880   1774 lm   
-#' 3 bmi       smoking_status_2   0.120     0.226      0.530  0.596      -0.323     0.563    525 lm   
-#' 4 ldl       smoking_status_0  NA        NA         NA     NA          NA        NA       2551 lm   
-#' 5 ldl       smoking_status_1  -0.0855    0.0275    -3.10   0.00191    -0.140    -0.0315  1700 lm   
-#' 6 ldl       smoking_status_2   0.0311    0.0423     0.737  0.461      -0.0517    0.114    509 lm   
-#' 7 sbp_0_avg smoking_status_0  NA        NA         NA     NA          NA        NA       2587 lm   
-#' 8 sbp_0_avg smoking_status_1  -0.0701    0.547     -0.128  0.898      -1.14      1.00    1719 lm   
-#' 9 sbp_0_avg smoking_status_2  -2.49      0.841     -2.96   0.00308    -4.14     -0.842    513 lm   
 #'
 #' @export
 #'
@@ -90,15 +64,16 @@ get_assoc = function(x, y, z, d,
 	# exposure categorical?
 	if (af)  {
 
+		x_vals = as.vector(unlist(fit$xlevels))
+
 		# categorical exposure - clean up names
 		res = res |> dplyr::mutate(term=str_replace(term, fixed("as.factor("), ""),
-									term=str_replace(term, fixed(")"), "_"))
+		                           term=str_replace(term, fixed(")"), "_"))
 		res = rbind(res[1,], res)
 		res[1,3:ncol(res)] = NA
-		res[1,2] = paste0(x, "_0")
+		res[1,2] = paste0(x, "_", x_vals[1])
 
 		# get sample size - categorical exposure
-		x_vals = as.vector(unlist(fit$xlevels))
 		n = x_vals_n = table(d |> select(!!x, !!y) |> na.omit() |> select(!!x))
 		for (ii in 1:length(x_vals))  n[ii] = x_vals_n[x_vals[ii]]
 		res = res |> dplyr::mutate(n=as.numeric(n))
