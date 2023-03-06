@@ -69,7 +69,7 @@ tidy_ci(fit_coxph, neglog10p=TRUE)
 
 ### get_assoc()
 
-To easily get tidy model output for a categorical or continuous exposure, including sample size (and cases ig logistic), outcome, and model info. Idea is to make quick loops easy. For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category. See the [`get_assoc()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) page for details 
+To easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops for PheWAS easy and tidy. For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category. See the [`get_assoc()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) page for details 
 
 #### Examples
 
