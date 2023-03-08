@@ -1,3 +1,7 @@
+# lukesRlib 0.1.4.1
+
+* Minor fix to `tidy_ci()` to avoid breaks due to missing p-values in model summary statistics
+
 # lukesRlib 0.1.4
 
 * Add new function `get_assoc()` to easily run PheWAS-like analysis using `tidy_ci()`
