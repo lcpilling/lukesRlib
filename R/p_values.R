@@ -77,15 +77,11 @@ get_z = function(p, two_sided=TRUE) {
 
 get_p_extreme = function(z) {
 	if (!is.numeric(z))  stop("z needs to be numeric")
-	if (!is.na(z)) {
-		log_pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
-		log10_pvalue = log_pvalue/log(10) ## from natural log to log10
-		mantissa     = 10^(log10_pvalue %% 1)
-		exponent     = log10_pvalue %/% 1
-		return(sprintf("%1.2fe%d",mantissa,exponent))
-	} else {
-		return(NA)
-	}
+	log_pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
+	log10_pvalue = log_pvalue/log(10) ## from natural log to log10
+	mantissa     = 10^(log10_pvalue %% 1)
+	exponent     = log10_pvalue %/% 1
+	return(sprintf("%1.2fe%d",mantissa,exponent))
 }
 
 
