@@ -95,10 +95,26 @@ tidy_ci = function(x,
 	# check model type
 	model = ""
 	if (check_model)  {
-		if ("glm" %in% class(x))  if (x$family$family == "gaussian") model = "Linear model (estimate=coefficient)"
-		if ("glm" %in% class(x))  if (x$family$family == "binomial") model = "Binomial model (estimate=Odds Ratio)"
-		if (any(c("coxph") %in% class(x)))                           model = "CoxPH model (estimate=Hazard Ratio)"
-		if (any(c("crr","tidycrr") %in% class(x)))                   model = "CRR model (estimate=sub-Hazard Ratio)"
+		if ("glm" %in% class(x))  if (x$family$family == "gaussian")  {
+			model = "Linear model (estimate=coefficient)"
+		}
+		if ("glm" %in% class(x))  if (x$family$family == "binomial")  {
+			text_out = paste0(text_out, ", Ncases=", as.numeric(table(x$y)[2]))
+			model = "Binomial model (estimate=Odds Ratio)"
+		}
+		if (any(c("coxph") %in% class(x)))  {
+			text_out = paste0(text_out, ", Ncases=", x$nevent)
+			model = "CoxPH model (estimate=Hazard Ratio)"
+		}
+		if (any(c("crr","tidycrr") %in% class(x)))  {
+			crr_n = table(x$data[,2])
+			crr_n2 = crr_n1 = NA
+			if (!is.na(crr_n["1"]))  crr_n1 = as.numeric(crr_n["1"])
+			if (!is.na(crr_n["2"]))  crr_n2 = as.numeric(crr_n["2"])
+			if (is.na(crr_n["2"]))   crr_n2 = 0
+			text_out = paste0(text_out, ", Ncases=", crr_n1, ", Ncompeting=", crr_n2)
+			model = "CRR model (estimate=sub-Hazard Ratio)"
+		}
 		text_out = paste0(text_out, " :: ", model)
 	}
 	
