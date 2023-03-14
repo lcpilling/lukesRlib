@@ -71,7 +71,7 @@ tidy_ci(fit_coxph, neglog10p=TRUE)
 
 ### get_assoc()
 
-`get_assoc()`  (phonetically: "get-a-sock") is designed for each PheWAS. I.e., to easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Make quick loops for PheWAS (multiples exposures on an outcome, or single exposure on multiple outcomes) easy and tidy. 
+`get_assoc()`  (phonetically: "get-a-sock") is designed for easy PheWASing. I.e., to easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Make quick loops for PheWAS (multiples exposures on an outcome, or single exposure on multiple outcomes) easy and tidy. 
 
 For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category. See the [`get_assoc()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) page for details 
 
@@ -230,7 +230,7 @@ R function to plot the (spline smoothed) exposure in a Cox proportional hazard m
 
 The function takes as input the results of a Cox proportional hazard model and plots a continuous exposure against the hazard ratio. The continuous exposure must be a spline term for the smoothing function to work. It is up to you to create the sensible CoxPH model. Includes 95% confidence intervals and boxplot along x-axis to show data distribution.
 
-See https://github.com/lukepilling/lukesRlib/wiki/doCoxSplinePlot()
+See the [`doCoxSplinePlot()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/doCoxSplinePlot()) page for details 
 
 #### Example
 ```
@@ -249,7 +249,7 @@ library(survival)
 ## do Cox model -- can include cofactors if desired
 ##     primary independent variable (exposure of interest) must be pspline()
 library(pspline)
-pham_fit = coxph( Surv(age_death, dead) ~ pspline(data$albumin, df=4) + age + sex + as.factor(smokes), data=data)
+pham_fit = coxph( Surv(age_death, dead) ~ pspline(albumin, df=4) + age + sex + as.factor(smokes), data=data)
 
 ## use doCoxSplinePlot() to plot the smoothed curve (including CI's) for the Cox model
 doCoxSplinePlot(x        = data$albumin, 
