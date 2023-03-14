@@ -15,7 +15,6 @@ tidy_ci(
   neglog10p = FALSE,
   check_model = TRUE,
   n = NA,
-  print_n = TRUE,
   conf.int = FALSE,
   quiet = FALSE,
   ...
@@ -41,8 +40,6 @@ tidy_ci(
 \item{check_model}{set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)}
 
 \item{n}{the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)}
-
-\item{print_n}{print the N included in analysis - extracted automatically for `glm` or `coxph` objects (default=TRUE)}
 
 \item{quiet}{Logical. Suppress text output (default=FALSE)}
 

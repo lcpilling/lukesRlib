@@ -29,7 +29,6 @@
 #' @param exp exponentiate estimate and CIs -- also see `check_model` (default=FALSE)
 #' @param check_model set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)
 #' @param n the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)
-#' @param print_n print the N included in analysis - extracted automatically for `glm` or `coxph` objects (default=TRUE)
 #' @param quiet Logical. Suppress text output (default=FALSE)
 #' @param ... Other `tidy()` options
 #'
@@ -57,57 +56,61 @@ tidy_ci = function(x,
                    neglog10p = FALSE, 
                    check_model = TRUE,
                    n = NA, 
-                   print_n = TRUE,
                    conf.int = FALSE,     ## tidy() option
                    quiet = FALSE,
                    ...) {
 	
-	## use `tidy()` CI method?  Only if not using the 1.96*SE method
+	# use `tidy()` CI method?  Only if not using the 1.96*SE method
 	if (ci) conf.int = FALSE
 	
-	## get tidy output -- do not use `broom` CIs or Exponentiate options by default
+	# get tidy output -- do not use `broom` CIs or Exponentiate options by default
 	ret = broom::tidy(x, conf.int = conf.int, exponentiate = FALSE, ...)
 	
-	## exclude intercept?
+	# exclude intercept?
 	if (!intercept) ret = ret |> dplyr::filter(term!="(Intercept)")
 	
-	## tidy factor names?
+	# tidy factor names?
 	if (tidy_factors)  ret = ret |> dplyr::mutate(term=str_replace(term, fixed("as.factor("), ""), term=str_replace(term, fixed(")"), "-"))
 	
-	## get CIs based on 1.96*SE?
+	# get CIs based on 1.96*SE?
 	if (ci)  ret = ret |> dplyr::mutate(conf.low=estimate-(!!ci_denominator*std.error), conf.high=estimate+(!!ci_denominator*std.error))
 	
-	## Print N?
+	# Print N?
+	text_out = ""
 	if (is.na(n) & "glm" %in% class(x))     n = length(x$y)
 	if (is.na(n) & "coxph" %in% class(x))   n = x$n
 	if (is.na(n) & "crr" %in% class(x))     n = x$n
 	if (is.na(n) & "tidycrr" %in% class(x)) n = x$cmprsk$n
-	if (print_n & !is.na(n) & !quiet) cat(paste0("N=", n, "\n"))
+	if (!is.na(n)) text_out = paste0("N=", n)
 	
-	## get -log10 p-value?
+	# get -log10 p-value?
 	if (neglog10p)  {
 		if (is.na(n)) cat("To calculate -log10 p-values provide the sample size `n`\n")
 		if (!is.na(n)) ret = ret |> dplyr::mutate(neglog10p=lukesRlib::get_p_neglog10_n(statistic, !!n))
 	}
 	
-	## get extreme p-values?
+	# get extreme p-values?
 	if (extreme_ps)  if (any(ret$p.value==0, na.rm=TRUE))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 	
-	## exponentiate estimate and CIs?
-	if (check_model & !exp)  {
-		model = ""
-		if ("glm" %in% class(x))  if (x$family$family == "binomial") model = "Binomial"
-		if (any(c("coxph") %in% class(x)))                           model = "CoxPH"
-		if (any(c("crr","tidycrr") %in% class(x)))                   model = "CRR"
-		if (model != "")  {
-			exp = TRUE
-			if (!quiet)  cat(paste0(model, " model :. estimate=exp()\n"))
-		}
+	# check model type
+	model = ""
+	if (check_model)  {
+		if ("glm" %in% class(x))  if (x$family$family == "gaussian") model = "Linear model (estimate=coefficient)"
+		if ("glm" %in% class(x))  if (x$family$family == "binomial") model = "Binomial model (estimate=Odds Ratio)"
+		if (any(c("coxph") %in% class(x)))                           model = "CoxPH model (estimate=Hazard Ratio)"
+		if (any(c("crr","tidycrr") %in% class(x)))                   model = "CRR model (estimate=sub-Hazard Ratio)"
+		text_out = paste0(text_out, " :: ", model)
 	}
+	
+	# exponentiate estimate and CIs?
+	if (check_model & !exp & model != "")  exp = TRUE
 	if (exp) ret = ret |> dplyr::mutate(estimate=exp(estimate))
 	if (exp & (ci | conf.int)) ret = ret |> dplyr::mutate(conf.low=exp(conf.low), conf.high=exp(conf.high))
 	
-	## return object
+	# print message?
+	if (!quiet)  cat(paste0(text_out, "\n"))
+	
+	# return object
 	ret
 	
 }
