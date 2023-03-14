@@ -92,30 +92,30 @@ tidy_ci = function(x,
 	# get extreme p-values?
 	if (extreme_ps)  if (any(ret$p.value==0, na.rm=TRUE))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 	
-	# check model type
+	# check model type & get sample size + case numbers
 	model = ""
 	if (check_model)  {
 		if ("glm" %in% class(x))  if (x$family$family == "gaussian")  {
 			model = "Linear model (estimate=coefficient)"
 		}
 		if ("glm" %in% class(x))  if (x$family$family == "binomial")  {
-			text_out = paste0(text_out, ", Ncases=", as.numeric(table(x$y)[2]))
 			model = "Binomial model (estimate=Odds Ratio)"
+			text_out = paste0(text_out, ", Ncases=", as.numeric(table(x$y)[2]))
 		}
 		if (any(c("coxph") %in% class(x)))  {
-			text_out = paste0(text_out, ", Ncases=", x$nevent)
 			model = "CoxPH model (estimate=Hazard Ratio)"
+			text_out = paste0(text_out, ", Ncases=", x$nevent)
 		}
 		if (any(c("crr","tidycrr") %in% class(x)))  {
+			model = "CRR model (estimate=sub-Hazard Ratio)"
 			crr_n = table(x$data[,2])
 			crr_n2 = crr_n1 = NA
 			if (!is.na(crr_n["1"]))  crr_n1 = as.numeric(crr_n["1"])
 			if (!is.na(crr_n["2"]))  crr_n2 = as.numeric(crr_n["2"])
 			if (is.na(crr_n["2"]))   crr_n2 = 0
 			text_out = paste0(text_out, ", Ncases=", crr_n1, ", Ncompeting=", crr_n2)
-			model = "CRR model (estimate=sub-Hazard Ratio)"
 		}
-		text_out = paste0(text_out, " :: ", model)
+		text_out = paste0(model, " :: ", text_out)
 	}
 	
 	# exponentiate estimate and CIs?
