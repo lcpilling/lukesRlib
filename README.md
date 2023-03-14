@@ -3,7 +3,7 @@
 # lukesRlib
 My library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.1.4-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.1.5-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-9cf.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -18,8 +18,10 @@ My library of R functions I sometimes find useful
     - [inv_norm()](#inv_norm)
     - [z_trans()](#z_trans)
   - [Working with test statistics](#working-with-test-statistics)
-    - [get_se()](#get_se), [get_z()](#get_z), and [get_p()](#get_p)
+    - [get_se()](#get_se), [get_z()](#get_z), [get_p()](#get_p)
     - [get_p_extreme()](#get_p_extreme), [get_p_neglog10()](#get_p_neglog10), [get_p_neglog10_n()](#get_p_neglog10_n)
+  - [Plotting](#plotting)
+    - [doCoxSplinePlot()](#doCoxSplinePlot)
 
 ## Installation
 To install `lukesRlib` from GitHub use the `remotes` package:
@@ -32,7 +34,7 @@ To update the package just run the above command again.
 ## Hypothesis testing
 
 ### tidy_ci()
-This function `tidy_ci()` runs [`broom::tidy()`](https://broom.tidymodels.org/) and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
+`tidy_ci()` ("tidy with CIs") runs [`broom::tidy()`](https://broom.tidymodels.org/) and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
 
 Motivation: by default the [`broom`](https://broom.tidymodels.org/) package uses `confint()` to estimate CIs. For GLMs this calculates CIs via the profile likelihood method. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to calculating using 1.96*SE
 
@@ -54,7 +56,7 @@ tidy_ci(fit_linear)
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
 tidy_ci(fit_coxph, neglog10p=TRUE)
-# CoxPH model :. estimate=exp()
+#> CoxPH model :. estimate=exp()
 #> # A tibble: 4 x 8
 #>   term                       estimate std.error statistic  p.value conf.low conf.high neglog10p
 #>   <chr>                         <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
@@ -69,7 +71,9 @@ tidy_ci(fit_coxph, neglog10p=TRUE)
 
 ### get_assoc()
 
-To easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops for PheWAS easy and tidy. For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category. See the [`get_assoc()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) page for details 
+`get_assoc()`  (phonetically: "get-a-sock") is designed for each PheWAS. I.e., to easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Make quick loops for PheWAS (multiples exposures on an outcome, or single exposure on multiple outcomes) easy and tidy. 
+
+For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category. See the [`get_assoc()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) page for details 
 
 #### Examples
 
@@ -216,3 +220,43 @@ n = 100000
 get_p_neglog10_n(z, n)
 #>  [1] 537.9851
 ```
+
+
+## Plotting
+
+### doCoxSplinePlot()
+
+R function to plot the (spline smoothed) exposure in a Cox proportional hazard model against the hazard ratio.
+
+The function takes as input the results of a Cox proportional hazard model and plots a continuous exposure against the hazard ratio. The continuous exposure must be a spline term for the smoothing function to work. It is up to you to create the sensible CoxPH model. Includes 95% confidence intervals and boxplot along x-axis to show data distribution.
+
+See https://github.com/lukepilling/lukesRlib/wiki/doCoxSplinePlot()
+
+#### Example
+```
+## get data, exclude missings
+data = data.frame( dead,       # numeric vector: binary [0=alive, 1=dead]
+                   age_death,  # numeric vector: age at death for each participant
+                   albumin     # numeric vector: the risk factor you are assessing
+                   age,        # numeric vector: age at measurement of risk factor (cofactor)
+                   sex,        # numeric vector: sex of participant (cofactor)
+                   smokes      # numeric vector: smoking status of participant (cofactor)
+                 ) |> na.omit()
+
+## load required packages
+library(survival)
+
+## do Cox model -- can include cofactors if desired
+##     primary independent variable (exposure of interest) must be pspline()
+library(pspline)
+pham_fit = coxph( Surv(age_death, dead) ~ pspline(data$albumin, df=4) + age + sex + as.factor(smokes), data=data)
+
+## use doCoxSplinePlot() to plot the smoothed curve (including CI's) for the Cox model
+doCoxSplinePlot(x        = data$albumin, 
+                fit      = pham_fit, 
+                x.lab    = "Albumin (g/dL)", 
+                title    = "Circulating albumin and mortality risk",
+                subtitle = "CoxPH model adjusted for age, sex and smokes, with 95% CIs")
+```
+![](https://github.com/lukepilling/doCoxSplinePlot/blob/master/I0wQG.png)
+

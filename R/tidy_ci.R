@@ -20,9 +20,10 @@
 #' @name tidy_ci
 #'
 #' @param x object containing model output to be tidied e.g., from a `glm()` or `survival::coxph()`
-#' @param ci calculate CIs using 1.96*SE method (default=TRUE) -- well actually, 1.959964 from `get_z(0.05)`
-#' @param ci_denominator the standard error of the sample mean (default=1.96)
+#' @param ci calculate CIs using 1.96*SE method (default=TRUE) - where 1.96 can be modified using `ci_denominator`
+#' @param ci_denominator the standard error of the sample mean (default=1.96 -- well actually, 1.959964 from `get_z(0.05)`)
 #' @param intercept Exclude intercept for tidier output (default=FALSE)
+#' @param tidy_factors Logical. Tidy `as.factor(x_var)#` terms to `x_var-#` (default=TRUE)
 #' @param extreme_ps If p=0 then return "extreme p-values" as strings (default=TRUE)
 #' @param neglog10p Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=FALSE)
 #' @param exp exponentiate estimate and CIs -- also see `check_model` (default=FALSE)
@@ -51,6 +52,7 @@ tidy_ci = function(x,
                    ci_denominator = 1.959964,
                    exp = FALSE, 
                    intercept = FALSE, 
+                   tidy_factors = TRUE,
                    extreme_ps = TRUE,
                    neglog10p = FALSE, 
                    check_model = TRUE,
@@ -62,28 +64,34 @@ tidy_ci = function(x,
 	
 	## use `tidy()` CI method?  Only if not using the 1.96*SE method
 	if (ci) conf.int = FALSE
-
+	
 	## get tidy output -- do not use `broom` CIs or Exponentiate options by default
 	ret = broom::tidy(x, conf.int = conf.int, exponentiate = FALSE, ...)
+	
+	## exclude intercept?
+	if (!intercept) ret = ret |> dplyr::filter(term!="(Intercept)")
+	
+	## tidy factor names?
+	if (tidy_factors)  ret = ret |> dplyr::mutate(term=str_replace(term, fixed("as.factor("), ""), term=str_replace(term, fixed(")"), "-"))
 	
 	## get CIs based on 1.96*SE?
 	if (ci)  ret = ret |> dplyr::mutate(conf.low=estimate-(!!ci_denominator*std.error), conf.high=estimate+(!!ci_denominator*std.error))
 	
+	## Print N?
+	if (is.na(n) & "glm" %in% class(x))     n = length(x$y)
+	if (is.na(n) & "coxph" %in% class(x))   n = x$n
+	if (is.na(n) & "crr" %in% class(x))     n = x$n
+	if (is.na(n) & "tidycrr" %in% class(x)) n = x$cmprsk$n
+	if (print_n & !is.na(n) & !quiet) cat(paste0("N=", n, "\n"))
+	
 	## get -log10 p-value?
 	if (neglog10p)  {
-		if (is.na(n) & "glm" %in% class(x))     n = length(x$y)
-		if (is.na(n) & "coxph" %in% class(x))   n = x$n
-		if (is.na(n) & "crr" %in% class(x))     n = x$n
-		if (is.na(n) & "tidycrr" %in% class(x)) n = x$cmprsk$n
 		if (is.na(n)) cat("To calculate -log10 p-values provide the sample size `n`\n")
 		if (!is.na(n)) ret = ret |> dplyr::mutate(neglog10p=lukesRlib::get_p_neglog10_n(statistic, !!n))
 	}
 	
-	## Print N?
-	if (print_n & !is.na(n) & !quiet) cat(paste0("N=", n, "\n"))
-	
 	## get extreme p-values?
-	if (extreme_ps)  if (any(ret$p.value[!is.na(ret$p.value)]==0))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
+	if (extreme_ps)  if (any(ret$p.value==0, na.rm=TRUE))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 	
 	## exponentiate estimate and CIs?
 	if (check_model & !exp)  {
@@ -98,9 +106,6 @@ tidy_ci = function(x,
 	}
 	if (exp) ret = ret |> dplyr::mutate(estimate=exp(estimate))
 	if (exp & (ci | conf.int)) ret = ret |> dplyr::mutate(conf.low=exp(conf.low), conf.high=exp(conf.high))
-	
-	## exclude intercept?
-	if (!intercept) ret = ret |> dplyr::filter(term!="(Intercept)")
 	
 	## return object
 	ret

@@ -66,12 +66,10 @@ get_assoc = function(x, y, z, d,
 
 		x_vals = as.vector(unlist(fit$xlevels))
 
-		# categorical exposure - clean up names
-		res = res |> dplyr::mutate(term=str_replace(term, fixed("as.factor("), ""),
-		                           term=str_replace(term, fixed(")"), "_"))
+		# categorical exposure - add reference group
 		res = rbind(res[1,], res)
 		res[1,3:ncol(res)] = NA
-		res[1,2] = paste0(x, "_", x_vals[1])
+		res[1,2] = paste0(x, "-", x_vals[1])
 
 		# get sample size - categorical exposure
 		n = x_vals_n = table(d |> select(!!x, !!y) |> na.omit() |> select(!!x))
@@ -87,15 +85,16 @@ get_assoc = function(x, y, z, d,
 
 	} else {  # exposure is not categorical
 
-	# get sample size - continuous exposure
-	n = length(fit$y)
-	res = res |> dplyr::mutate(n)
-	
-	# if model is logistic, get the cases too
-	if (model == "logistic")  {
-		n_cases = length(fit$y[fit$y==1])
-		res = res |> dplyr::mutate(n_cases)
-	}
+		# get sample size - continuous exposure
+		n = length(fit$y)
+		res = res |> dplyr::mutate(n)
+		
+		# if model is logistic, get the cases too
+		if (model == "logistic")  {
+			n_cases = length(fit$y[fit$y==1])
+			res = res |> dplyr::mutate(n_cases)
+		}
+
 	}
 
 	# modify final bits

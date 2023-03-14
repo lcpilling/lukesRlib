@@ -10,6 +10,7 @@ tidy_ci(
   ci_denominator = 1.959964,
   exp = FALSE,
   intercept = FALSE,
+  tidy_factors = TRUE,
   extreme_ps = TRUE,
   neglog10p = FALSE,
   check_model = TRUE,
@@ -23,13 +24,15 @@ tidy_ci(
 \arguments{
 \item{x}{object containing model output to be tidied e.g., from a `glm()` or `survival::coxph()`}
 
-\item{ci}{calculate CIs using 1.96*SE method (default=TRUE) -- well actually, 1.959964 from `get_z(0.05)`}
+\item{ci}{calculate CIs using 1.96*SE method (default=TRUE) - where 1.96 can be modified using `ci_denominator`}
 
-\item{ci_denominator}{the standard error of the sample mean (default=1.96)}
+\item{ci_denominator}{the standard error of the sample mean (default=1.96 -- well actually, 1.959964 from `get_z(0.05)`)}
 
 \item{exp}{exponentiate estimate and CIs -- also see `check_model` (default=FALSE)}
 
 \item{intercept}{Exclude intercept for tidier output (default=FALSE)}
+
+\item{tidy_factors}{Logical. Tidy `as.factor(x_var)#` terms to `x_var-#` (default=TRUE)}
 
 \item{extreme_ps}{If p=0 then return "extreme p-values" as strings (default=TRUE)}
 
