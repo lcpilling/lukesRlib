@@ -41,6 +41,15 @@ get_assoc = function(x, y, z, d,
                      logistic=FALSE, af=FALSE, note="", 
                      ...)  {
 
+	# check inputs
+	if (class(x) != "character")  stop("x needs to be a string, a variable name in d")
+	if (class(y) != "character")  stop("y needs to be a string, a variable name in d")
+	if (class(z) != "character")  stop("z needs to be a string of variable names in d")
+	if (! class(d) %in% c("data.frame","tibble"))  stop("d needs to be a data.frame or tibble")
+
+	if (! x %in% colnames(d))  stop("x needs to be a variable in d")
+	if (! y %in% colnames(d))  stop("y needs to be a variable in d")
+
 	# exposure variable - categorical?
 	xx = x
 	if (af)  xx = paste0("as.factor(",x,")")

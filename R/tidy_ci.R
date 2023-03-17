@@ -104,7 +104,7 @@ tidy_ci = function(x,
 		}
 		if (any(c("coxph") %in% class(x)))  {
 			model = "CoxPH model (estimate=Hazard Ratio)"
-			text_out = paste0(text_out, ", Ncases=", x$nevent)
+			text_out = paste0(text_out, ", Nevents=", x$nevent)
 		}
 		if (any(c("crr","tidycrr") %in% class(x)))  {
 			model = "CRR model (estimate=sub-Hazard Ratio)"
@@ -113,7 +113,7 @@ tidy_ci = function(x,
 			if (!is.na(crr_n["1"]))  crr_n1 = as.numeric(crr_n["1"])
 			if (!is.na(crr_n["2"]))  crr_n2 = as.numeric(crr_n["2"])
 			if (is.na(crr_n["2"]))   crr_n2 = 0
-			text_out = paste0(text_out, ", Ncases=", crr_n1, ", Ncompeting=", crr_n2)
+			text_out = paste0(text_out, ", Nevents=", crr_n1, ", Ncompeting=", crr_n2)
 		}
 		text_out = paste0(model, " :: ", text_out)
 	}
