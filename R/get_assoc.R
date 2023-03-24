@@ -17,6 +17,8 @@
 #' @param logistic Logical. Default is FALSE. Include `family=binomial(link="logit")` in `glm()`?
 #' @param af Logical. Default is FALSE. Is `x` categorical? I.e., include in formula as `as.factor(x)`
 #' @param note A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
+#' @param scale_x Logical. Default is FALSE. Apple scale() function to exposure?
+#' @param scale_y Logical. Default is FALSE. Apple scale() function to outcome?
 #' @param ... Other `tidy_ci()` options
 #'
 #' @examples
@@ -38,14 +40,18 @@
 #'
 
 get_assoc = function(x, y, z, d, 
-                     logistic=FALSE, af=FALSE, note="", 
+                     logistic=FALSE, 
+                     af=FALSE, 
+                     note="", 
+                     scale_x=FALSE, 
+                     scale_y=FALSE,
                      ...)  {
 
 	# check inputs
 	if (class(x) != "character")  stop("x needs to be a string, a variable name in d")
 	if (class(y) != "character")  stop("y needs to be a string, a variable name in d")
 	if (class(z) != "character")  stop("z needs to be a string of variable names in d")
-	if (! class(d) %in% c("data.frame","tibble"))  stop("d needs to be a data.frame or tibble")
+	if (! any(class(d) %in% c("data.frame","tbl","tbl_df")))  stop("d needs to be a data.frame or tibble")
 
 	if (! x %in% colnames(d))  stop("x needs to be a variable in d")
 	if (! y %in% colnames(d))  stop("y needs to be a variable in d")
@@ -53,22 +59,24 @@ get_assoc = function(x, y, z, d,
 	# exposure variable - categorical?
 	xx = x
 	if (af)  xx = paste0("as.factor(",x,")")
+	
+	# scale exposure or outcome?
+	yy = y
+	if (scale_x & !af)  xx = paste0("scale(",x,")")
+	if (scale_y & !logistic)  yy = paste0("scale(",y,")")
 
 	# run model
 	if (!logistic)  {
 		model = "lm"
-		fit = glm(paste0(y, " ~ ", xx, z), data=d)
+		fit = glm(paste0(yy, " ~ ", xx, z), data=d)
 	} else {
 		model = "logistic"
-		fit = glm(paste0(y, " ~ ", xx, z), data=d, family=binomial(link="logit"))
+		fit = glm(paste0(yy, " ~ ", xx, z), data=d, family=binomial(link="logit"))
 	}
 
 	# get tidy output - include outcome name as first col
 	res = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, ...) |> filter(grepl(!!x, term))
 	res = res |> dplyr::mutate(outcome=!!y) |> dplyr::relocate(outcome)
-
-	# if "p.extreme" are all NAs then remove that col
-	#if ("p.extreme" %in% colnames(res))  if (!any(!is.na(res$p.extreme)))  res = res |> select(-p.extreme)
 
 	# exposure categorical?
 	if (af)  {
@@ -109,7 +117,7 @@ get_assoc = function(x, y, z, d,
 	# modify final bits
 	res = res |> dplyr::rename(exposure=term)
 	res = res |> dplyr::mutate(model)
-	if (nchar(note)>0)  res = res |> dplyr::mutate(note)
+	if (nchar(note)>0)  res = res |> dplyr::mutate(note=!!note)
 
 	res
 }

@@ -1,3 +1,7 @@
+# lukesRlib 0.1.5.1
+
+* add `scale` options for exposure and outcome to `get_assoc()`
+
 # lukesRlib 0.1.5
 
 * `tidy_ci()` now tidies up terms included as categorical variables. "as.factor(x_var)1" is replaced with "x_var-1". Can be disabled with `tidy_factors=FALSE`

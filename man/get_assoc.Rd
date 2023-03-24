@@ -4,7 +4,18 @@
 \alias{get_assoc}
 \title{Get tidy model output (just exposure of interest, with augmented output)}
 \usage{
-get_assoc(x, y, z, d, logistic = FALSE, af = FALSE, note = "", ...)
+get_assoc(
+  x,
+  y,
+  z,
+  d,
+  logistic = FALSE,
+  af = FALSE,
+  note = "",
+  scale_x = FALSE,
+  scale_y = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A string. The exposure variable name, found in `d`}
@@ -20,6 +31,10 @@ get_assoc(x, y, z, d, logistic = FALSE, af = FALSE, note = "", ...)
 \item{af}{Logical. Default is FALSE. Is `x` categorical? I.e., include in formula as `as.factor(x)`}
 
 \item{note}{A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.}
+
+\item{scale_x}{Logical. Default is FALSE. Apple scale() function to exposure?}
+
+\item{scale_y}{Logical. Default is FALSE. Apple scale() function to outcome?}
 
 \item{...}{Other `tidy_ci()` options}
 }
