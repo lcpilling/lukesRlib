@@ -90,7 +90,10 @@ get_assoc = function(x, y, z, d,
 
 		# get sample size - categorical exposure
 		n = x_vals_n = table(d |> select(!!x, !!y) |> na.omit() |> select(!!x))
-		for (ii in 1:length(x_vals))  n[ii] = x_vals_n[x_vals[ii]]
+		for (ii in 1:length(x_vals))  {
+			n[ii] = x_vals_n[x_vals[ii]]
+			if (is.na(n[ii]))  n[ii] = 0
+		}
 		res = res |> dplyr::mutate(n=as.numeric(n))
 
 		# if model is logistic, get the cases too

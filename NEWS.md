@@ -1,3 +1,7 @@
+# lukesRlib 0.1.5.2
+
+* fix missing `n` in `get_assoc()` when no events in exposure group
+
 # lukesRlib 0.1.5.1
 
 * add `scale` options for exposure and outcome to `get_assoc()`
