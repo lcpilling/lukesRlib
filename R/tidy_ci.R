@@ -69,8 +69,19 @@ tidy_ci = function(x,
 	# exclude intercept?
 	if (!intercept) ret = ret |> dplyr::filter(term!="(Intercept)")
 	
+	# tidy variable name if scaled
+	ret = ret |> dplyr::mutate(
+		term=if_else(grepl("scale(", term, fixed=TRUE), str_replace(term, fixed(")"), "-scaled"), term),
+		term=str_replace(term, fixed("scale("), "")
+	)
+	
 	# tidy factor names?
-	if (tidy_factors)  ret = ret |> dplyr::mutate(term=str_replace(term, fixed("as.factor("), ""), term=str_replace(term, fixed(")"), "-"))
+	if (tidy_factors)  {
+		ret = ret |> dplyr::mutate(
+			term=if_else(grepl("as.factor(", term, fixed=TRUE), str_replace(term, fixed(")"), "-"), term),
+			term=str_replace(term, fixed("as.factor("), "")
+		)
+	}
 	
 	# get CIs based on 1.96*SE?
 	if (ci)  ret = ret |> dplyr::mutate(conf.low=estimate-(!!ci_denominator*std.error), conf.high=estimate+(!!ci_denominator*std.error))

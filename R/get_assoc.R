@@ -75,13 +75,13 @@ get_assoc = function(x, y, z, d,
 	}
 
 	# get tidy output - include outcome name as first col
-	res = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, ...) |> filter(grepl(!!x, term))
+	res = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, ...) |> dplyr::filter(grepl(!!x, term))
 	res = res |> dplyr::mutate(outcome=!!y) |> dplyr::relocate(outcome)
 
 	# exposure categorical?
 	if (af)  {
 
-		x_vals = as.vector(unlist(fit$xlevels))
+		x_vals = as.vector(fit$xlevels[[1]])
 
 		# categorical exposure - add reference group
 		res = rbind(res[1,], res)
@@ -89,7 +89,7 @@ get_assoc = function(x, y, z, d,
 		res[1,2] = paste0(x, "-", x_vals[1])
 
 		# get sample size - categorical exposure
-		n = x_vals_n = table(d |> select(!!x, !!y) |> na.omit() |> select(!!x))
+		n = x_vals_n = table(d |> dplyr::select(!!x, !!y) |> na.omit() |> dplyr::select(!!x))
 		for (ii in 1:length(x_vals))  {
 			n[ii] = x_vals_n[x_vals[ii]]
 			if (is.na(n[ii]))  n[ii] = 0

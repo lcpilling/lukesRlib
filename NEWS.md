@@ -1,18 +1,13 @@
-# lukesRlib 0.1.5.2
+# lukesRlib 0.1.6
 
-* fix missing `n` in `get_assoc()` when no events in exposure group
-
-# lukesRlib 0.1.5.1
-
+* fixes to `get_assoc()` (when no events in exposure group, or when two factor variables included)
 * add `scale` options for exposure and outcome to `get_assoc()`
+* in `tidy_ci()` tidy variable names with "scale()" 
 
 # lukesRlib 0.1.5
 
 * `tidy_ci()` now tidies up terms included as categorical variables. "as.factor(x_var)1" is replaced with "x_var-1". Can be disabled with `tidy_factors=FALSE`
 * addition of "Plotting" category of functions, starting with `doCoxSplinePlot()` that nicely plots the output of a spline term in a CoxPH model
-
-# lukesRlib 0.1.4.1
-
 * Minor fix to `tidy_ci()` to avoid breaks due to missing p-values in model summary statistics
 
 # lukesRlib 0.1.4
