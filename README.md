@@ -47,7 +47,7 @@ See the [`tidy_ci()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/ti
 ```R
 fit_linear = glm(bmi ~ age + sex, data = d)
 tidy_ci(fit_linear)
-#> Linear model (estimate=coefficient)
+#> Linear model (estimate=coefficient) :: N=449811 :: R2=0.0099
 #> # A tibble: 2 x 8
 #>   term  estimate std.error statistic   p.value conf.low conf.high p.extreme
 #>   <chr>    <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <chr>    
@@ -57,7 +57,7 @@ tidy_ci(fit_linear)
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
 tidy_ci(fit_coxph, neglog10p=TRUE)
-#> CoxPH model (estimate=Hazard Ratio)
+#> CoxPH model (estimate=Hazard Ratio) :: N=449811, Nevents=31025
 #> # A tibble: 4 x 8
 #>   term             estimate std.error statistic  p.value conf.low conf.high neglog10p
 #>   <chr>               <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
