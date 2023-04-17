@@ -75,7 +75,7 @@ get_assoc = function(x, y, z, d,
 	}
 
 	# get tidy output - include outcome name as first col
-	res = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, ...) |> dplyr::filter(grepl(!!x, term))
+	res = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, get_r2=FALSE, ...) |> dplyr::filter(grepl(!!x, term))
 	res = res |> dplyr::mutate(outcome=!!y) |> dplyr::relocate(outcome)
 
 	# exposure categorical?

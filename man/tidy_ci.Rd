@@ -15,33 +15,36 @@ tidy_ci(
   neglog10p = FALSE,
   check_model = TRUE,
   n = NA,
+  get_r2 = TRUE,
   conf.int = FALSE,
   quiet = FALSE,
   ...
 )
 }
 \arguments{
-\item{x}{object containing model output to be tidied e.g., from a `glm()` or `survival::coxph()`}
+\item{x}{object containing model output to be tidied e.g., from a `glm()` or `survival::coxph()`.}
 
-\item{ci}{calculate CIs using 1.96*SE method (default=TRUE) - where 1.96 can be modified using `ci_denominator`}
+\item{ci}{Logical. Default is TRUE. Calculate CIs using 1.96*SE method - where 1.96 can be modified using `ci_denominator`.}
 
-\item{ci_denominator}{the standard error of the sample mean (default=1.96 -- well actually, 1.959964 from `get_z(0.05)`)}
+\item{ci_denominator}{Numeric. Default is 1.96. The standard error of the sample mean (default actually 1.959964 :: from `get_z(0.05)`).}
 
-\item{exp}{exponentiate estimate and CIs -- also see `check_model` (default=FALSE)}
+\item{exp}{Logical. Default is FALSE. Exponentiate estimate and CIs -- also see `check_model`.}
 
-\item{intercept}{Exclude intercept for tidier output (default=FALSE)}
+\item{intercept}{Logical. Default is FALSE. Exclude intercept for tidier output.}
 
-\item{tidy_factors}{Logical. Tidy `as.factor(x_var)#` terms to `x_var-#` (default=TRUE)}
+\item{tidy_factors}{Logical. Default is TRUE. Tidy `as.factor(x_var)#` terms to `x_var-#`.}
 
-\item{extreme_ps}{If p=0 then return "extreme p-values" as strings (default=TRUE)}
+\item{extreme_ps}{Logical. Default is TRUE. If p=0 then return "extreme p-values" as strings.}
 
-\item{neglog10p}{Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override) (default=FALSE)}
+\item{neglog10p}{Logical. Default is FALSE. Provides negative log10 p-values (if input is class `glm` or `coxph` or `crr` -- user can provide sample size `n=#` to override).}
 
-\item{check_model}{set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed (default=TRUE)}
+\item{check_model}{Logical. Default is TRUE. Set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed.}
 
-\item{n}{the N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required (default=NA)}
+\item{n}{Numeric. Default is NA. The N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required.}
 
-\item{quiet}{Logical. Suppress text output (default=FALSE)}
+\item{get_r2}{Logical. Default is TRUE. get R^2 value if model is linear.}
+
+\item{quiet}{Logical. Default is FALSE. Suppress text output}
 
 \item{...}{Other `tidy()` options}
 }
@@ -54,7 +57,7 @@ For GLMs this calculates confidence intervals via profile likelihood by default.
 When using large datasets this takes a long time and does not meaningfully alter the CIs 
 compared to simply calculating using 1.96*SE.
 This function `tidy_ci()` runs `broom::tidy()` and returns the tidy estimates with CIs 
-calculated as EST +/- 1.96*SE. (Well, actually 1.959964 from `lukesRlib::get_z(0.05)`)
+calculated as EST +/- 1.96*SE. (Well, actually 1.959964 :: from `lukesRlib::get_z(0.05)`)
 
 The function also does a few other nice/useful things to the output: hides the intercept by 
 default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, 

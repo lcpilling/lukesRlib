@@ -1,3 +1,8 @@
+# lukesRlib 0.1.7
+
+* calculate R^2 in `tidy_ci()` if `glm()` is linear regression
+* tidy up `tidy_ci()` parameter documentation
+
 # lukesRlib 0.1.6
 
 * fixes to `get_assoc()` (when no events in exposure group, or when two factor variables included)
