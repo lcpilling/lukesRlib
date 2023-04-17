@@ -1,7 +1,9 @@
 # lukesRlib 0.1.7
 
-* calculate R^2 in `tidy_ci()` if `glm()` is linear regression
-* tidy up `tidy_ci()` parameter documentation
+* Calculate R^2 in `tidy_ci()` if `glm()` is linear regression
+* Tidy up `tidy_ci()` parameter documentation
+* Add functions `xv()` and `yv()` to improve ease of using {purrr} function `map2()` with `get_assoc()` for PheWAS of multiple exposures and outcomes in one analysis
+* - This package now depends on {purrr} >= v1.0.0
 
 # lukesRlib 0.1.6
 

@@ -124,3 +124,59 @@ get_assoc = function(x, y, z, d,
 
 	res
 }
+
+
+#' Get exposure variables for using with `purrr::map2()`
+#'
+#' @description The {purrr} package provides the wonderful `map()` and `map2()` functions. To get `map2()` to do each comparison need to provide a "long" version of the variable list
+#'
+#' @return Returns a vector of strings
+#'
+#' @author Luke Pilling
+#'
+#' @name xv
+#'
+#' @param x_vars A vector of strings. The exposure variable names
+#' @param y_vars A vector of strings. The outcome variable names
+#'
+#' @examples
+#' x_vars = c("bmi","sbp")
+#' y_vars = c("chd","t2d")
+#' x_vars2 = xv(x_vars, y_vars)
+#' y_vars2 = yv(x_vars, y_vars)
+#'
+#' @export
+#'
+
+xv = function(x_vars, y_vars) {
+	purrr::map(x_vars, \(x) rep(x, length(y_vars))) |> list_c()
+}
+
+
+#' Get outcome variables for using with `purrr::map2()`
+#'
+#' @description The {purrr} package provides the wonderful `map()` and `map2()` functions. To get `map2()` to do each comparison need to provide a "long" version of the variable list
+#'
+#' @return Returns a vector of strings
+#'
+#' @author Luke Pilling
+#'
+#' @name yv
+#'
+#' @param x_vars A vector of strings. The exposure variable names
+#' @param y_vars A vector of strings. The outcome variable names
+#'
+#' @examples
+#' x_vars = c("bmi","sbp")
+#' y_vars = c("chd","t2d")
+#' x_vars2 = xv(x_vars, y_vars)
+#' y_vars2 = yv(x_vars, y_vars)
+#'
+#' @export
+#'
+
+yv = function(x_vars, y_vars) {
+	purrr::map(x_vars, \(x) c(y_vars)) |> list_c()
+}
+
+
