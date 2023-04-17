@@ -54,19 +54,22 @@ tidy_ci(fit_linear)
 #> 1 age     0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212 NA       
 #> 2 sex     0.703   0.0137       51.4  0           0.676     0.729  9.39e-576
 
+# ^^ provided N and R^2 estimate. Calculated "extreme p" where p rounded to 0
+
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
-tidy_ci(fit_coxph, neglog10p=TRUE)
+tidy_ci(fit_coxph)
 #> CoxPH model (estimate=Hazard Ratio) :: N=449811, Nevents=31025
 #> # A tibble: 4 x 8
-#>   term             estimate std.error statistic  p.value conf.low conf.high neglog10p
-#>   <chr>               <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>     <dbl>
-#> 1 age                 0.995  0.000837     -6.56 5.28e-11    0.993     0.996     10.3 
-#> 2 sex                 1.04   0.0109        3.66 2.52e- 4    1.02      1.06       3.60
-#> 3 smoking_status-1    1.04   0.0120        3.26 1.13e- 3    1.02      1.06       2.95
-#> 4 smoking_status-2    1.03   0.0149        2.16 3.08e- 2    1.00      1.06       1.51
+#>   term             estimate std.error statistic  p.value conf.low conf.high
+#>   <chr>               <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>
+#> 1 age                 0.995  0.000837     -6.56 5.28e-11    0.993     0.996
+#> 2 sex                 1.04   0.0109        3.66 2.52e- 4    1.02      1.06 
+#> 3 smoking_status-1    1.04   0.0120        3.26 1.13e- 3    1.02      1.06 
+#> 4 smoking_status-2    1.03   0.0149        2.16 3.08e- 2    1.00      1.06 
 
 # ^^ automatically identified the input as from a coxph model and exponentiated estimate/CIs
+# ^^ provided N and Nevents. Also, tidied "as.factor()" variable names
 ```
 
 
