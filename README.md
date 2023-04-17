@@ -83,14 +83,14 @@ For all exposures, it gets the N. For categorical exposures, the N is split by g
 
 ```R
 # for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
-get_assoc(y="weight", x="height", z="+age+sex", d=ukb)
+get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 #> A tibble: 1 x 10
 #>   outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
 #>   <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
 #> 1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
 
 # categorical exposure and startified analysis, with note
-get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), logistic=TRUE, af=TRUE, note="Males only")
+get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), logistic=TRUE, af=TRUE, note="Males only")
 #> A tibble: 3 x 12
 #>   outcome  exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note      
 #>   <chr>    <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>     
@@ -98,9 +98,9 @@ get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), logist
 #> 2 chd      smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males only
 #> 3 chd      smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males only
 
-# multiple exposures on single outcome, then combine output (i.e., a "PheWAS")
+# multiple exposures on single outcome, then combine output (i.e., a "PheWAS") -- using `map()` from the [{purrr}](https://purrr.tidyverse.org/) package
 x_vars = c("bmi","ldl","sbp_0_avg")
-res = do.call(rbind, lapply(x_vars, get_assoc, y="chd", z="+age+sex", d=ukb, logistic=TRUE))
+res = map(x_vars, \(x) get_assoc(x=x, y="chd", z="+age+sex", d=ukb, logistic=TRUE)) |> list_rbind()
 res
 #> # A tibble: 3 x 11
 #>   outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
