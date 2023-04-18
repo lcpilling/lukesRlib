@@ -1,9 +1,13 @@
+# lukesRlib 0.1.8
+
+* Changed `get_assoc()` so that x and y can be vectors - i.e., multiple exposures/outcomes can be provided. Then uses {purrr} function `map2()` to iterate over combinations
+* - This package now depends on {purrr} >= v1.0.0  &  {stringr} >= v1.5.0
+* - Added functions `xv()` and `yv()` to improve ease of using {purrr} function `map2()` with `get_assoc()` for PheWAS of multiple exposures and outcomes in one analysis
+
 # lukesRlib 0.1.7
 
 * Calculate R^2 in `tidy_ci()` if `glm()` is linear regression
 * Tidy up `tidy_ci()` parameter documentation
-* Add functions `xv()` and `yv()` to improve ease of using {purrr} function `map2()` with `get_assoc()` for PheWAS of multiple exposures and outcomes in one analysis
-* - This package now depends on {purrr} >= v1.0.0
 
 # lukesRlib 0.1.6
 

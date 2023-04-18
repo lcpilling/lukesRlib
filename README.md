@@ -3,7 +3,7 @@
 # lukesRlib
 My library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.1.7-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.1.8-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-9cf.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -98,9 +98,9 @@ get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), logist
 #> 2 chd      smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males only
 #> 3 chd      smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males only
 
-# multiple exposures on single outcome, then combine output (i.e., a "PheWAS") -- using `map()` from the [{purrr}](https://purrr.tidyverse.org/) package
+# multiple exposures on single outcome, then combine output (i.e., a "PheWAS") - can provide a vector of exposures and/or outcomes
 x_vars = c("bmi","ldl","sbp_0_avg")
-res = map(x_vars, \(x) get_assoc(x=x, y="chd", z="+age+sex", d=ukb, logistic=TRUE)) |> list_rbind()
+res = get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, logistic=TRUE)
 res
 #> # A tibble: 3 x 11
 #>   outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
