@@ -23,6 +23,7 @@
 #' @param note A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
 #' @param scale_x Logical. Default is FALSE. Apple scale() function to exposure?
 #' @param scale_y Logical. Default is FALSE. Apple scale() function to outcome?
+#' @param extreme_ps Logical. Default is TRUE. If p==0 then return "extreme p-values" as strings.
 #' @param ... Other `tidy_ci()` options
 #'
 #' @examples
@@ -47,6 +48,7 @@ get_assoc = function(x, y, z, d,
                      note = "", 
                      scale_x = FALSE, 
                      scale_y = FALSE,
+                     extreme_ps = TRUE,
                      ...)  {
 	
 	# check inputs
@@ -68,10 +70,15 @@ get_assoc = function(x, y, z, d,
 	}
 	
 	# use {purrr} function map2() for analysis -- allows for any combination of exposure/outcome numbers
-	res = purrr::map2(lukesRlib::xv(x,y), lukesRlib::yv(x,y), 
+	ret = purrr::map2(lukesRlib::xv(x,y), lukesRlib::yv(x,y), 
 	                  \(x,y) lukesRlib::get_assoc1(x=x, y=y, z=z, d=d, logistic=logistic, af=af, note=note, scale_x=scale_x, scale_y=scale_y), 
 	                 .progress = progress) |> purrr::list_rbind()
-	res
+	
+	# Get extreme p-values if any p-values rounded to zero? 
+	if (extreme_ps)  if (any(ret$p.value==0, na.rm=TRUE))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
+	
+	# return results
+	ret
 	
 }
 

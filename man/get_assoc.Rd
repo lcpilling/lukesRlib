@@ -16,6 +16,7 @@ get_assoc(
   note = "",
   scale_x = FALSE,
   scale_y = FALSE,
+  extreme_ps = TRUE,
   ...
 )
 }
@@ -41,6 +42,8 @@ get_assoc(
 \item{scale_x}{Logical. Default is FALSE. Apple scale() function to exposure?}
 
 \item{scale_y}{Logical. Default is FALSE. Apple scale() function to outcome?}
+
+\item{extreme_ps}{Logical. Default is TRUE. If p==0 then return "extreme p-values" as strings.}
 
 \item{...}{Other `tidy_ci()` options}
 }
