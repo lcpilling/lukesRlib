@@ -64,7 +64,7 @@ get_assoc = function(x, y, z, d,
 	# subset d to just variables used - makes processing much quicker
 	if (subset_d)  {
 		all_vars = c(x,y,z_vars)
-		d = d[,colnames(d) %in% all_vars] |> na.omit()
+		d = d[,colnames(d) %in% all_vars]
 	}
 	
 	# use {purrr} function map2() for analysis -- allows for any combination of exposure/outcome numbers
