@@ -60,7 +60,9 @@ get_assoc = function(x, y, z, d,
 	# check variables are all in d
 	if (any(! x %in% colnames(d)))  stop("Not all exposure variables are in the provided data")
 	if (any(! y %in% colnames(d)))  stop("Not all exposure variables are in the provided data")
-	z_vars = stringr::str_replace_all(z, " ", "") |> stringr::str_split_1(fixed("+")) |> purrr::keep(\(x) stringr::str_length(x)>0)
+	z_vars = stringr::str_replace_all(z, " |as.factor\\(|\\)", "") |> 
+	         stringr::str_split_1(stringr::fixed("+")) |> 
+	         purrr::keep(\(x) stringr::str_length(x)>0)
 	if (any(! z_vars %in% colnames(d)))  stop("Not all covariate variables are in the provided data")
 	
 	# subset d to just variables used - makes processing much quicker
