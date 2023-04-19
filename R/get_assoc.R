@@ -1,6 +1,6 @@
 #' Get tidy model output of exposure(s) on outcome(s)
 #'
-#' @description To easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
+#' @description To easily get tidy model output (linear or logistic GLM) for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
 #'
 #' For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category
 #'
@@ -88,7 +88,7 @@ get_assoc = function(x, y, z, d,
 
 #' Get tidy model output (just exposure of interest, with augmented output)
 #'
-#' @description To easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
+#' @description To easily get tidy model output (linear or logistic GLM) for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
 #'
 #' For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category
 #'

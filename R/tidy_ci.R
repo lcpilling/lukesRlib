@@ -115,10 +115,12 @@ tidy_ci = function(x,
 		if ("glm" %in% class(x))  if (x$family$family == "binomial")  {
 			model = "Binomial model (estimate=Odds Ratio)"
 			text_out = paste0(text_out, ", Ncases=", as.numeric(table(x$y)[2]))
+			exp = TRUE
 		}
 		if (any(c("coxph") %in% class(x)))  {
 			model = "CoxPH model (estimate=Hazard Ratio)"
 			text_out = paste0(text_out, ", Nevents=", x$nevent)
+			exp = TRUE
 		}
 		if (any(c("crr","tidycrr") %in% class(x)))  {
 			model = "CRR model (estimate=sub-Hazard Ratio)"
@@ -128,12 +130,12 @@ tidy_ci = function(x,
 			if (!is.na(crr_n["2"]))  crr_n2 = as.numeric(crr_n["2"])
 			if (is.na(crr_n["2"]))   crr_n2 = 0
 			text_out = paste0(text_out, ", Nevents=", crr_n1, ", Ncompeting=", crr_n2)
+			exp = TRUE
 		}
 		text_out = paste0(model, " :: ", text_out)
 	}
 	
 	# exponentiate estimate and CIs?
-	if (check_model & !exp & model != "")  exp = TRUE
 	if (exp) ret = ret |> dplyr::mutate(estimate=exp(estimate))
 	if (exp & (ci | conf.int)) ret = ret |> dplyr::mutate(conf.low=exp(conf.low), conf.high=exp(conf.high))
 	
