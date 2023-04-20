@@ -23,6 +23,8 @@
 #' @param note A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
 #' @param scale_x Logical. Default is FALSE. Apple scale() function to exposure?
 #' @param scale_y Logical. Default is FALSE. Apple scale() function to outcome?
+#' @param inv_norm_x Logical. Default is FALSE. Apple inv_norm() function to exposure?
+#' @param inv_norm_y Logical. Default is FALSE. Apple inv_norm() function to outcome?
 #' @param extreme_ps Logical. Default is TRUE. If p==0 then return "extreme p-values" as strings.
 #' @param ... Other `tidy_ci()` options
 #'
@@ -48,6 +50,8 @@ get_assoc = function(x, y, z, d,
                      note = "", 
                      scale_x = FALSE, 
                      scale_y = FALSE,
+                     inv_norm_x = FALSE, 
+                     inv_norm_y = FALSE,
                      extreme_ps = TRUE,
                      ...)  {
 	
@@ -73,7 +77,7 @@ get_assoc = function(x, y, z, d,
 	
 	# use {purrr} function map2() for analysis -- allows for any combination of exposure/outcome numbers
 	ret = purrr::map2(lukesRlib::xv(x,y), lukesRlib::yv(x,y), 
-	                  \(x,y) lukesRlib::get_assoc1(x=x, y=y, z=z, d=d, logistic=logistic, af=af, note=note, scale_x=scale_x, scale_y=scale_y), 
+	                  \(x,y) lukesRlib::get_assoc1(x=x, y=y, z=z, d=d, logistic=logistic, af=af, note=note, scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y), 
 	                 .progress = progress) |> purrr::list_rbind()
 	
 	# Get extreme p-values if any p-values rounded to zero? 
@@ -109,6 +113,8 @@ get_assoc = function(x, y, z, d,
 #' @param note A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
 #' @param scale_x Logical. Default is FALSE. Apple scale() function to exposure?
 #' @param scale_y Logical. Default is FALSE. Apple scale() function to outcome?
+#' @param inv_norm_x Logical. Default is FALSE. Apple inv_norm() function to exposure?
+#' @param inv_norm_y Logical. Default is FALSE. Apple inv_norm() function to outcome?
 #' @param ... Other `tidy_ci()` options
 #'
 #' @examples
@@ -135,6 +141,8 @@ get_assoc1 = function(x, y, z, d,
                      note = "", 
                      scale_x = FALSE, 
                      scale_y = FALSE,
+                     inv_norm_x = FALSE, 
+                     inv_norm_y = FALSE,
                      ...)  {
 
 	# check inputs
@@ -154,7 +162,11 @@ get_assoc1 = function(x, y, z, d,
 	yy = y
 	if (scale_x & !af)  xx = paste0("scale(",x,")")
 	if (scale_y & !logistic)  yy = paste0("scale(",y,")")
-
+	
+	# inverse normalize exposure or outcome?
+	if (inv_norm_x & !af)       d = d |> mutate( !! rlang::sym(x) := lukesRlib::inv_norm( !! rlang::sym(x) ) )
+	if (inv_norm_y & !logistic) d = d |> mutate( !! rlang::sym(y) := lukesRlib::inv_norm( !! rlang::sym(y) ) )
+	
 	# run model
 	if (!logistic)  {
 		model = "lm"

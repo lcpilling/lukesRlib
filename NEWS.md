@@ -1,3 +1,8 @@
+# lukesRlib 0.1.9
+
+* Added dependency {rlang} >= v1.0.0 so that the `sym()` function can be used - i.e., using provided variable name strings in `dplyr::mutate()` etc
+* `get_assoc()` now allows options `inv_norm_x` and `inv_norm_y`
+
 # lukesRlib 0.1.8
 
 * Changed `get_assoc()` so that x and y can be vectors - i.e., multiple exposures/outcomes can be provided. Then uses {purrr} function `map2()` to iterate over combinations

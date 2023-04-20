@@ -14,6 +14,8 @@ get_assoc1(
   note = "",
   scale_x = FALSE,
   scale_y = FALSE,
+  inv_norm_x = FALSE,
+  inv_norm_y = FALSE,
   ...
 )
 }
@@ -36,13 +38,17 @@ get_assoc1(
 
 \item{scale_y}{Logical. Default is FALSE. Apple scale() function to outcome?}
 
+\item{inv_norm_x}{Logical. Default is FALSE. Apple inv_norm() function to exposure?}
+
+\item{inv_norm_y}{Logical. Default is FALSE. Apple inv_norm() function to outcome?}
+
 \item{...}{Other `tidy_ci()` options}
 }
 \value{
 Returns a tibble - summary statistics from a model
 }
 \description{
-To easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
+To easily get tidy model output (linear or logistic GLM) for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
 
 For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category
 

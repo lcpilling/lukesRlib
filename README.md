@@ -3,7 +3,7 @@
 # lukesRlib
 My library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.1.8-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.1.9-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-9cf.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
