@@ -98,7 +98,7 @@ get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), logist
 #> 2 chd      smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males only
 #> 3 chd      smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males only
 
-# multiple exposures on single outcome, then combine output (i.e., a "PheWAS") - can provide a vector of exposures and/or outcomes
+# multiple exposures on single outcome (i.e., a "PheWAS"). Both exposures and outcomes can be a vector of variable names
 x_vars = c("bmi","ldl","sbp_0_avg")
 res = get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, logistic=TRUE)
 res
