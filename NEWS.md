@@ -1,3 +1,9 @@
+# lukesRlib 0.2.0
+
+* `get_assoc()` can now perform `coxph()` models from the {survival} package. The user provides strings depicting the survival object as the outcome e.g., "Surv(time, event)"
+* Added two genetics-related functions: `lambda_gc()` (to calculate Lambda GC!) and `get_loci()` (to crudely determine independent loci in GWAS summary stats)
+* General improvements/clarifications throughout code and documentation
+
 # lukesRlib 0.1.9
 
 * Added dependency {rlang} >= v1.0.0 so that the `sym()` function can be used - i.e., using provided variable name strings in `dplyr::mutate()` etc

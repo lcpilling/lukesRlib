@@ -11,7 +11,7 @@ get_assoc(
   d,
   subset_d = TRUE,
   progress = TRUE,
-  logistic = FALSE,
+  model = "lm",
   af = FALSE,
   note = "",
   scale_x = FALSE,
@@ -25,7 +25,7 @@ get_assoc(
 \arguments{
 \item{x}{A string or vector of strings. The exposure variable name(s), found in `d`}
 
-\item{y}{A string or vector of strings. The outcome variable name(s), found in `d`}
+\item{y}{A string. The outcome variable name, found in `d` -- if model is 'coxph' then paste the survival object here e.g., 'Surv(time, event)' where `time` and `event` are variables in `d`}
 
 \item{z}{A string. The covariate formula (e.g., " + age + sex"), found in `d`}
 
@@ -35,7 +35,7 @@ get_assoc(
 
 \item{progress}{Logical. Default is TRUE. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided)}
 
-\item{logistic}{Logical. Default is FALSE. Include `family=binomial(link="logit")` in `glm()`?}
+\item{model}{A string. Default is "lm". The type of model to perform. Can also be "logistic" or "coxph"}
 
 \item{af}{Logical. Default is FALSE. Is `x` categorical? I.e., include in formula as `as.factor(x)`}
 
@@ -57,7 +57,7 @@ get_assoc(
 Returns a tibble - summary statistics from a model
 }
 \description{
-To easily get tidy model output (linear or logistic GLM) for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
+To easily get tidy model output (from linear or logistic GLM, or CoxPH) for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
 
 For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category
 

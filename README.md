@@ -3,7 +3,7 @@
 # lukesRlib
 My library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.1.9-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.2.0-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -20,6 +20,9 @@ My library of R functions I sometimes find useful
   - [Working with test statistics](#working-with-test-statistics)
     - [get_se()](#get_se), [get_z()](#get_z), [get_p()](#get_p)
     - [get_p_extreme()](#get_p_extreme), [get_p_neglog10()](#get_p_neglog10), [get_p_neglog10_n()](#get_p_neglog10_n)
+  - [Genetics](#genetics)
+    - [lambda_gc()](#lambda_gc)
+    - [get_loci()](#get_loci)
   - [Plotting](#plotting)
     - [doCoxSplinePlot()](#doCoxSplinePlot)
 
@@ -75,32 +78,32 @@ tidy_ci(fit_coxph)
 
 ### get_assoc()
 
-`get_assoc()`  (phonetically: "get-a-sock") is designed for easy PheWASing. I.e., to easily get tidy model output for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Make quick loops for PheWAS (multiples exposures on an outcome, or single exposure on multiple outcomes) easy and tidy. 
+`get_assoc()` (phonetically: "get-a-sock") makes PheWAS in R easy and fast, utilizing the {purrr} `map2()` function. It gets the tidy model output for categorical or continuous exposures, from linear, logistic, or CoxPH models: includes N and N cases, outcome, and model info. User can provide multiples exposures and outcomes. 
 
-For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category. See the [`get_assoc()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) page for details 
+See the [`get_assoc()` Wiki](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) details 
 
 #### Examples
 
 ```R
-# for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
+# for one outcome it is equivalent to `tidy_ci(glm(weight~height+age+sex, data=ukb))` with added `n`
 get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 #> A tibble: 1 x 10
 #>   outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
 #>   <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
 #> 1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
 
-# categorical exposure and startified analysis, with note
-get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), logistic=TRUE, af=TRUE, note="Males only")
+# categorical exposure and startified analysis, with n+n_cases for reference category, and note
+get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males")
 #> A tibble: 3 x 12
-#>   outcome  exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note      
-#>   <chr>    <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>     
-#> 1 chd      smoking_status-0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males only
-#> 2 chd      smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males only
-#> 3 chd      smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males only
+#>   outcome exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note 
+#>   <chr>   <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>
+#> 1 chd     smoking_status-0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males
+#> 2 chd     smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males
+#> 3 chd     smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males
 
-# multiple exposures on single outcome, then combine output (i.e., a "PheWAS") - can provide a vector of exposures and/or outcomes
+# multiple exposures on single outcome (i.e., a "PheWAS") - can provide multiple exposures and outcomes at once
 x_vars = c("bmi","ldl","sbp_0_avg")
-res = get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, logistic=TRUE)
+res = get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
 res
 #> # A tibble: 3 x 11
 #>   outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
@@ -119,15 +122,15 @@ From Steve Miller's package https://github.com/svmiller/stevemisc
 
 `carrec()` (phonetically: "car-wreck") is a simple port of `car::recode()` to avoid clashes in the `{car}` package. This package offers STATA-like recoding features for R.
 
-For example, assume a variable of interest is on a 1-10 scale. You want to code values 6 and above to be 1, and code values of 1-5 to be 0. Here’s how you would do that.
+For example, if a variable of interest is on a 1-10 scale and you want to code values 6 and above to be 1, and code values of 1-5 to be 0, you would do:
 
 ``` r
-x <- seq(1, 10)
+x = seq(1, 10)
 x
-#>  [1]  1  2  3  4  5  6  7  8  9 10
+#> [1]  1  2  3  4  5  6  7  8  9 10
 
 carrec(x, "1:5=0;6:10=1")
-#>  [1] 0 0 0 0 0 1 1 1 1 1
+#> [1] 0 0 0 0 0 1 1 1 1 1
 ```
 
 ### inv_norm()
@@ -223,6 +226,34 @@ z = 50
 n = 100000
 get_p_neglog10_n(z, n)
 #>  [1] 537.9851
+```
+
+
+## Genetics
+
+### lambda_gc()
+Estimate inflation of test statistics. Lambda GC compares the median test statistic against the expected median test statistic under the null hypothesis of no association. For well-powered quantitative traits with a known polygenic inheritance, we expect inflation of lambda GC, but for traits with no expected association, we expect lambda GC to be around 1.
+
+```r
+lambda_gc(p_values)
+```
+
+
+
+### get_loci()
+Determine loci from a GWAS summary statistics file. Use distance from lead significant SNP to estimate independet loci in GWAS summary stats. Uses -log10(p) derived from BETA/SE so does not need P as input.
+
+```r
+get_loci(
+  gwas,
+  snp_col = "SNP",
+  chr_col = "CHR",
+  pos_col = "BP",
+  maf_col = "MAF",
+  beta_col = "BETA",
+  se_col = "SE",
+  n_bases = 1e+06
+)
 ```
 
 
