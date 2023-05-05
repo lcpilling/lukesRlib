@@ -84,7 +84,7 @@ See the [`get_assoc()` Wiki](https://github.com/lukepilling/lukesRlib/wiki/get_a
 
 #### Examples
 
-#### Get tidy model output for an exposure/outcome combination
+##### Get tidy model output for an exposure/outcome combination
 ```R
 get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 #> A tibble: 1 x 10
@@ -95,7 +95,7 @@ get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 
 The above example is equivalent to `tidy_ci(glm(weight~height+age+sex, data=ukb))` with added `n`
 
-#### Categorical exposure in logistic regression - stratified analysis
+##### Categorical exposure in logistic regression - stratified analysis
 ```R
 get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males")
 #> A tibble: 3 x 12
@@ -108,7 +108,7 @@ get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model=
 
 In the above example, the `estimate` is the Odds Ratio from a logistic regression model. The `n` and `n_cases` are directly from the model object and reflect those included in the model after excluding missing participants. The exposure is categorical, and a reference category line has been added to include the N and Ncases for that group. 
 
-#### multiple exposures on single outcome (i.e., a "PheWAS")
+##### multiple exposures on single outcome (i.e., a "PheWAS")
 ```R
 x_vars = c("bmi","ldl","sbp_0_avg")
 get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
