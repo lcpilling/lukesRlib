@@ -16,8 +16,6 @@
 #' @param y A string. The outcome variable name, found in `d` -- if model is 'coxph' then paste the survival object here e.g., 'Surv(time, event)' where `time` and `event` are variables in `d`
 #' @param z A string. The covariate formula (e.g., " + age + sex"), found in `d`
 #' @param d A data.frame or tibble. The data
-#' @param subset_d Logical. Default is TRUE. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used)
-#' @param progress Logical. Default is TRUE. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided)
 #' @param model A string. Default is "lm". The type of model to perform. Can also be "logistic" or "coxph"
 #' @param af Logical. Default is FALSE. Is `x` categorical? I.e., include in formula as `as.factor(x)`
 #' @param note A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
@@ -25,6 +23,8 @@
 #' @param scale_y Logical. Default is FALSE. Apple scale() function to outcome?
 #' @param inv_norm_x Logical. Default is FALSE. Apple inv_norm() function to exposure?
 #' @param inv_norm_y Logical. Default is FALSE. Apple inv_norm() function to outcome?
+#' @param subset_d Logical. Default is TRUE. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used)
+#' @param progress Logical. Default is TRUE. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided)
 #' @param extreme_ps Logical. Default is TRUE. If p==0 then return "extreme p-values" as strings.
 #' @param ... Other `tidy_ci()` options
 #'

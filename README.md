@@ -84,15 +84,19 @@ See the [`get_assoc()` Wiki](https://github.com/lukepilling/lukesRlib/wiki/get_a
 
 #### Examples
 
+#### Get tidy model output for an exposure/outcome combination
 ```R
-# for one outcome it is equivalent to `tidy_ci(glm(weight~height+age+sex, data=ukb))` with added `n`
 get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 #> A tibble: 1 x 10
 #>   outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
 #>   <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
 #> 1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
+```
 
-# categorical exposure and startified analysis, with n+n_cases for reference category, and note
+The above example is equivalent to `tidy_ci(glm(weight~height+age+sex, data=ukb))` with added `n`
+
+#### Categorical exposure in logistic regression - stratified analysis
+```R
 get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males")
 #> A tibble: 3 x 12
 #>   outcome exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note 
@@ -100,11 +104,14 @@ get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model=
 #> 1 chd     smoking_status-0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males
 #> 2 chd     smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males
 #> 3 chd     smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males
+```
 
-# multiple exposures on single outcome (i.e., a "PheWAS") - can provide multiple exposures and outcomes at once
+In the above example, the `estimate` is the Odds Ratio from a logistic regression model. The `n` and `n_cases` are directly from the model object and reflect those included in the model after excluding missing participants. The exposure is categorical, and a reference category line has been added to include the N and Ncases for that group. 
+
+#### multiple exposures on single outcome (i.e., a "PheWAS")
+```R
 x_vars = c("bmi","ldl","sbp_0_avg")
-res = get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
-res
+get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
 #> # A tibble: 3 x 11
 #>   outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
 #>   <chr>   <chr>        <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl> <int>   <int> <chr>   
@@ -112,6 +119,8 @@ res
 #> 2 chd     ldl          0.980   0.0689     -0.300 7.64e- 1    0.856      1.12  4498     311 logistic
 #> 3 chd     sbp_0_avg    1.01    0.00333     3.53  4.23e- 4    1.01       1.02  4561     316 logistic
 ```
+
+Multiple exposures and outcomes can be provided simultaneously.
 
 
 ## Data Transformation
