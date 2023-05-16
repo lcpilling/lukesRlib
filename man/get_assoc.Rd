@@ -41,13 +41,13 @@ get_assoc(
 
 \item{note}{A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.}
 
-\item{scale_x}{Logical. Default is FALSE. Apple scale() function to exposure?}
+\item{scale_x}{Logical. Default is FALSE. Apply scale() function to exposure?}
 
-\item{scale_y}{Logical. Default is FALSE. Apple scale() function to outcome?}
+\item{scale_y}{Logical. Default is FALSE. Apply scale() function to outcome?}
 
-\item{inv_norm_x}{Logical. Default is FALSE. Apple inv_norm() function to exposure?}
+\item{inv_norm_x}{Logical. Default is FALSE. Apply inv_norm() function to exposure?}
 
-\item{inv_norm_y}{Logical. Default is FALSE. Apple inv_norm() function to outcome?}
+\item{inv_norm_y}{Logical. Default is FALSE. Apply inv_norm() function to outcome?}
 
 \item{extreme_ps}{Logical. Default is TRUE. If p==0 then return "extreme p-values" as strings.}
 

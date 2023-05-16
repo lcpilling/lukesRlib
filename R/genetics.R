@@ -52,6 +52,7 @@ lambda_gc = function(p) {
 #' @param beta_col A string. Default="BETA". The BETA column name.
 #' @param se_col A string. Default="SE". The SE column name.
 #' @param n_bases An interger. Default=1e6. The distance between two significant SNPs, beyond which they are defined as in separate loci.
+#' @param p_threshold A number. Default=5e-8. P-value threshold for statistical significance
 #'
 #' @examples
 #' get_loci(gwas)
@@ -66,21 +67,25 @@ get_loci = function(gwas,
                     maf_col  = "MAF",
                     beta_col = "BETA",
                     se_col   = "SE",
-                    n_bases  = 1e6)  {
+                    n_bases  = 1e6,
+                    p_threshold = 5e-8)  {
 
 	## will use -log10 of the p-value in case any p-values were <5e-324 and are rounded to 0 in many software
-	gwas[,"P_neglog10"] = -( 2 + pnorm(-abs( gwas[,beta_col] / gwas[,se_col] ), log.p=T) ) / log(10)
+	gwas[,"P_neglog10"] = lukesRlib::get_p_neglog10( gwas[,beta_col] / gwas[,se_col] )
 	
 	## determine "loci" 
 	gwas_loci = NULL
 	n_loci = 0
 	
+	## determine threshold in -log10 
+	p_threshold_neglog10 = lukesRlib::get_p_neglog10(p_threshold, is_p=TRUE)
+	
 	# are any SNPs GWAS significant? i.e., -log10 of 5e-8
-	if (any(gwas[,"P_neglog10"] > 6.73347))
+	if (any(gwas[,"P_neglog10"] > p_threshold_neglog10))
 	{
 	
 		## creating GWAS hits file 
-		gwas_loci = gwas[ gwas[,"P_neglog10"] > 6.73347 , ]
+		gwas_loci = gwas[ gwas[,"P_neglog10"] > p_threshold_neglog10 , ]
 		dim(gwas_loci)
 		head(gwas_loci)
 		
@@ -130,7 +135,7 @@ get_loci = function(gwas,
 		
 		n_loci = locus
 		cat(paste0("N variants = ", nrow(gwas)), "\n")
-		cat(paste0("N variants p<5E-8 = ", nrow(gwas_loci)), "\n")
+		cat(paste0("N variants p<threshold = ", nrow(gwas_loci)), "\n")
 		cat(paste0("N loci = ", n_loci, "\n"))
 		
 		######################################################

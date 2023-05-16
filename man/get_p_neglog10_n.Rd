@@ -4,18 +4,20 @@
 \alias{get_p_neglog10_n}
 \title{Get -log10 p-value (using Z & N)}
 \usage{
-get_p_neglog10_n(z, n)
+get_p_neglog10_n(z, n, is_p = FALSE)
 }
 \arguments{
 \item{z}{a z (or t) statistic}
 
 \item{n}{the sample size used to estimate the z (or t) statistic}
+
+\item{is_p}{Logistic. Default=FALSE. Is this a p-value?}
 }
 \value{
 Returns a -log 10 p-value
 }
 \description{
-Get -log10 p-value from a provided z statistic and n
+Get -log10 p-value from a provided z statistic (or p-value) and n
 }
 \examples{
 z = 50

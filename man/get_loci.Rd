@@ -12,7 +12,8 @@ get_loci(
   maf_col = "MAF",
   beta_col = "BETA",
   se_col = "SE",
-  n_bases = 1e+06
+  n_bases = 1e+06,
+  p_threshold = 5e-08
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ get_loci(
 \item{se_col}{A string. Default="SE". The SE column name.}
 
 \item{n_bases}{An interger. Default=1e6. The distance between two significant SNPs, beyond which they are defined as in separate loci.}
+
+\item{p_threshold}{A number. Default=5e-8. P-value threshold for statistical significance}
 }
 \value{
 Returns a data frame of significant SNPs with locus annotation

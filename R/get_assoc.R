@@ -83,6 +83,10 @@ get_assoc = function(x, y, z, d,
 		d = d[,colnames(d) %in% all_vars]
 	}
 	
+	# check z formula starts with a "+" - if not, add one 
+	z = stringr::str_replace_all(z, " ", "")
+	if (stringr::str_sub(z,start=1,end=1) != "+")  z = paste0("+",z)
+	
 	# use {purrr} function map2() for analysis -- allows for any combination of exposure/outcome numbers
 	ret = purrr::map2(lukesRlib::xv(x,y), lukesRlib::yv(x,y), 
 	                  \(x,y) lukesRlib::get_assoc1(x=x, y=y, z=z, d=d, model=model, af=af, note=note, scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y), 
@@ -223,6 +227,8 @@ get_assoc1 = function(x, y, z, d,
 		# get sample size - categorical exposure
 		if (!coxph)  {
 			n = x_vals_n = table(d |> dplyr::select(!!x, !!y) |> na.omit() |> dplyr::select(!!x))
+			
+			# make sure values line up with x labels
 			for (ii in 1:length(x_vals))  {
 				n[ii] = x_vals_n[x_vals[ii]]
 				if (is.na(n[ii]))  n[ii] = 0
@@ -233,16 +239,28 @@ get_assoc1 = function(x, y, z, d,
 		# if model is logistic, get the cases too
 		if (logistic)  {
 			n_cases = x_vals_n_cases = table(d |> dplyr::select(!!x, !!y) |> na.omit() |> dplyr::filter(.data[[y]]==1) |> dplyr::select(!!x))
-			for (ii in 1:length(x_vals))  n_cases[ii] = x_vals_n_cases[x_vals[ii]]
+			
+			# make sure values line up with x labels
+			for (ii in 1:length(x_vals))  {
+				n_cases[ii] = x_vals_n_cases[x_vals[ii]]
+				if (is.na(n_cases[ii]))  n_cases[ii] = 0
+			}
 			res = res |> dplyr::mutate(n_cases=as.numeric(n_cases))
 		}
 
 		# if model is coxph, get the cases too
 		if (coxph)  {
-			n = fit$n
+			n = x_vals_n = table(d |> dplyr::select(!!x, !!y1, !!y2) |> na.omit() |> dplyr::select(!!x))
 			n_cases = x_vals_n_cases = table(d |> dplyr::select(!!x, !!y1, !!y2) |> na.omit() |> dplyr::filter(.data[[y2]]==1) |> dplyr::select(!!x))
-			for (ii in 1:length(x_vals))  n_cases[ii] = x_vals_n_cases[x_vals[ii]]
-			res = res |> dplyr::mutate(n, n_cases=as.numeric(n_cases))
+			
+			# make sure values line up with x labels
+			for (ii in 1:length(x_vals))  {
+				n[ii] = x_vals_n[x_vals[ii]]
+				if (is.na(n[ii]))  n[ii] = 0
+				n_cases[ii] = x_vals_n_cases[x_vals[ii]]
+				if (is.na(n_cases[ii]))  n_cases[ii] = 0
+			}
+			res = res |> dplyr::mutate(n=as.numeric(n), n_cases=as.numeric(n_cases))
 		}
 
 	} else {  # exposure is not categorical

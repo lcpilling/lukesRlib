@@ -4,16 +4,18 @@
 \alias{get_p_neglog10}
 \title{Get -log10 p-value (using Z only)}
 \usage{
-get_p_neglog10(z)
+get_p_neglog10(z, is_p = FALSE)
 }
 \arguments{
-\item{z}{a z (or t) statistic}
+\item{z}{Numeric. A z statistic or p-value.}
+
+\item{is_p}{Logistic. Default=FALSE. Is this a p-value?}
 }
 \value{
 Returns a -log 10 p-value
 }
 \description{
-Get -log10 p-value from a provided z statistic
+Get -log10 p-value from a provided z statistic (or p-value)
 }
 \examples{
 z = 50

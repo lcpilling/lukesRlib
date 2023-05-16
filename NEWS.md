@@ -1,3 +1,8 @@
+# lukesRlib 0.2.1
+
+* Added p-value threshold option to `get_loci()`
+* Fix problem getting `n` in `get_assoc()` when `model="coxph"`
+
 # lukesRlib 0.2.0
 
 * `get_assoc()` can now perform `coxph()` models from the {survival} package. The user provides strings depicting the survival object as the outcome e.g., "Surv(time, event)"

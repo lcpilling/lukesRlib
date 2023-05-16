@@ -46,11 +46,8 @@ get_p = function(z) {
 #'
 get_z = function(p, two_sided=TRUE) {
 	if (!is.numeric(p))  stop("p needs to be numeric")
-	if (two_sided)  {
-		z = abs(qnorm(p/2))
-	}  else  {
-		z = abs(qnorm(p))
-	}
+	if (two_sided)  p = p/2
+	z = abs(qnorm(p))
 	z
 }
 
@@ -87,7 +84,7 @@ get_p_extreme = function(z) {
 
 #' Get -log10 p-value (using Z only)
 #'
-#' @description Get -log10 p-value from a provided z statistic
+#' @description Get -log10 p-value from a provided z statistic (or p-value)
 #'
 #' @return Returns a -log 10 p-value
 #'
@@ -95,7 +92,8 @@ get_p_extreme = function(z) {
 #'
 #' @name get_p_neglog10
 #'
-#' @param z a z (or t) statistic
+#' @param z Numeric. A z statistic or p-value.
+#' @param is_p Logistic. Default=FALSE. Is this a p-value? 
 #'
 #' @examples
 #' z = 50
@@ -105,8 +103,10 @@ get_p_extreme = function(z) {
 #' @export
 #'
 
-get_p_neglog10 = function(z) {
+get_p_neglog10 = function(z, 
+                          is_p=FALSE) {
 	if (!is.numeric(z))  stop("z needs to be numeric")
+	if (is_p)  z = lukesRlib::get_z(z)
 	neglog10_p=-( 2 + pnorm(-abs( z ), log.p=T) ) / log(10)
 	neglog10_p
 }
@@ -114,7 +114,7 @@ get_p_neglog10 = function(z) {
 
 #' Get -log10 p-value (using Z & N)
 #'
-#' @description Get -log10 p-value from a provided z statistic and n
+#' @description Get -log10 p-value from a provided z statistic (or p-value) and n
 #'
 #' @return Returns a -log 10 p-value
 #'
@@ -124,6 +124,7 @@ get_p_neglog10 = function(z) {
 #'
 #' @param z a z (or t) statistic
 #' @param n the sample size used to estimate the z (or t) statistic
+#' @param is_p Logistic. Default=FALSE. Is this a p-value? 
 #'
 #' @examples
 #' z = 50
@@ -134,9 +135,12 @@ get_p_neglog10 = function(z) {
 #' @export
 #'
 
-get_p_neglog10_n = function(z, n) {
+get_p_neglog10_n = function(z, 
+                            n, 
+                            is_p=FALSE) {
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	if (!is.numeric(n))  stop("n needs to be numeric")
+	if (is_p)  z = lukesRlib::get_z(z)
 	neglog10_p=-1*(pt(abs(z),df=n,lower.tail=F,log.p=T) + log(2))/log(10)
 	neglog10_p
 }
