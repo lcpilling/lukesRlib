@@ -25,7 +25,7 @@
 #' @param inv_norm_y Logical. Default is FALSE. Apply inv_norm() function to outcome?
 #' @param subset_d Logical. Default is TRUE. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used)
 #' @param progress Logical. Default is TRUE. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided)
-#' @param extreme_ps Logical. Default is TRUE. If p==0 then return "extreme p-values" as strings.
+#' @param extreme_ps Logical. Default is FALSE. If p==0 then return "extreme p-values" as strings.
 #' @param ... Other `tidy_ci()` options
 #'
 #' @examples
@@ -52,7 +52,7 @@ get_assoc = function(x, y, z, d,
                      scale_y = FALSE,
                      inv_norm_x = FALSE, 
                      inv_norm_y = FALSE,
-                     extreme_ps = TRUE,
+                     extreme_ps = FALSE,
                      ...)  {
 	
 	# check inputs
