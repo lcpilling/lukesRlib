@@ -18,7 +18,7 @@ get_assoc(
   scale_y = FALSE,
   inv_norm_x = FALSE,
   inv_norm_y = FALSE,
-  extreme_ps = TRUE,
+  extreme_ps = FALSE,
   ...
 )
 }
@@ -49,7 +49,7 @@ get_assoc(
 
 \item{inv_norm_y}{Logical. Default is FALSE. Apply inv_norm() function to outcome?}
 
-\item{extreme_ps}{Logical. Default is TRUE. If p==0 then return "extreme p-values" as strings.}
+\item{extreme_ps}{Logical. Default is FALSE. If p==0 then return "extreme p-values" as strings.}
 
 \item{...}{Other `tidy_ci()` options}
 }
