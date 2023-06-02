@@ -1,3 +1,9 @@
+# lukesRlib 0.2.2
+
+* Decided to remove `doCoxSplinePlot()` because it is so much easier to do in {ggplot2} that a whole function is no longer necessary
+* - Therefore the {pspline} dependency can be removed
+* Set `extreme_ps` default to FALSE in `get_assoc()`
+
 # lukesRlib 0.2.1
 
 * Added p-value threshold option to `get_loci()`

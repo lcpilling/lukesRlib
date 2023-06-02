@@ -2,7 +2,6 @@
 
 export(.squeeze_blanks)
 export(carrec)
-export(doCoxSplinePlot)
 export(get_assoc)
 export(get_assoc1)
 export(get_loci)

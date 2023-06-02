@@ -3,7 +3,7 @@
 # lukesRlib
 My library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.2.1-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.2.2-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -23,8 +23,6 @@ My library of R functions I sometimes find useful
   - [Genetics](#genetics)
     - [lambda_gc()](#lambda_gc)
     - [get_loci()](#get_loci)
-  - [Plotting](#plotting)
-    - [doCoxSplinePlot()](#doCoxSplinePlot)
 
 ## Installation
 To install `lukesRlib` from GitHub use the `remotes` package:
@@ -39,11 +37,9 @@ To update the package just run the above command again.
 ### tidy_ci()
 `tidy_ci()` ("tidy with CIs") runs [`broom::tidy()`](https://broom.tidymodels.org/) and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
 
-Motivation: by default the [`broom`](https://broom.tidymodels.org/) package uses `confint()` to estimate CIs. For GLMs this calculates CIs via the profile likelihood method. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to calculating using 1.96*SE
+Motivation: by default the [{broom}](https://broom.tidymodels.org/) package uses `confint()` to estimate CIs. For GLMs this calculates CIs via the profile likelihood method. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to calculating using 1.96*SE
 
-`tidy_ci()` does a few other nice things: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, and if p==0 returns the 'extreme p' as a string. Other options include -log10 p-values.
-
-See the [`tidy_ci()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/tidy_ci()) page for more details 
+`tidy_ci()` does a few other nice things: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, and if p==0 returns the 'extreme p' as a string. Other options include -log10 p-values. See the [`tidy_ci()` Wiki](https://github.com/lukepilling/lukesRlib/wiki/tidy_ci()) page for more details 
 
 #### Examples
 
@@ -108,16 +104,16 @@ get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model=
 
 In the above example, the `estimate` is the Odds Ratio from a logistic regression model. The `n` and `n_cases` are directly from the model object and reflect those included in the model after excluding missing participants. The exposure is categorical, and a reference category line has been added to include the N and Ncases for that group. 
 
-##### multiple exposures on single outcome (i.e., a "PheWAS")
+##### Multiple exposures on single outcome (i.e., a "PheWAS")
 ```R
-x_vars = c("bmi","ldl","sbp_0_avg")
+x_vars = c("bmi","ldl","sbp")
 get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
 #> # A tibble: 3 x 11
-#>   outcome exposure  estimate std.error statistic  p.value conf.low conf.high     n n_cases model   
-#>   <chr>   <chr>        <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl> <int>   <int> <chr>   
-#> 1 chd     bmi          1.08    0.0113      6.97  3.10e-12    1.06       1.11  4692     324 logistic
-#> 2 chd     ldl          0.980   0.0689     -0.300 7.64e- 1    0.856      1.12  4498     311 logistic
-#> 3 chd     sbp_0_avg    1.01    0.00333     3.53  4.23e- 4    1.01       1.02  4561     316 logistic
+#>   outcome exposure estimate std.error statistic p.value conf.low conf.high     n n_cases model   
+#>   <chr>   <chr>       <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <int>   <int> <chr>   
+#> 1 chd     bmi         1.08    0.0113      6.97  3.1e-12    1.06       1.11  4692     324 logistic
+#> 2 chd     ldl         0.980   0.0689     -0.300 7.6e- 1    0.856      1.12  4498     311 logistic
+#> 3 chd     sbp         1.01    0.00333     3.53  4.2e- 4    1.01       1.02  4561     316 logistic
 ```
 
 Multiple exposures and outcomes can be provided simultaneously.
@@ -127,9 +123,7 @@ Multiple exposures and outcomes can be provided simultaneously.
 
 ### carrec()
 
-From Steve Miller's package https://github.com/svmiller/stevemisc
-
-`carrec()` (phonetically: "car-wreck") is a simple port of `car::recode()` to avoid clashes in the `{car}` package. This package offers STATA-like recoding features for R.
+From [Steve Miller's package](https://github.com/svmiller/stevemisc): `carrec()` (phonetically: "car-wreck") is a port of `car::recode()` to avoid clashes in the {car} package. This offers STATA-like recoding features for R.
 
 For example, if a variable of interest is on a 1-10 scale and you want to code values 6 and above to be 1, and code values of 1-5 to be 0, you would do:
 
@@ -264,43 +258,4 @@ get_loci(
   n_bases = 1e+06
 )
 ```
-
-
-## Plotting
-
-### doCoxSplinePlot()
-
-R function to plot the (spline smoothed) exposure in a Cox proportional hazard model against the hazard ratio.
-
-The function takes as input the results of a Cox proportional hazard model and plots a continuous exposure against the hazard ratio. The continuous exposure must be a spline term for the smoothing function to work. It is up to you to create the sensible CoxPH model. Includes 95% confidence intervals and boxplot along x-axis to show data distribution.
-
-See the [`doCoxSplinePlot()` Wiki page](https://github.com/lukepilling/lukesRlib/wiki/doCoxSplinePlot()) page for details 
-
-#### Example
-```
-## get data, exclude missings
-data = data.frame( dead,       # numeric vector: binary [0=alive, 1=dead]
-                   age_death,  # numeric vector: age at death for each participant
-                   albumin     # numeric vector: the risk factor you are assessing
-                   age,        # numeric vector: age at measurement of risk factor (cofactor)
-                   sex,        # numeric vector: sex of participant (cofactor)
-                   smokes      # numeric vector: smoking status of participant (cofactor)
-                 ) |> na.omit()
-
-## load required packages
-library(survival)
-
-## do Cox model -- can include cofactors if desired
-##     primary independent variable (exposure of interest) must be pspline()
-library(pspline)
-pham_fit = coxph( Surv(age_death, dead) ~ pspline(albumin, df=4) + age + sex + as.factor(smokes), data=data)
-
-## use doCoxSplinePlot() to plot the smoothed curve (including CI's) for the Cox model
-doCoxSplinePlot(x        = data$albumin, 
-                fit      = pham_fit, 
-                x.lab    = "Albumin (g/dL)", 
-                title    = "Circulating albumin and mortality risk",
-                subtitle = "CoxPH model adjusted for age, sex and smokes, with 95% CIs")
-```
-![](https://github.com/lukepilling/doCoxSplinePlot/blob/master/I0wQG.png)
 
