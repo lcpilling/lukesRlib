@@ -3,7 +3,7 @@
 # lukesRlib
 My library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.2.2-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.2.3-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -20,9 +20,6 @@ My library of R functions I sometimes find useful
   - [Working with test statistics](#working-with-test-statistics)
     - [get_se()](#get_se), [get_z()](#get_z), [get_p()](#get_p)
     - [get_p_extreme()](#get_p_extreme), [get_p_neglog10()](#get_p_neglog10), [get_p_neglog10_n()](#get_p_neglog10_n)
-  - [Genetics](#genetics)
-    - [lambda_gc()](#lambda_gc)
-    - [get_loci()](#get_loci)
 
 ## Installation
 To install `lukesRlib` from GitHub use the `remotes` package:
@@ -229,33 +226,5 @@ z = 50
 n = 100000
 get_p_neglog10_n(z, n)
 #>  [1] 537.9851
-```
-
-
-## Genetics
-
-### lambda_gc()
-Estimate inflation of test statistics. Lambda GC compares the median test statistic against the expected median test statistic under the null hypothesis of no association. For well-powered quantitative traits with a known polygenic inheritance, we expect inflation of lambda GC, but for traits with no expected association, we expect lambda GC to be around 1.
-
-```r
-lambda_gc(p_values)
-```
-
-
-
-### get_loci()
-Determine loci from a GWAS summary statistics file. Use distance from lead significant SNP to estimate independet loci in GWAS summary stats. Uses -log10(p) derived from BETA/SE so does not need P as input.
-
-```r
-get_loci(
-  gwas,
-  snp_col = "SNP",
-  chr_col = "CHR",
-  pos_col = "BP",
-  maf_col = "MAF",
-  beta_col = "BETA",
-  se_col = "SE",
-  n_bases = 1e+06
-)
 ```
 

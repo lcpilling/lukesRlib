@@ -1,3 +1,8 @@
+# lukesRlib 0.2.3
+
+* Decided to remove genetics-related functions to instead have them in a separate package, as the dependencies were getting out of hand
+* See https://github.com/lukepilling/gwasRtools
+
 # lukesRlib 0.2.2
 
 * Decided to remove `doCoxSplinePlot()` because it is so much easier to do in {ggplot2} that a whole function is no longer necessary
