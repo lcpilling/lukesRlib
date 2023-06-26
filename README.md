@@ -234,7 +234,7 @@ get_p_neglog10_n(z, n)
 
 ## Plotting-related
 
-### anootate_textp()
+### annotate_textp()
 
 Annotate a ggplot2 plot with text. Allows one to specify the relative position of the figure easily. Configurable margin, text and box justification. The added bonus in the following code is that you can specify which facet to annotate with something like `facets=data.frame(cat1='blue', cat2='tall')`.
 
