@@ -1,7 +1,8 @@
 # lukesRlib 0.2.3
 
 * Decided to remove genetics-related functions to instead have them in a separate package, as the dependencies were getting out of hand
-* See https://github.com/lukepilling/gwasRtools
+  * See https://github.com/lukepilling/gwasRtools
+* Add `annotate_textp()` function for use in ggplot2 plots for adding easy text annotation geoms
 
 # lukesRlib 0.2.2
 

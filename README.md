@@ -1,4 +1,4 @@
-<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/lukesRlib.png" width="180" />
+<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/main/images/lukesRlib.png" width="180" />
 
 # lukesRlib
 My library of R functions I sometimes find useful
@@ -20,6 +20,8 @@ My library of R functions I sometimes find useful
   - [Working with test statistics](#working-with-test-statistics)
     - [get_se()](#get_se), [get_z()](#get_z), [get_p()](#get_p)
     - [get_p_extreme()](#get_p_extreme), [get_p_neglog10()](#get_p_neglog10), [get_p_neglog10_n()](#get_p_neglog10_n)
+  - [Plotting-related](#plotting-related)
+    - [annotate_textp()](#annotate_textp)
 
 ## Installation
 To install `lukesRlib` from GitHub use the `remotes` package:
@@ -228,3 +230,23 @@ get_p_neglog10_n(z, n)
 #>  [1] 537.9851
 ```
 
+
+
+## Plotting-related
+
+### anootate_textp()
+
+Annotate a ggplot2 plot with text. Allows one to specify the relative position of the figure easily. Configurable margin, text and box justification. The added bonus in the following code is that you can specify which facet to annotate with something like `facets=data.frame(cat1='blue', cat2='tall')`.
+
+Function originally by Rosen Matev (from https://stackoverflow.com/questions/22488563/ggplot2-annotate-layer-position-in-r)
+
+To get it aligned nicely in the middle, it may also require adjusting `box_just` depending on plot width etc. Other options include `size` and `alpha`
+
+```r
+qplot(1:10,1:10) + annotate_textp('Text annotation\nx=1, y=0, hjust=1', x=1, y=0, hjust=1)
+qplot(1:10,1:10) + annotate_textp('Text annotation\nx=0.1, y=0.9, hjust=0', x=0, y=1, hjust=0)
+qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5))
+qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)\nsize=14, alpha=0.5', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5), size=13, alpha=0.5)
+```
+
+<img align="middle" src="https://github.com/lukepilling/lukesRlib/raw/master/annotate_textp.png" />

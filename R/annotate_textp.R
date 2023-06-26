@@ -1,0 +1,58 @@
+#' Annotate a ggplot2 plot with text
+#'
+#' @description One can specify the relative position of the figure easily. Configurable margin, text and box justification. The added bonus in the following code is that you can specify which facet to annotate with something like facets=data.frame(cat1='blue', cat2='tall')
+#'
+#' From Stack Overflow comment https://stackoverflow.com/questions/22488563/ggplot2-annotate-layer-position-in-r
+#'
+#' @return Returns a geom layer 
+#'
+#' @author Rosen Matev
+#'
+#' @name annotate_textp
+#'
+#' @param label A string. The text to be plotted.
+#' @param x Numeric. X axis position (min=0, max=1 - relative to the plot margins)
+#' @param y Numeric. Y axis position (min=0, max=1 - relative to the plot margins)
+#' @param hjust Numeric. The horizontal alignment  (0 = left, 0.5 = center, 1 = right). Default=0
+#' @param size Numeric. Font size. Default={theme default)
+#' @param alpha Numeric. Transparency (0:1). Default=NA
+#'
+#' @examples
+#' qplot(1:10,1:10) + annotate_textp('Text annotation\nx=1, y=0, hjust=1', x=1, y=0, hjust=1)
+#' qplot(1:10,1:10) + annotate_textp('Text annotation\nx=0.1, y=0.9, hjust=0', x=0, y=1, hjust=0)
+#' qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)\nsize=14, alpha=0.5', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5), size=14, alpha=0.5)
+#'
+#' @export
+#'
+
+annotate_textp = function(label, x, y, facets=NULL, hjust=0, vjust=0, color='black', alpha=NA,
+                          family=thm$text$family, size=thm$text$size, fontface=1, lineheight=1.0,
+                          box_just=ifelse(c(x,y)<0.5,0,1), margin=unit(size/2, 'pt'), thm=theme_get()) {
+  x = scales::squish_infinite(x)
+  y = scales::squish_infinite(y)
+  data = if (is.null(facets)) data.frame(x=NA) else data.frame(x=NA, facets)
+
+  tg = grid::textGrob(
+    label, x=0, y=0, hjust=hjust, vjust=vjust,
+    gp=grid::gpar(col=alpha(color, alpha), fontsize=size, fontfamily=family, fontface=fontface, lineheight=lineheight)
+  )
+  ts = grid::unit.c(grid::grobWidth(tg), grid::grobHeight(tg))
+  vp = grid::viewport(x=x, y=y, width=ts[1], height=ts[2], just=box_just)
+  tg = grid::editGrob(tg, x=ts[1]*hjust, y=ts[2]*vjust, vp=vp)
+  inner = grid::grobTree(tg, vp=grid::viewport(width=unit(1, 'npc')-margin*2, height=unit(1, 'npc')-margin*2))
+
+  layer(
+    data = NULL,
+    stat = StatIdentity,
+    position = PositionIdentity,
+    geom = GeomCustomAnn,
+    inherit.aes = TRUE,
+    params = list(
+      grob=grid::grobTree(inner), 
+      xmin=-Inf, 
+      xmax=Inf, 
+      ymin=-Inf, 
+      ymax=Inf
+    )
+  )
+}
