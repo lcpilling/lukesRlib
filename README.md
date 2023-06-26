@@ -1,4 +1,4 @@
-<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/main/images/lukesRlib.png" width="180" />
+<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/images/lukesRlib.png" width="180" />
 
 # lukesRlib
 My library of R functions I sometimes find useful
@@ -249,4 +249,4 @@ qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nb
 qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)\nsize=14, alpha=0.5', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5), size=13, alpha=0.5)
 ```
 
-<img align="middle" src="https://github.com/lukepilling/lukesRlib/raw/master/annotate_textp.png" />
+<img align="middle" src="https://github.com/lukepilling/lukesRlib/raw/master/images/annotate_textp.png" />
