@@ -88,8 +88,9 @@ get_assoc = function(x, y, z, d,
 	if (stringr::str_sub(z,start=1,end=1) != "+")  z = paste0("+",z)
 	
 	# use {purrr} function map2() for analysis -- allows for any combination of exposure/outcome numbers
-	ret = purrr::map2(lukesRlib::xv(x,y), lukesRlib::yv(x,y), 
-	                  \(x,y) lukesRlib::get_assoc1(x=x, y=y, z=z, d=d, model=model, af=af, note=note, scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y), 
+	ret = purrr::map2(lukesRlib:::xv(x,y), 
+	                  lukesRlib:::yv(x,y), 
+	                  \(x,y) lukesRlib:::get_assoc1(x=x, y=y, z=z, d=d, model=model, af=af, note=note, scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y), 
 	                 .progress = progress) |> 
 	      purrr::list_rbind()
 	
@@ -144,8 +145,6 @@ get_assoc = function(x, y, z, d,
 #' # one exposure on multiple outcomes, then combine output
 #' y_vars = c("bmi","ldl","sbp_0_avg")
 #' res = do.call(rbind, lapply(y_vars, function(y) get_assoc1(x="smoking_status", y=y, z="+age+sex", d=ukb, af=TRUE)))
-#'
-#' @export
 #'
 
 get_assoc1 = function(x, y, z, d, 
@@ -314,8 +313,6 @@ get_assoc1 = function(x, y, z, d,
 #' x_vars2 = xv(x_vars, y_vars)
 #' y_vars2 = yv(x_vars, y_vars)
 #'
-#' @export
-#'
 
 xv = function(x_vars, y_vars) {
 	purrr::map(x_vars, \(x) rep(x, length(y_vars))) |> purrr::list_c()
@@ -340,8 +337,6 @@ xv = function(x_vars, y_vars) {
 #' y_vars = c("chd","t2d")
 #' x_vars2 = xv(x_vars, y_vars)
 #' y_vars2 = yv(x_vars, y_vars)
-#'
-#' @export
 #'
 
 yv = function(x_vars, y_vars) {
