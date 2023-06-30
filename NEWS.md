@@ -4,6 +4,7 @@
   * See https://github.com/lukepilling/gwasRtools
 * Add `annotate_textp()` function for use in ggplot2 plots for adding easy text annotation geoms
 * Moved some functions to be internal only to tidy up the namespace
+* Fix `get_p_extreme` if NaN is passed rather than NA
 
 # lukesRlib 0.2.2
 

@@ -74,6 +74,7 @@ get_z = function(p, two_sided=TRUE) {
 
 get_p_extreme = function(z) {
 	if (!is.numeric(z))  stop("z needs to be numeric")
+	z[ is.nan(z) ] = NA
 	log_pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
 	log10_pvalue = log_pvalue/log(10) ## from natural log to log10
 	mantissa     = 10^(log10_pvalue %% 1)
@@ -172,7 +173,7 @@ get_p_neglog10_n = function(z,
 get_se = function(lci, uci, log=FALSE, denominator=3.919928) {
 	if (!is.numeric(lci))  stop("`lci` needs to be numeric")
 	if (!is.numeric(uci))  stop("`uci` needs to be numeric")
-	if (lci > uci)         stop("`uci` needs to be greater than `lci`")
+	#if (any(lci > uci))         stop("`uci` needs to be greater than `lci`")
 	if (log)  {
 		lci = log(lci)
 		uci = log(uci)
