@@ -11,7 +11,7 @@ get_p_neglog10_n(z, n, is_p = FALSE)
 
 \item{n}{the sample size used to estimate the z (or t) statistic}
 
-\item{is_p}{Logistic. Default=FALSE. Is this a p-value?}
+\item{is_p}{Logical. Default=FALSE. Is this a p-value?}
 }
 \value{
 Returns a -log 10 p-value

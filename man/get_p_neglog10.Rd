@@ -9,7 +9,7 @@ get_p_neglog10(z, is_p = FALSE)
 \arguments{
 \item{z}{Numeric. A z statistic or p-value.}
 
-\item{is_p}{Logistic. Default=FALSE. Is this a p-value?}
+\item{is_p}{Logical. Default=FALSE. Is this a p-value?}
 }
 \value{
 Returns a -log 10 p-value

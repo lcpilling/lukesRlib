@@ -29,7 +29,7 @@
 #' @param exp Logical. Default is FALSE. Exponentiate estimate and CIs -- also see `check_model`.
 #' @param check_model Logical. Default is TRUE. Set `exp=TRUE` if `glm(family=binomial)` or `survival::coxph()` or `cmprsk::crr()` was performed.
 #' @param n Numeric. Default is NA. The N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required.
-#' @param get_r2 Logical. Default is TRUE. get R^2 value if model is linear.
+#' @param get_r2 Logical. Default is TRUE. get R^2 value if model is linear, or C-statistic if model is CoxPH
 #' @param quiet Logical. Default is FALSE. Suppress text output
 #' @param ... Other `tidy()` options
 #'
@@ -120,6 +120,10 @@ tidy_ci = function(x,
 		if (any(c("coxph") %in% class(x)))  {
 			model = "CoxPH model (estimate=Hazard Ratio)"
 			text_out = paste0(text_out, ", Nevents=", x$nevent)
+			if (get_r2)  {
+				c_stat = concordance(x)
+				text_out = paste0(text_out, " :: C-statistic=", signif(c_stat$concordance,2))
+			}
 			exp = TRUE
 		}
 		if (any(c("crr","tidycrr") %in% class(x)))  {

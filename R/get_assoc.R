@@ -309,6 +309,7 @@ get_assoc1 = function(x, y, z, d,
 #' x_vars2 = xv(x_vars, y_vars)
 #' y_vars2 = yv(x_vars, y_vars)
 #'
+#' @noRd
 
 xv = function(x_vars, y_vars) {
 	purrr::map(x_vars, \(x) rep(x, length(y_vars))) |> purrr::list_c()
@@ -334,6 +335,7 @@ xv = function(x_vars, y_vars) {
 #' x_vars2 = xv(x_vars, y_vars)
 #' y_vars2 = yv(x_vars, y_vars)
 #'
+#' @noRd
 
 yv = function(x_vars, y_vars) {
 	purrr::map(x_vars, \(x) c(y_vars)) |> purrr::list_c()

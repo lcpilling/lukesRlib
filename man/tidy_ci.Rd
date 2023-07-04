@@ -42,7 +42,7 @@ tidy_ci(
 
 \item{n}{Numeric. Default is NA. The N for `neglog10p` is extracted automatically for `glm` or `coxph` objects - override here if required.}
 
-\item{get_r2}{Logical. Default is TRUE. get R^2 value if model is linear.}
+\item{get_r2}{Logical. Default is TRUE. get R^2 value if model is linear, or C-statistic if model is CoxPH}
 
 \item{quiet}{Logical. Default is FALSE. Suppress text output}
 

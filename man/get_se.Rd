@@ -7,13 +7,13 @@
 get_se(lci, uci, log = FALSE, denominator = 3.919928)
 }
 \arguments{
-\item{lci}{the lower confidence interval}
+\item{lci}{The lower confidence interval}
 
-\item{uci}{the lower confidence interval}
+\item{uci}{The lower confidence interval}
 
-\item{log}{log the CI values? (default=FALSE)}
+\item{log}{Log the CI values? (default=FALSE)}
 
-\item{denominator}{the standard error of the sample mean (default=3.92... well actually, 3.919928 from `2*get_z(0.05)`)}
+\item{denominator}{The standard error of the sample mean (default=3.92... well actually, 3.919928 from `2*get_z(0.05)`)}
 }
 \value{
 Returns SE (numeric)

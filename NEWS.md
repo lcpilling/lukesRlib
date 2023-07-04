@@ -4,7 +4,8 @@
   * lm = R-squared
   * logistic = McFadden's pseudo-R2
   * coxph = Harrell's c-statistic
-* Also fix error if user does not want to provide any covariates to `get_assoc()`
+* Fix error if user does not want to provide any covariates to `get_assoc()`
+* `tidy_ci()` now returns the C-statistic for CoxPH models by default
 
 # lukesRlib 0.2.3
 

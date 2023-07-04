@@ -16,7 +16,7 @@
 #' #>  [1] 1.523971e-23
 #'
 #' @export
-#'
+
 get_p = function(z) {
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	p = 2*pnorm(-abs(z))
@@ -43,8 +43,9 @@ get_p = function(z) {
 #' #>  [1] 6.466951
 #'
 #' @export
-#'
-get_z = function(p, two_sided=TRUE) {
+
+get_z = function(p, 
+                 two_sided=TRUE) {
 	if (!is.numeric(p))  stop("p needs to be numeric")
 	if (two_sided)  p = p/2
 	z = abs(qnorm(p))
@@ -72,7 +73,7 @@ get_z = function(p, two_sided=TRUE) {
 #' @export
 #'
 
-get_p_extreme = function(z) {
+get_p_extreme = function(z)  {
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	z[ is.nan(z) ] = NA
 	log_pvalue   = log(2) + pnorm(abs(z), lower.tail = FALSE, log.p = TRUE)
@@ -94,7 +95,7 @@ get_p_extreme = function(z) {
 #' @name get_p_neglog10
 #'
 #' @param z Numeric. A z statistic or p-value.
-#' @param is_p Logistic. Default=FALSE. Is this a p-value? 
+#' @param is_p Logical. Default=FALSE. Is this a p-value? 
 #'
 #' @examples
 #' z = 50
@@ -105,7 +106,7 @@ get_p_extreme = function(z) {
 #'
 
 get_p_neglog10 = function(z, 
-                          is_p=FALSE) {
+                          is_p=FALSE)  {
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	if (is_p)  z = lukesRlib::get_z(z)
 	neglog10_p=-( 2 + pnorm(-abs( z ), log.p=T) ) / log(10)
@@ -125,7 +126,7 @@ get_p_neglog10 = function(z,
 #'
 #' @param z a z (or t) statistic
 #' @param n the sample size used to estimate the z (or t) statistic
-#' @param is_p Logistic. Default=FALSE. Is this a p-value? 
+#' @param is_p Logical. Default=FALSE. Is this a p-value? 
 #'
 #' @examples
 #' z = 50
@@ -138,7 +139,7 @@ get_p_neglog10 = function(z,
 
 get_p_neglog10_n = function(z, 
                             n, 
-                            is_p=FALSE) {
+                            is_p=FALSE)  {
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	if (!is.numeric(n))  stop("n needs to be numeric")
 	if (is_p)  z = lukesRlib::get_z(z)
@@ -157,10 +158,10 @@ get_p_neglog10_n = function(z,
 #'
 #' @name get_se
 #'
-#' @param lci the lower confidence interval
-#' @param uci the lower confidence interval
-#' @param log log the CI values? (default=FALSE)
-#' @param denominator the standard error of the sample mean (default=3.92... well actually, 3.919928 from `2*get_z(0.05)`)
+#' @param lci The lower confidence interval
+#' @param uci The lower confidence interval
+#' @param log Log the CI values? (default=FALSE)
+#' @param denominator The standard error of the sample mean (default=3.92... well actually, 3.919928 from `2*get_z(0.05)`)
 #'
 #' @examples
 #' lci = 0.1
@@ -169,8 +170,11 @@ get_p_neglog10_n = function(z,
 #' #>  [1] 0.05102041
 #'
 #' @export
-#'
-get_se = function(lci, uci, log=FALSE, denominator=3.919928) {
+
+get_se = function(lci, 
+                  uci, 
+                  log=FALSE, 
+                  denominator=3.919928)  {
 	if (!is.numeric(lci))  stop("`lci` needs to be numeric")
 	if (!is.numeric(uci))  stop("`uci` needs to be numeric")
 	#if (any(lci > uci))         stop("`uci` needs to be greater than `lci`")
