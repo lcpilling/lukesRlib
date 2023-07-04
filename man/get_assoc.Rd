@@ -7,19 +7,19 @@
 get_assoc(
   x,
   y,
-  z = "",
+  z,
   d,
-  subset_d = TRUE,
-  progress = TRUE,
   model = "lm",
   af = FALSE,
   note = "",
   get_fit = FALSE,
+  extreme_ps = FALSE,
   scale_x = FALSE,
   scale_y = FALSE,
   inv_norm_x = FALSE,
   inv_norm_y = FALSE,
-  extreme_ps = FALSE,
+  subset_d = TRUE,
+  progress = TRUE,
   ...
 )
 }
@@ -28,13 +28,9 @@ get_assoc(
 
 \item{y}{A string. The outcome variable name, found in `d` -- if model is 'coxph' then paste the survival object here e.g., 'Surv(time, event)' where `time` and `event` are variables in `d`}
 
-\item{z}{A string. Default is "". The covariate formula (e.g., " + age + sex"), found in `d`}
+\item{z}{A string. The covariate formula (e.g., " + age + sex"), found in `d`}
 
 \item{d}{A data.frame or tibble. The data}
-
-\item{subset_d}{Logical. Default is TRUE. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used)}
-
-\item{progress}{Logical. Default is TRUE. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided)}
 
 \item{model}{A string. Default is "lm". The type of model to perform. Can also be "logistic" or "coxph"}
 
@@ -44,6 +40,8 @@ get_assoc(
 
 \item{get_fit}{Logical. Default is FALSE. Get model fit? (for each model: lm=R2, logistic=McFadden's pseudo-R2, coxph=Harrell's c-statistic)}
 
+\item{extreme_ps}{Logical. Default is FALSE. If p==0 then return "extreme p-values" as strings.}
+
 \item{scale_x}{Logical. Default is FALSE. Apply scale() function to exposure?}
 
 \item{scale_y}{Logical. Default is FALSE. Apply scale() function to outcome?}
@@ -52,7 +50,9 @@ get_assoc(
 
 \item{inv_norm_y}{Logical. Default is FALSE. Apply inv_norm() function to outcome?}
 
-\item{extreme_ps}{Logical. Default is FALSE. If p==0 then return "extreme p-values" as strings.}
+\item{subset_d}{Logical. Default is TRUE. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used)}
+
+\item{progress}{Logical. Default is TRUE. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided)}
 
 \item{...}{Other `tidy_ci()` options}
 }

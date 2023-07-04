@@ -44,17 +44,17 @@
 #' @export
 #'
 get_assoc = function(x, y, z, d, 
-                     subset_d = TRUE,
-                     progress = TRUE,
                      model = "lm", 
                      af = FALSE, 
                      note = "", 
                      get_fit = FALSE,
+                     extreme_ps = FALSE,
                      scale_x = FALSE, 
                      scale_y = FALSE,
                      inv_norm_x = FALSE, 
                      inv_norm_y = FALSE,
-                     extreme_ps = FALSE,
+                     subset_d = TRUE,
+                     progress = TRUE,
                      ...)  {
 	
 	# check inputs
