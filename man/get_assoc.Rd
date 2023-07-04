@@ -7,13 +7,14 @@
 get_assoc(
   x,
   y,
-  z,
+  z = "",
   d,
   subset_d = TRUE,
   progress = TRUE,
   model = "lm",
   af = FALSE,
   note = "",
+  get_fit = FALSE,
   scale_x = FALSE,
   scale_y = FALSE,
   inv_norm_x = FALSE,
@@ -27,7 +28,7 @@ get_assoc(
 
 \item{y}{A string. The outcome variable name, found in `d` -- if model is 'coxph' then paste the survival object here e.g., 'Surv(time, event)' where `time` and `event` are variables in `d`}
 
-\item{z}{A string. The covariate formula (e.g., " + age + sex"), found in `d`}
+\item{z}{A string. Default is "". The covariate formula (e.g., " + age + sex"), found in `d`}
 
 \item{d}{A data.frame or tibble. The data}
 
@@ -40,6 +41,8 @@ get_assoc(
 \item{af}{Logical. Default is FALSE. Is `x` categorical? I.e., include in formula as `as.factor(x)`}
 
 \item{note}{A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.}
+
+\item{get_fit}{Logical. Default is FALSE. Get model fit? (for each model: lm=R2, logistic=McFadden's pseudo-R2, coxph=Harrell's c-statistic)}
 
 \item{scale_x}{Logical. Default is FALSE. Apply scale() function to exposure?}
 
@@ -68,12 +71,12 @@ Can provide multiple exposures and/or outcomes
 get_assoc(y="weight", x="height", z="+age+sex", d=ukb)
 
 # categorical exposure, binary outcome, and stratified analysis (with note)
-get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), logistic=TRUE, af=TRUE, note="Males only")
+get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males only")
 
-# multiple exposures and/or outcomes
+# multiple exposures and/or outcomes - get pseudo R^2
 x_vars = c("bmi","ldl","sbp_0_avg")
 y_vars = c("chd","t2d")
-get_assoc(x=x_vars, y=y_vars, z="+age+sex", d=ukb, logistic=TRUE)
+get_assoc(x=x_vars, y=y_vars, z="+age+sex", d=ukb, model="logistic", get_fit=TRUE)
 
 }
 \author{

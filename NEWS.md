@@ -1,3 +1,11 @@
+# lukesRlib 0.2.4
+
+* Add option "get_fit" to `get_assoc()` to also get model fit statistic when PheWASing. For each model type the `fit_stat` is:
+  * lm = R-squared
+  * logistic = McFadden's pseudo-R2
+  * coxph = Harrell's c-statistic
+* Also fix error if user does not want to provide any covariates to `get_assoc()`
+
 # lukesRlib 0.2.3
 
 * Decided to remove genetics-related functions to instead have them in a separate package, as the dependencies were getting out of hand
@@ -9,7 +17,7 @@
 # lukesRlib 0.2.2
 
 * Decided to remove `doCoxSplinePlot()` because it is so much easier to do in {ggplot2} that a whole function is no longer necessary
-* - Therefore the {pspline} dependency can be removed
+  * Therefore the {pspline} dependency can be removed
 * Set `extreme_ps` default to FALSE in `get_assoc()`
 
 # lukesRlib 0.2.1
