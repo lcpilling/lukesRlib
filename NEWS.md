@@ -1,6 +1,6 @@
 # lukesRlib 0.2.5
 
-* `get_assoc()` now expects the data as first argument, if not defined. To brings it more into general tidyverse rules. For instance, one can now:
+* `get_assoc()` now expects the data as first argument, if not defined. Brings it more into the tidyverse. For instance, one can now:
   * `data |> filter(age>60) |> get_assoc(x="BMI", y="diabetes", z="sex")`
 
 # lukesRlib 0.2.4
