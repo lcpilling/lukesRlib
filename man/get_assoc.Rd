@@ -5,10 +5,10 @@
 \title{Get tidy model output of exposure(s) on outcome(s)}
 \usage{
 get_assoc(
+  d,
   x,
   y,
   z,
-  d,
   model = "lm",
   af = FALSE,
   note = "",
@@ -24,13 +24,13 @@ get_assoc(
 )
 }
 \arguments{
+\item{d}{A data.frame or tibble. The data}
+
 \item{x}{A string or vector of strings. The exposure variable name(s), found in `d`}
 
 \item{y}{A string. The outcome variable name, found in `d` -- if model is 'coxph' then paste the survival object here e.g., 'Surv(time, event)' where `time` and `event` are variables in `d`}
 
 \item{z}{A string. The covariate formula (e.g., " + age + sex"), found in `d`}
-
-\item{d}{A data.frame or tibble. The data}
 
 \item{model}{A string. Default is "lm". The type of model to perform. Can also be "logistic" or "coxph"}
 
@@ -68,10 +68,10 @@ Can provide multiple exposures and/or outcomes
 }
 \examples{
 # for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
-get_assoc(y="weight", x="height", z="+age+sex", d=ukb)
+get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 
 # categorical exposure, binary outcome, and stratified analysis (with note)
-get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males only")
+get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males only")
 
 # multiple exposures and/or outcomes - get pseudo R^2
 x_vars = c("bmi","ldl","sbp_0_avg")

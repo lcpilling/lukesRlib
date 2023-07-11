@@ -1,3 +1,8 @@
+# lukesRlib 0.2.5
+
+* `get_assoc()` now expects the data as first argument, if not defined. To brings it more into general tidyverse rules. For instance, one can now:
+  * `data |> filter(age>60) |> get_assoc(x="BMI", y="diabetes", z="sex")`
+
 # lukesRlib 0.2.4
 
 * Add option "get_fit" to `get_assoc()` to also get model fit statistic when PheWASing. For each model type the `fit_stat` is:

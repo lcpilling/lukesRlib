@@ -3,7 +3,7 @@
 # lukesRlib
 My library of R functions I sometimes find useful
 
-[![](https://img.shields.io/badge/version-0.2.4-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.2.5-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 
@@ -116,6 +116,21 @@ get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
 ```
 
 Multiple exposures and outcomes can be provided simultaneously.
+
+##### Tidyverse formatted. Data is first argument. `get_assoc()` can be on the right-side of other `dplyr` functions
+```R
+res_all     = ukb |> 
+                get_assoc(x=x_vars, y="chd", z="+age+sex", model="logistic", note="All")
+res_males   = ukb |> 
+                filter(sex=="Male") |> 
+                get_assoc(x=x_vars, y="chd", z="+age", model="logistic", note="Males")
+res_females = ukb |> 
+                filter(sex=="Female") |> 
+                get_assoc(x=x_vars, y="chd", z="+age", model="logistic", note="Females")
+
+res = list_rbind(list(res_all, res_males, res_females))
+```
+
 
 
 ## Data Transformation

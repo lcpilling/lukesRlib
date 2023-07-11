@@ -12,10 +12,10 @@
 #'
 #' @name get_assoc
 #'
+#' @param d A data.frame or tibble. The data
 #' @param x A string or vector of strings. The exposure variable name(s), found in `d`
 #' @param y A string. The outcome variable name, found in `d` -- if model is 'coxph' then paste the survival object here e.g., 'Surv(time, event)' where `time` and `event` are variables in `d`
 #' @param z A string. The covariate formula (e.g., " + age + sex"), found in `d`
-#' @param d A data.frame or tibble. The data
 #' @param model A string. Default is "lm". The type of model to perform. Can also be "logistic" or "coxph"
 #' @param af Logical. Default is FALSE. Is `x` categorical? I.e., include in formula as `as.factor(x)`
 #' @param note A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
@@ -31,10 +31,10 @@
 #'
 #' @examples
 #' # for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
-#' get_assoc(y="weight", x="height", z="+age+sex", d=ukb)
+#' get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 #'
 #' # categorical exposure, binary outcome, and stratified analysis (with note)
-#' get_assoc(y="chd", x="smoking_status", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males only")
+#' get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males only")
 #'
 #' # multiple exposures and/or outcomes - get pseudo R^2
 #' x_vars = c("bmi","ldl","sbp_0_avg")
@@ -43,7 +43,7 @@
 #'
 #' @export
 #'
-get_assoc = function(x, y, z, d, 
+get_assoc = function(d, x, y, z, 
                      model = "lm", 
                      af = FALSE, 
                      note = "", 
@@ -61,7 +61,7 @@ get_assoc = function(x, y, z, d,
 	if (class(x) != "character")  stop("x needs to be a string or character vector")
 	if (class(y) != "character")  stop("y needs to be a string or character vector")
 	if (class(z) != "character")  stop("z needs to be a string")
-	if (! any(class(d) %in% c("data.frame","tbl","tbl_df")))  stop("d needs to be a data.frame or tibble")
+	if (! any(class(d) %in% c("data.frame","tbl","tbl_df")))  stop("d needs to be a data.frame or tibble. Best to explicitly provide inputs using `get_assoc(x=\"BMI\", y=\"diabetes\", z=\"sex\", d=data)` or `data |> get_assoc(x=\"BMI\", y=\"diabetes\", z=\"sex\")`")
 	if (! any(model %in% c("lm","logistic","coxph")))         stop("model needs to be 'lm' 'logistic' or 'coxph'")
 	
 	# if doing coxph, extract variable names for checking:
