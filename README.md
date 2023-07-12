@@ -24,11 +24,11 @@ My library of R functions I sometimes find useful
     - [annotate_textp()](#annotate_textp)
 
 ## Installation
-To install `lukesRlib` from GitHub use the `remotes` package:
+To install the development version from GitHub use the `remotes` package:
 
 `remotes::install_github("lukepilling/lukesRlib")`
 
-To update the package just run the above command again.
+I periodically "release" a version number once it works as expected. The development version may contain things that do not yet "work".
 
 
 ## Hypothesis testing
