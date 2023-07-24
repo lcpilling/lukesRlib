@@ -28,7 +28,7 @@
 #'
 #' basic_plot +
 #'   theme_minimal(base_size = 16, base_family = 'Source Sans Pro') +
-#'   scale_fill_manual(values = thematic::okabe_ito(6)) +
+#'   scale_fill_manual(values = c('Adelie'= '#da2c38', 'Chinstrap'= '#FED18C', 'Gentoo'= '#30C5FF')) +
 #'   theme_minimal_modified()
 #'
 #' @export

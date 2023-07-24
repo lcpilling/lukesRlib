@@ -265,7 +265,7 @@ qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nb
 qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)\nsize=14, alpha=0.5', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5), size=13, alpha=0.5)
 ```
 
-<img align="middle" src="https://github.com/lukepilling/lukesRlib/raw/master/images/annotate_textp.png" />
+<img align="center" src="https://github.com/lukepilling/lukesRlib/raw/master/images/annotate_textp.png" />
 
 ### theme_minimal_modified()
 
@@ -290,8 +290,8 @@ basic_plot <- penguins |>
 
 basic_plot +
   theme_minimal(base_size = 16, base_family = 'Source Sans Pro') +
-  scale_fill_manual(values = thematic::okabe_ito(6)) +
+  scale_fill_manual(values = c('Adelie'= '#da2c38', 'Chinstrap'= '#FED18C', 'Gentoo'= '#30C5FF')) +  # scale_fill_manual(values = thematic::okabe_ito(6)) +
   theme_minimal_modified()
 ```
 
-<img align="middle" src="https://github.com/lukepilling/lukesRlib/raw/master/images/theme_minimal_modified.png" />
+<img align="center" src="https://github.com/lukepilling/lukesRlib/raw/master/images/theme_minimal_modified.png" width="600" />
