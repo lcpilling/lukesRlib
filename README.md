@@ -22,6 +22,7 @@ My library of R functions I sometimes find useful
     - [get_p_extreme()](#get_p_extreme), [get_p_neglog10()](#get_p_neglog10), [get_p_neglog10_n()](#get_p_neglog10_n)
   - [Plotting-related](#plotting-related)
     - [annotate_textp()](#annotate_textp)
+    - [theme_minimal_modified()](#theme_minimal_modified)
 
 ## Installation
 To install the development version from GitHub use the `remotes` package:
@@ -265,3 +266,32 @@ qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nb
 ```
 
 <img align="middle" src="https://github.com/lukepilling/lukesRlib/raw/master/images/annotate_textp.png" />
+
+### theme_minimal_modified()
+
+Nice modification to ggplot's `theme_minimal` by Albert Rapp (https://alberts-newsletter.beehiiv.com/p/ggplot-theme)
+
+```r
+library(tidyverse)
+penguins <- palmerpenguins::penguins |> 
+  filter(!is.na(sex))
+
+basic_plot <- penguins |> 
+  ggplot(aes(x = bill_length_mm, y = body_mass_g, fill = species)) +
+  geom_point(shape = 21, size = 5, alpha = 0.85, color = 'grey10') +
+  labs(
+    x = 'Bill length (in mm)',
+    y = element_blank(),
+    fill = 'Species',
+    title = 'Penguins from the Palmer Archipelago',
+    subtitle = 'Penguin weights (in g)',
+    caption = 'Data: {palmerpenguins} R package'
+  )
+
+basic_plot +
+  theme_minimal(base_size = 16, base_family = 'Source Sans Pro') +
+  scale_fill_manual(values = thematic::okabe_ito(6)) +
+  theme_minimal_modified()
+```
+
+<img align="middle" src="https://github.com/lukepilling/lukesRlib/raw/master/images/theme_minimal_modified.png" />

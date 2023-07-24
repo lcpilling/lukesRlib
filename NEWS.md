@@ -2,6 +2,7 @@
 
 * `get_assoc()` now expects the data as first argument, if not defined. Brings it more into the tidyverse. For instance, one can now:
   * `data |> filter(age>60) |> get_assoc(x="BMI", y="diabetes", z="sex")`
+* Add theme `theme_minimal_modified` for ggplots
 
 # lukesRlib 0.2.4
 
