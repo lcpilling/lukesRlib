@@ -109,7 +109,7 @@ get_p_neglog10 = function(z,
                           is_p=FALSE)  {
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	if (is_p)  z = lukesRlib::get_z(z)
-	neglog10_p=-( 2 + pnorm(-abs( z ), log.p=T) ) / log(10)
+	neglog10_p = abs( ( pnorm(-abs(z), log.p=TRUE) + log(2) ) / log(10) )
 	neglog10_p
 }
 
@@ -143,7 +143,7 @@ get_p_neglog10_n = function(z,
 	if (!is.numeric(z))  stop("z needs to be numeric")
 	if (!is.numeric(n))  stop("n needs to be numeric")
 	if (is_p)  z = lukesRlib::get_z(z)
-	neglog10_p=-1*(pt(abs(z),df=n,lower.tail=F,log.p=T) + log(2))/log(10)
+	neglog10_p = -1 * ( pt(abs(z), df=n, lower.tail=F, log.p=T) + log(2) ) / log(10)
 	neglog10_p
 }
 

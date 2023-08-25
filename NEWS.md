@@ -4,6 +4,7 @@
   * `data |> filter(age>60) |> get_assoc(x="BMI", y="diabetes", z="sex")`
 * Add theme `theme_minimal_modified` for ggplots
 * Moves most dependencies to "Imports" - this is the preferred way to use existing packages https://r-pkgs.org/dependencies-mindset-background.html#sec-dependencies-namespace
+* Fix -log10p calculation
 
 # lukesRlib 0.2.4
 
