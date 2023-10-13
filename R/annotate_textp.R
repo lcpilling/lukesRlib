@@ -14,7 +14,7 @@
 #' @param x Numeric. X axis position (min=0, max=1 - relative to the plot margins)
 #' @param y Numeric. Y axis position (min=0, max=1 - relative to the plot margins)
 #' @param hjust Numeric. The horizontal alignment  (0 = left, 0.5 = center, 1 = right). Default=0
-#' @param size Numeric. Font size. Default={theme default)
+#' @param size Numeric. Font size. Default={theme default}
 #' @param alpha Numeric. Transparency (0:1). Default=NA
 #'
 #' @examples

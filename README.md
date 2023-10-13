@@ -3,11 +3,12 @@
 # lukesRlib
 My library of R functions I sometimes find useful
 
+<!-- badges: start -->
 [![](https://img.shields.io/badge/version-0.2.5-informational.svg)](https://github.com/lukepilling/lukesRlib)
-[![DOI](https://zenodo.org/badge/590063045.svg)](https://zenodo.org/badge/latestdoi/590063045)
-
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
+[![DOI](https://zenodo.org/badge/590063045.svg)](https://zenodo.org/badge/latestdoi/590063045)
+<!-- badges: end -->
 
 <sub>Toolbox icon from https://vectorified.com/icon-tool-box</sub>
 
@@ -29,7 +30,9 @@ My library of R functions I sometimes find useful
 ## Installation
 To install the development version from GitHub use the `remotes` package:
 
-`remotes::install_github("lukepilling/lukesRlib")`
+```r
+remotes::install_github("lukepilling/lukesRlib")
+```
 
 I periodically "release" a version number once it works as expected. The development version may contain things that do not yet "work".
 
@@ -45,7 +48,7 @@ Motivation: by default the [{broom}](https://broom.tidymodels.org/) package uses
 
 #### Examples
 
-```R
+```r
 fit_linear = glm(bmi ~ age + sex, data = d)
 tidy_ci(fit_linear)
 #> Linear model (estimate=coefficient) :: N=449811 :: R2=0.0099
@@ -54,9 +57,11 @@ tidy_ci(fit_linear)
 #>   <chr>    <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <chr>    
 #> 1 age     0.0196  0.000847     23.1  4.72e-118   0.0179    0.0212 NA       
 #> 2 sex     0.703   0.0137       51.4  0           0.676     0.729  9.39e-576
+```
 
-# ^^ provided N and R^2 estimate. Calculated "extreme p" where p rounded to 0
+Provided N and R^2 estimate. Calculated "extreme p" where p rounded to 0
 
+```r
 library(survival)
 fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
 tidy_ci(fit_coxph)
@@ -68,10 +73,9 @@ tidy_ci(fit_coxph)
 #> 2 sex                 1.04   0.0109        3.66 2.52e- 4    1.02      1.06 
 #> 3 smoking_status-1    1.04   0.0120        3.26 1.13e- 3    1.02      1.06 
 #> 4 smoking_status-2    1.03   0.0149        2.16 3.08e- 2    1.00      1.06 
-
-# ^^ automatically identified the input as from a coxph model and exponentiated estimate/CIs
-# ^^ provided N and Nevents. Also, tidied "as.factor()" variable names
 ```
+
+Automatically identified the input as from a coxph model and exponentiated estimate/CIs. Also provided N and Nevents. Also, tidied "as.factor()" variable names.
 
 
 ### get_assoc()
@@ -83,7 +87,7 @@ See the [`get_assoc()` Wiki](https://github.com/lukepilling/lukesRlib/wiki/get_a
 #### Examples
 
 ##### Get tidy model output for an exposure/outcome combination
-```R
+```r
 get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 #> A tibble: 1 x 10
 #>   outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
@@ -94,7 +98,7 @@ get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 The above example is equivalent to `tidy_ci(glm(weight~height+age+sex, data=ukb))` with added `n`
 
 ##### Categorical exposure in logistic regression - stratified analysis
-```R
+```r
 get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males")
 #> A tibble: 3 x 12
 #>   outcome exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note 
@@ -107,7 +111,7 @@ get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model=
 In the above example, the `estimate` is the Odds Ratio from a logistic regression model. The `n` and `n_cases` are directly from the model object and reflect those included in the model after excluding missing participants. The exposure is categorical, and a reference category line has been added to include the N and Ncases for that group. 
 
 ##### Multiple exposures on single outcome (i.e., a "PheWAS")
-```R
+```r
 x_vars = c("bmi","ldl","sbp")
 get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
 #> # A tibble: 3 x 11
@@ -121,7 +125,7 @@ get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
 Multiple exposures and outcomes can be provided simultaneously.
 
 ##### Tidyverse formatted. Data is first argument. `get_assoc()` can be on the right-side of other `dplyr` functions
-```R
+```r
 res_all     = ukb |> 
                 get_assoc(x=x_vars, y="chd", z="+age+sex", model="logistic", note="All")
 res_males   = ukb |> 
@@ -144,7 +148,7 @@ From [Steve Miller's package](https://github.com/svmiller/stevemisc): `carrec()`
 
 For example, if a variable of interest is on a 1-10 scale and you want to code values 6 and above to be 1, and code values of 1-5 to be 0, you would do:
 
-``` r
+```r
 x = seq(1, 10)
 x
 #> [1]  1  2  3  4  5  6  7  8  9 10

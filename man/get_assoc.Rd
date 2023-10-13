@@ -20,39 +20,55 @@ get_assoc(
   inv_norm_y = FALSE,
   subset_d = TRUE,
   progress = TRUE,
+  verbose = FALSE,
   ...
 )
 }
 \arguments{
-\item{d}{A data.frame or tibble. The data}
+\item{d}{A \code{data.frame} or \code{tibble}. The data.}
 
-\item{x}{A string or vector of strings. The exposure variable name(s), found in `d`}
+\item{x}{A string or vector of strings. The exposure variable name(s), found in `d`. (character)}
 
-\item{y}{A string. The outcome variable name, found in `d` -- if model is 'coxph' then paste the survival object here e.g., 'Surv(time, event)' where `time` and `event` are variables in `d`}
+\item{y}{A string. The outcome variable name, found in `d` -- if model is 'coxph' then paste the survival object here e.g., 'Surv(time, event)' where `time` and `event` are variables in `d`. (character)}
 
-\item{z}{A string. The covariate formula (e.g., " + age + sex"), found in `d`}
+\item{z}{A string. The covariate formula (e.g., " + age + sex"), found in `d`. Default is no covariates. 
+\code{default=""} (character)}
 
-\item{model}{A string. Default is "lm". The type of model to perform. Can also be "logistic" or "coxph"}
+\item{model}{A string. The type of model to perform. Can be "lm", "logistic" or "coxph".
+\code{default="lm"} (character)}
 
-\item{af}{Logical. Default is FALSE. Is `x` categorical? I.e., include in formula as `as.factor(x)`}
+\item{af}{Logical. Is `x` categorical? I.e., include in formula as `as.factor(x)`.
+\code{default=FALSE}}
 
-\item{note}{A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.}
+\item{note}{A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
+\code{default=""} (character)}
 
-\item{get_fit}{Logical. Default is FALSE. Get model fit? (for each model: lm=R2, logistic=McFadden's pseudo-R2, coxph=Harrell's c-statistic)}
+\item{get_fit}{Logical. Default is FALSE. Get model fit? (for each model: lm=R2, logistic=McFadden's pseudo-R2, coxph=Harrell's c-statistic).
+\code{default=FALSE}}
 
-\item{extreme_ps}{Logical. Default is FALSE. If p==0 then return "extreme p-values" as strings.}
+\item{extreme_ps}{Logical. Default is FALSE. If p==0 then return "extreme p-values" as strings.
+\code{default=FALSE}}
 
-\item{scale_x}{Logical. Default is FALSE. Apply scale() function to exposure?}
+\item{scale_x}{Logical. Default is FALSE. Apply scale() function to exposure?
+\code{default=FALSE}}
 
-\item{scale_y}{Logical. Default is FALSE. Apply scale() function to outcome?}
+\item{scale_y}{Logical. Default is FALSE. Apply scale() function to outcome?
+\code{default=FALSE}}
 
-\item{inv_norm_x}{Logical. Default is FALSE. Apply inv_norm() function to exposure?}
+\item{inv_norm_x}{Logical. Apply inv_norm() function to exposure?
+\code{default=FALSE}}
 
-\item{inv_norm_y}{Logical. Default is FALSE. Apply inv_norm() function to outcome?}
+\item{inv_norm_y}{Logical. Apply inv_norm() function to outcome?
+\code{default=FALSE}}
 
-\item{subset_d}{Logical. Default is TRUE. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used)}
+\item{subset_d}{Logical. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used).
+\code{default=TRUE}}
 
-\item{progress}{Logical. Default is TRUE. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided)}
+\item{progress}{Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
+\code{default=TRUE}}
+
+\item{verbose}{Logical. Be verbose,
+\code{default=FALSE}}
 
 \item{...}{Other `tidy_ci()` options}
 }
@@ -60,7 +76,7 @@ get_assoc(
 Returns a tibble - summary statistics from a model
 }
 \description{
-To easily get tidy model output (from linear or logistic GLM, or CoxPH) for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick loops easy.
+To easily get tidy model output (from linear or logistic GLM, or CoxPH) for a categorical or continuous exposure, including sample size (and N cases if logistic), outcome, and model info. Idea is to make quick PheWAS trivially easy.
 
 For all exposures, it gets the N. For categorical exposures, the N is split by group, and a row is included for the reference category
 
@@ -71,12 +87,15 @@ Can provide multiple exposures and/or outcomes
 get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
 
 # categorical exposure, binary outcome, and stratified analysis (with note)
-get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males only")
+#  - note that data can be passed using the pipe if desired
+d=ukb |> filter(sex==1) |>
+  get_assoc(x="smoking_status", y="chd", z="+age", model="logistic", af=TRUE, note="Males only")
 
 # multiple exposures and/or outcomes - get pseudo R^2
 x_vars = c("bmi","ldl","sbp_0_avg")
 y_vars = c("chd","t2d")
-get_assoc(x=x_vars, y=y_vars, z="+age+sex", d=ukb, model="logistic", get_fit=TRUE)
+res = get_assoc(x=x_vars, y=y_vars, z="+age+sex", d=ukb, model="logistic", get_fit=TRUE)
+res
 
 }
 \author{

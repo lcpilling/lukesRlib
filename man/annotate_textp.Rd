@@ -32,6 +32,8 @@ annotate_textp(
 \item{hjust}{Numeric. The horizontal alignment  (0 = left, 0.5 = center, 1 = right). Default=0}
 
 \item{alpha}{Numeric. Transparency (0:1). Default=NA}
+
+\item{size}{Numeric. Font size. Default={theme default}}
 }
 \value{
 Returns a geom layer

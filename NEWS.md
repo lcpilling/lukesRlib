@@ -1,3 +1,9 @@
+# lukesRlib 0.2.5.90000 (dev version)
+
+* `get_assoc()` - fixed if no covariates provided
+* `get_assoc()` - if x and y are the same, skip (useful if providing same list of variables twice for pairwise analysis)
+* `get_assoc()` - added `verbose` option for bug checking
+
 # lukesRlib 0.2.5
 
 * `get_assoc()` now expects the data as first argument, if not defined. Brings it more into the tidyverse. For instance, one can now:
