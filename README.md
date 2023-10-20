@@ -34,7 +34,15 @@ To install the development version from GitHub use the `remotes` package:
 remotes::install_github("lukepilling/lukesRlib")
 ```
 
-I periodically "release" a version number once it works as expected. The development version may contain things that do not yet "work".
+I periodically "release" a version number once it works as expected. The development version may contain things that do not yet "work"
+
+```r
+# To install the latest release, use:
+remotes::install_github("lukepilling/lukesRlib@*release")
+
+# To install a specific version (see tags), use:
+remotes::install_github("lukepilling/lukesRlib@v0.2.0", force=TRUE)
+```
 
 
 ## Hypothesis testing
