@@ -41,7 +41,7 @@ I periodically "release" a version number once it works as expected. The develop
 remotes::install_github("lukepilling/lukesRlib@*release")
 
 # To install a specific version (see tags), use:
-remotes::install_github("lukepilling/lukesRlib@v0.2.0", force=TRUE)
+remotes::install_github("lukepilling/lukesRlib@v0.2.0")
 ```
 
 
