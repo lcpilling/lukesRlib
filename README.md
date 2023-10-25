@@ -1,4 +1,4 @@
-<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/images/lukesRlib.png" width="180" />
+<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/images/lukesRlib.png" width="200" />
 
 # lukesRlib
 My library of R functions I sometimes find useful
