@@ -17,6 +17,8 @@ Imports:
   rlang (>= 1.0.0), 
   broom (>= 1.0.0), 
   survival (>= 2.37-2)
+Suggests:
+  beepr (>= 1.3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3

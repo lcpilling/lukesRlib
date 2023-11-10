@@ -20,6 +20,8 @@ get_assoc(
   inv_norm_y = FALSE,
   subset_d = TRUE,
   progress = TRUE,
+  beep = FALSE,
+  beep_sound = 3,
   verbose = FALSE,
   ...
 )
@@ -66,6 +68,12 @@ get_assoc(
 
 \item{progress}{Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
 \code{default=TRUE}}
+
+\item{beep}{Logical. Beep when done,
+\code{default=FALSE}}
+
+\item{beep_sound}{Numeric. Which sound to use? See `beepr` docs,
+\code{default=3}}
 
 \item{verbose}{Logical. Be verbose,
 \code{default=FALSE}}

@@ -39,6 +39,10 @@
 #'        \code{default=TRUE}
 #' @param progress Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
 #'        \code{default=TRUE}
+#' @param beep Logical. Beep when done,
+#'        \code{default=FALSE}
+#' @param beep_sound Numeric. Which sound to use? See `beepr` docs,
+#'        \code{default=3}
 #' @param verbose Logical. Be verbose,
 #'        \code{default=FALSE}
 #' @param ... Other `tidy_ci()` options
@@ -72,6 +76,8 @@ get_assoc = function(d, x, y, z,
                      inv_norm_y = FALSE,
                      subset_d = TRUE,
                      progress = TRUE,
+                     beep = FALSE,
+                     beep_sound = 3,
                      verbose = FALSE,
                      ...)  {
 	
@@ -136,6 +142,9 @@ get_assoc = function(d, x, y, z,
 		if (verbose)  cat("Getting extreme p-values\n")
 		if (any(ret$p.value==0, na.rm=TRUE))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 	}
+	
+	# try to beep?
+	if (beep)  try(beepr::beep(beep_sound), silent=TRUE)
 	
 	# return results
 	ret

@@ -3,6 +3,7 @@
 * `get_assoc()` - fixed if no covariates provided
 * `get_assoc()` - if x and y are the same, skip (useful if providing same list of variables twice for pairwise analysis)
 * `get_assoc()` - added `verbose` option for bug checking
+* `get_assoc()` - added `beep` option for beeping when finished
 
 # lukesRlib 0.2.5
 
