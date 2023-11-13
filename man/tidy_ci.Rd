@@ -63,7 +63,9 @@ The function also does a few other nice/useful things to the output: hides the i
 default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, 
 and if p=0 returns the extreme p as a string. Other optional outputs include -log10 p-values.
 
-Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()`
+Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()`.
+
+For linear mixed-effects models `lmer()` from package {lme4} this can display the fixed-effects with p-values and Wald CIs.
 }
 \examples{
 fit_linear = glm(bmi ~ age + sex + as.factor(smoking_status), data = d)

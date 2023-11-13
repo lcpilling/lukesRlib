@@ -11,7 +11,9 @@
 #' default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, 
 #' and if p=0 returns the extreme p as a string. Other optional outputs include -log10 p-values.
 #'
-#' Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()`
+#' Not tested for models other than `glm()` and `survival::coxph()` where it seems to work very well and produces consistent CIs. Also works well for `cmprsk::crr()`.
+#'
+#' For linear mixed-effects models `lmer()` from package {lme4} this can display the fixed-effects with p-values and Wald CIs.
 #'
 #' @return Returns a tibble - summary statistics from a model 
 #'
@@ -65,8 +67,13 @@ tidy_ci = function(x,
 	# use `tidy()` CI method?  Only if not using the 1.96*SE method
 	if (ci) conf.int = FALSE
 	
-	# get tidy output -- do not use `broom` CIs or Exponentiate options by default
-	ret = broom::tidy(x, conf.int = conf.int, exponentiate = FALSE, ...)
+	# is this a LMM from {lme4}? Tidy myself, otherwise use {broom}
+	if ("lmerMod" %in% class(x))  {
+		ret = lukesRlib:::tidy_lme4(x)
+	} else {
+		# get tidy output -- do not use `broom` CIs or Exponentiate options by default
+		ret = broom::tidy(x, conf.int = conf.int, exponentiate = FALSE, ...)
+	}
 	
 	# exclude intercept?
 	if (!intercept) ret = ret |> dplyr::filter(term!="(Intercept)")
@@ -94,6 +101,7 @@ tidy_ci = function(x,
 	if (is.na(n) & "coxph" %in% class(x))   n = x$n
 	if (is.na(n) & "crr" %in% class(x))     n = x$n
 	if (is.na(n) & "tidycrr" %in% class(x)) n = x$cmprsk$n
+	if (is.na(n) & "lmerMod" %in% class(x)) n = summary(x)$ngrps
 	if (!is.na(n)) text_out = paste0("N=", n)
 	
 	# get -log10 p-value?
@@ -136,6 +144,9 @@ tidy_ci = function(x,
 			text_out = paste0(text_out, ", Nevents=", crr_n1, ", Ncompeting=", crr_n2)
 			exp = TRUE
 		}
+		if ("lmerMod" %in% class(x))  {
+			model = summary(x)$methTitle
+		}
 		text_out = paste0(model, " :: ", text_out)
 	}
 	
@@ -150,3 +161,39 @@ tidy_ci = function(x,
 	ret
 	
 }
+
+
+
+#' Get tidy output for {lme4} LMM `lmer()` output
+#'
+#' @author Luke Pilling
+#'
+#' @name xv
+#'
+#' @param x_vars A vector of strings. The exposure variable names
+#' @param y_vars A vector of strings. The outcome variable names
+#'
+#' @examples
+#' x_vars = c("bmi","sbp")
+#' y_vars = c("chd","t2d")
+#' x_vars2 = xv(x_vars, y_vars)
+#' y_vars2 = yv(x_vars, y_vars)
+#'
+#' @noRd
+
+tidy_lme4 = function(x) {
+	x = summary(x)
+	x = x$coefficients
+	x2 = data.frame(
+		term = rownames(x),
+		estimate = as.vector(x[,"Estimate"]),
+		std.error = as.vector(x[,"Std. Error"]),
+		statistic = as.vector(x[,"t value"])
+	)
+	x2$p.value = lukesRlib::get_p(x2$statistic)
+	x2
+}
+
+
+
+

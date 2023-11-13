@@ -1,9 +1,10 @@
-# lukesRlib 0.2.5.90000 (dev version)
+# lukesRlib 0.2.6
 
 * `get_assoc()` - fixed if no covariates provided
 * `get_assoc()` - if x and y are the same, skip (useful if providing same list of variables twice for pairwise analysis)
 * `get_assoc()` - added `verbose` option for bug checking
 * `get_assoc()` - added `beep` option for beeping when finished
+* `tidy_ci()` - add some functionality for summarizing fixed-effects from `lme4::lmer()`
 
 # lukesRlib 0.2.5
 
