@@ -145,7 +145,7 @@ tidy_ci = function(x,
 			exp = TRUE
 		}
 		if ("lmerMod" %in% class(x))  {
-			model = summary(x)$methTitle
+			model = paste0(summary(x)$methTitle, " (fixed effects only)")
 		}
 		text_out = paste0(model, " :: ", text_out)
 	}

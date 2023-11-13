@@ -4,7 +4,7 @@
 My library of R functions I sometimes find useful
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/version-0.2.5.9000-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.2.6-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 [![DOI](https://zenodo.org/badge/590063045.svg)](https://zenodo.org/badge/latestdoi/590063045)
@@ -48,7 +48,7 @@ remotes::install_github("lukepilling/lukesRlib@v0.2.0")
 ## Hypothesis testing
 
 ### tidy_ci()
-`tidy_ci()` ("tidy with CIs") runs [`broom::tidy()`](https://broom.tidymodels.org/) and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE
+`tidy_ci()` ("tidy with CIs") runs [`broom::tidy()`](https://broom.tidymodels.org/) and returns the tidy estimates with CIs calculated as EST +/- 1.96*SE (i.e., the Wald method)
 
 Motivation: by default the [{broom}](https://broom.tidymodels.org/) package uses `confint()` to estimate CIs. For GLMs this calculates CIs via the profile likelihood method. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to calculating using 1.96*SE
 
