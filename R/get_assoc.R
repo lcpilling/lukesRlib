@@ -48,19 +48,18 @@
 #' @param ... Other `tidy_ci()` options
 #'
 #' @examples
-#' # for one outcome, equivalent to `tidy_ci(glm(weight ~ height +age+sex, d=ukb))` - with added `n`
-#' get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
+#' # for one outcome, equivalent to `tidy_ci(glm(sbp ~ bmi +age+sex, d=example_data))` - with added `n`
+#' get_assoc(x="bmi", y="sbp", z="+age+sex", d=example_data)
 #'
 #' # categorical exposure, binary outcome, and stratified analysis (with note)
 #' #  - note that data can be passed using the pipe if desired
-#' d=ukb |> filter(sex==1) |>
-#'   get_assoc(x="smoking_status", y="chd", z="+age", model="logistic", af=TRUE, note="Males only")
+#' example_data |> dplyr::filter(sex==1) |>
+#'   get_assoc(x="bmi_cat", y="event", z="+age", model="logistic", af=TRUE, note="Males only")  |> print(width=500)
 #'
 #' # multiple exposures and/or outcomes - get pseudo R^2
-#' x_vars = c("bmi","ldl","sbp_0_avg")
-#' y_vars = c("chd","t2d")
-#' res = get_assoc(x=x_vars, y=y_vars, z="+age+sex", d=ukb, model="logistic", get_fit=TRUE)
-#' res
+#' x_vars = c("bmi","sbp","dbp","scl")
+#' y_vars = c("event","sex")
+#' get_assoc(x=x_vars, y=y_vars, z="+age", d=example_data, model="logistic", get_fit=TRUE)  |> print(width=500)
 #'
 #' @export
 #'

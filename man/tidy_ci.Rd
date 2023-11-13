@@ -68,15 +68,11 @@ Not tested for models other than `glm()` and `survival::coxph()` where it seems 
 For linear mixed-effects models `lmer()` from package {lme4} this can display the fixed-effects with p-values and Wald CIs.
 }
 \examples{
-fit_linear = glm(bmi ~ age + sex + as.factor(smoking_status), data = d)
+fit_linear = glm(sbp ~ age + sex + as.factor(bmi_cat), data = example_data)
 tidy_ci(fit_linear)
 
-fit_logistic = glm(current_smoker_vs_never ~ age + sex + bmi, data = d, family = binomial(link="logit"))
+fit_logistic = glm(event ~ age + sex + bmi, data = example_data, family = binomial)
 tidy_ci(fit_logistic)   # detect model and exponentiate automatically
-tidy_ci(fit_logistic, check_model=FALSE)  # override auto checking to get untransformed estimates
-
-fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
-tidy_ci(fit_coxph)
 
 }
 \author{

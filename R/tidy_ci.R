@@ -36,15 +36,11 @@
 #' @param ... Other `tidy()` options
 #'
 #' @examples
-#' fit_linear = glm(bmi ~ age + sex + as.factor(smoking_status), data = d)
+#' fit_linear = glm(sbp ~ age + sex + as.factor(bmi_cat), data = example_data)
 #' tidy_ci(fit_linear)
 #' 
-#' fit_logistic = glm(current_smoker_vs_never ~ age + sex + bmi, data = d, family = binomial(link="logit"))
+#' fit_logistic = glm(event ~ age + sex + bmi, data = example_data, family = binomial)
 #' tidy_ci(fit_logistic)   # detect model and exponentiate automatically
-#' tidy_ci(fit_logistic, check_model=FALSE)  # override auto checking to get untransformed estimates
-#' 
-#' fit_coxph = coxph(Surv(time, status) ~ age + sex + as.factor(smoking_status), data = d)
-#' tidy_ci(fit_coxph)
 #'
 #' @export
 #'
@@ -80,15 +76,15 @@ tidy_ci = function(x,
 	
 	# tidy variable name if scaled
 	ret = ret |> dplyr::mutate(
-		term=if_else(grepl("scale(", term, fixed=TRUE), str_replace(term, fixed(")"), "-scaled"), term),
-		term=str_replace(term, fixed("scale("), "")
+		term=dplyr::if_else(grepl("scale(", term, fixed=TRUE), stringr::str_replace(term, stringr::fixed(")"), "-scaled"), term),
+		term=stringr::str_replace(term, stringr::fixed("scale("), "")
 	)
 	
 	# tidy factor names?
 	if (tidy_factors)  {
 		ret = ret |> dplyr::mutate(
-			term=if_else(grepl("as.factor(", term, fixed=TRUE), str_replace(term, fixed(")"), "-"), term),
-			term=str_replace(term, fixed("as.factor("), "")
+			term=dplyr::if_else(grepl("as.factor(", term, fixed=TRUE), stringr::str_replace(term, stringr::fixed(")"), "-"), term),
+			term=stringr::str_replace(term, stringr::fixed("as.factor("), "")
 		)
 	}
 	
