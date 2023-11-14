@@ -63,7 +63,10 @@
 #'
 #' @export
 #'
-get_assoc = function(d, x, y, z, 
+get_assoc = function(d, 
+                     x, 
+                     y, 
+                     z = "", 
                      model = "lm", 
                      af = FALSE, 
                      note = "", 

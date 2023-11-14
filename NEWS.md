@@ -1,4 +1,4 @@
-# lukesRlib 0.2.6
+# lukesRlib 0.2.6 (13 Nov 2023)
 
 * `get_assoc()` - fixed if no covariates provided
 * `get_assoc()` - if x and y are the same, skip (useful if providing same list of variables twice for pairwise analysis)
@@ -6,7 +6,7 @@
 * `get_assoc()` - added `beep` option for beeping when finished
 * `tidy_ci()` - add some functionality for summarizing fixed-effects from `lme4::lmer()`
 
-# lukesRlib 0.2.5
+# lukesRlib 0.2.5 (25 Aug 2023)
 
 * `get_assoc()` now expects the data as first argument, if not defined. Brings it more into the tidyverse. For instance, one can now:
   * `data |> filter(age>60) |> get_assoc(x="BMI", y="diabetes", z="sex")`
@@ -14,7 +14,7 @@
 * Moves most dependencies to "Imports" - this is the preferred way to use existing packages https://r-pkgs.org/dependencies-mindset-background.html#sec-dependencies-namespace
 * Fix -log10p calculation
 
-# lukesRlib 0.2.4
+# lukesRlib 0.2.4 (30 Jun 2023)
 
 * Add option "get_fit" to `get_assoc()` to also get model fit statistic when PheWASing. For each model type the `fit_stat` is:
   * lm = R-squared
@@ -23,7 +23,7 @@
 * Fix error if user does not want to provide any covariates to `get_assoc()`
 * `tidy_ci()` now returns the C-statistic for CoxPH models by default
 
-# lukesRlib 0.2.3
+# lukesRlib 0.2.3 (7 Jun 2023)
 
 * Decided to remove genetics-related functions to instead have them in a separate package, as the dependencies were getting out of hand
   * See https://github.com/lukepilling/gwasRtools
@@ -42,7 +42,7 @@
 * Added p-value threshold option to `get_loci()`
 * Fix problem getting `n` in `get_assoc()` when `model="coxph"`
 
-# lukesRlib 0.2.0
+# lukesRlib 0.2.0 (5 May 2023)
 
 * `get_assoc()` can now perform `coxph()` models from the {survival} package. The user provides strings depicting the survival object as the outcome e.g., "Surv(time, event)"
 * Added two genetics-related functions: `lambda_gc()` (to calculate Lambda GC!) and `get_loci()` (to crudely determine independent loci in GWAS summary stats)
@@ -94,6 +94,6 @@
 
 * Added two new p-value related functions -- very simple but nice to have available
 
-# lukesRlib 0.1.0
+# lukesRlib 0.1.0 (26 Jan 2023)
 
 * Added a `NEWS.md` file to track changes to the package.
