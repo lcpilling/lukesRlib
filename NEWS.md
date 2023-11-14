@@ -5,6 +5,7 @@
 * `get_assoc()` - added `verbose` option for bug checking
 * `get_assoc()` - added `beep` option for beeping when finished
 * `tidy_ci()` - add some functionality for summarizing fixed-effects from `lme4::lmer()`
+* Add `example_data` object for examples. Contains ~5,000 participants from Framingham Heart Study
 
 # lukesRlib 0.2.5 (25 Aug 2023)
 
