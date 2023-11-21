@@ -1,3 +1,7 @@
+# lukesRlib 0.2.6.9000 (21 Nov 2023)
+
+* `get_assoc()` - fixed if exposure or outcome needs to be protected by backticks (previously failed if variable was something like "bmi-1")
+
 # lukesRlib 0.2.6 (13 Nov 2023)
 
 * `get_assoc()` - fixed if no covariates provided

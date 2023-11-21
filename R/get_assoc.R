@@ -63,25 +63,27 @@
 #'
 #' @export
 #'
-get_assoc = function(d, 
-                     x, 
-                     y, 
-                     z = "", 
-                     model = "lm", 
-                     af = FALSE, 
-                     note = "", 
-                     get_fit = FALSE,
-                     extreme_ps = FALSE,
-                     scale_x = FALSE, 
-                     scale_y = FALSE,
-                     inv_norm_x = FALSE, 
-                     inv_norm_y = FALSE,
-                     subset_d = TRUE,
-                     progress = TRUE,
-                     beep = FALSE,
-                     beep_sound = 3,
-                     verbose = FALSE,
-                     ...)  {
+get_assoc = function(
+	d, 
+	x, 
+	y, 
+	z = "", 
+	model = "lm", 
+	af = FALSE, 
+	note = "", 
+	get_fit = FALSE,
+	extreme_ps = FALSE,
+	scale_x = FALSE, 
+	scale_y = FALSE,
+	inv_norm_x = FALSE, 
+	inv_norm_y = FALSE,
+	subset_d = TRUE,
+	progress = TRUE,
+	beep = FALSE,
+	beep_sound = 3,
+	verbose = FALSE,
+	...
+)  {
 	
 	# check inputs
 	if (class(x) != "character")  stop("x needs to be a string or character vector")
@@ -154,21 +156,25 @@ get_assoc = function(d,
 }
 
 
-
 #' Internal function to get tidy model output (just exposure of interest, with augmented output)
 #' Inherits most options from `get_assoc()`
 #' @noRd
-get_assoc1 = function(x, y, z, d, 
-                      model = "lm", 
-                      af = FALSE, 
-                      note = "", 
-                      scale_x = FALSE, 
-                      scale_y = FALSE,
-                      inv_norm_x = FALSE, 
-                      inv_norm_y = FALSE,
-                      get_fit = FALSE,
-                      verbose = FALSE,
-                      ...)  {
+get_assoc1 = function(
+	x, 
+	y, 
+	z, 
+	d, 
+	model = "lm", 
+	af = FALSE, 
+	note = "", 
+	scale_x = FALSE, 
+	scale_y = FALSE,
+	inv_norm_x = FALSE, 
+	inv_norm_y = FALSE,
+	get_fit = FALSE,
+	verbose = FALSE,
+	...
+)  {
 	
 	if (verbose)  cat("Doing analysis of x (", x, ") on y (", y, ")\n")
 	
@@ -194,15 +200,16 @@ get_assoc1 = function(x, y, z, d,
 				d = d |> dplyr::mutate(!! rlang::sym(y1) := as.numeric(!! rlang::sym(y1)) )
 			}
 		}
-	
+		if (!coxph)  yy = stringr::str_c("`", yy, "`")  # add backticks to protect variable name in regression formula
+		
 		# exposure variable - categorical?
 		xx = x
+		xx = stringr::str_c("`", xx, "`")  # add backticks to protect variable name in regression formula
 		if (af)  xx = paste0("as.factor(",x,")")
 		
 		# scale exposure or outcome?
-		yy = y
-		if (scale_x & !af)                 xx = paste0("scale(",x,")")
-		if (scale_y & !logistic & !coxph)  yy = paste0("scale(",y,")")
+		if (scale_x & !af)                 xx = paste0("scale(",xx,")")
+		if (scale_y & !logistic & !coxph)  yy = paste0("scale(",yy,")")
 		
 		# inverse normalize exposure or outcome?
 		if (inv_norm_x & !af)                d = d |> dplyr::mutate( !! rlang::sym(x) := lukesRlib::inv_norm( !! rlang::sym(x) ) )

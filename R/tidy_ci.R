@@ -5,7 +5,7 @@
 #' When using large datasets this takes a long time and does not meaningfully alter the CIs 
 #' compared to simply calculating using 1.96*SE.
 #' This function `tidy_ci()` runs `broom::tidy()` and returns the tidy estimates with CIs 
-#' calculated as EST +/- 1.96*SE. (Well, actually 1.959964 :: from `lukesRlib::get_z(0.05)`)
+#' calculated as EST +/- 1.96*SE. (Well, actually 1.959964)
 #'
 #' The function also does a few other nice/useful things to the output: hides the intercept by 
 #' default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, 
@@ -23,7 +23,7 @@
 #'
 #' @param x object containing model output to be tidied e.g., from a `glm()` or `survival::coxph()`.
 #' @param ci Logical. Default is TRUE. Calculate CIs using 1.96*SE method - where 1.96 can be modified using `ci_denominator`.
-#' @param ci_denominator Numeric. Default is 1.96. The standard error of the sample mean (default actually 1.959964 :: from `get_z(0.05)`).
+#' @param ci_denominator Numeric. Default is 1.96  (actually 1.959964). The standard error of the sample mean.
 #' @param intercept Logical. Default is FALSE. Exclude intercept for tidier output.
 #' @param tidy_factors Logical. Default is TRUE. Tidy `as.factor(x_var)#` terms to `x_var-#`.
 #' @param extreme_ps Logical. Default is TRUE. If p=0 then return "extreme p-values" as strings.
@@ -44,21 +44,22 @@
 #'
 #' @export
 #'
-
-tidy_ci = function(x, 
-                   ci = TRUE, 
-                   ci_denominator = 1.959964,
-                   exp = FALSE, 
-                   intercept = FALSE, 
-                   tidy_factors = TRUE,
-                   extreme_ps = TRUE,
-                   neglog10p = FALSE, 
-                   check_model = TRUE,
-                   n = NA, 
-                   get_r2 = TRUE,
-                   conf.int = FALSE,     ## tidy() option
-                   quiet = FALSE,
-                   ...) {
+tidy_ci = function(
+	x, 
+	ci = TRUE, 
+	ci_denominator = 1.959964,
+	exp = FALSE, 
+	intercept = FALSE, 
+	tidy_factors = TRUE,
+	extreme_ps = TRUE,
+	neglog10p = FALSE, 
+	check_model = TRUE,
+	n = NA, 
+	get_r2 = TRUE,
+	conf.int = FALSE,     ## tidy() option
+	quiet = FALSE,
+	...
+) {
 	
 	# use `tidy()` CI method?  Only if not using the 1.96*SE method
 	if (ci) conf.int = FALSE
@@ -87,6 +88,9 @@ tidy_ci = function(x,
 			term=stringr::str_replace(term, stringr::fixed("as.factor("), "")
 		)
 	}
+	
+	# remove backticks if present
+	ret = ret |> dplyr::mutate(term=stringr::str_replace_all(term, stringr::fixed("`"), ""))
 	
 	# get CIs based on 1.96*SE?
 	if (ci)  ret = ret |> dplyr::mutate(conf.low=estimate-(!!ci_denominator*std.error), conf.high=estimate+(!!ci_denominator*std.error))
@@ -176,7 +180,6 @@ tidy_ci = function(x,
 #' y_vars2 = yv(x_vars, y_vars)
 #'
 #' @noRd
-
 tidy_lme4 = function(x) {
 	x = summary(x)
 	x = x$coefficients
