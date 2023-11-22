@@ -190,22 +190,22 @@ get_assoc1 = function(
 		# if doing coxph, extract variable names for checking:
 		yy = y
 		if (coxph)  {
-			yy = stringr::str_replace_all(y, stringr::fixed("Surv("), "") |> stringr::str_replace_all(" |\\)", "") |> stringr::str_split_1(",")
-			y1 = yy[1]
-			y2 = yy[2]
+			y12 = stringr::str_replace_all(y, stringr::fixed("Surv("), "") |> stringr::str_replace_all(" |\\)", "") |> stringr::str_split_1(",")
+			y1  = y12[1]
+			y2  = y12[2]
 			
 			# if time variable is not numeric try to convert (and give warning)
 			if ( ! d |> dplyr::select(!!y1) |> dplyr::pull() |> is.numeric() )  {
 				warning("Time variable not numeric -- attempting conversion with `as.numeric()`")
 				d = d |> dplyr::mutate(!! rlang::sym(y1) := as.numeric(!! rlang::sym(y1)) )
 			}
+		} else {
+			yy = stringr::str_c("`", yy, "`")  # add backticks to protect variable name in regression formula
 		}
-		if (!coxph)  yy = stringr::str_c("`", yy, "`")  # add backticks to protect variable name in regression formula
 		
 		# exposure variable - categorical?
-		xx = x
-		xx = stringr::str_c("`", xx, "`")  # add backticks to protect variable name in regression formula
-		if (af)  xx = paste0("as.factor(",x,")")
+		xx = stringr::str_c("`", x, "`")  # add backticks to protect variable name in regression formula
+		if (af)  xx = paste0("as.factor(",xx,")")
 		
 		# scale exposure or outcome?
 		if (scale_x & !af)                 xx = paste0("scale(",xx,")")
@@ -216,28 +216,30 @@ get_assoc1 = function(
 		if (inv_norm_y & !logistic & !coxph) d = d |> dplyr::mutate( !! rlang::sym(y) := lukesRlib::inv_norm( !! rlang::sym(y) ) )
 		
 		# run model
-		if (verbose)  cat("Data checked, running model\n")
-		if (!logistic & !coxph)  fit = glm(paste0(yy, " ~ ", xx, z), data=d)
-		if (logistic)            fit = glm(paste0(yy, " ~ ", xx, z), data=d, family=binomial(link="logit"))
-		if (coxph)               fit = survival::coxph(as.formula(paste0(yy, " ~ ", xx, z)), data=d)
-	
+		reg_formula <- paste0(yy, " ~ ", xx, z)
+		if (verbose)  cat("Data checked, running model\n - formula:", reg_formula, "\n")
+		
+		if (!logistic & !coxph)  fit = glm(as.formula(reg_formula), data=d)
+		if (logistic)            fit = glm(as.formula(reg_formula), data=d, family=binomial(link="logit"))
+		if (coxph)               fit = survival::coxph(as.formula(reg_formula), data=d)
+		
 		# get tidy output
 		res = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, get_r2=FALSE, ...) |> dplyr::filter(grepl(!!x, term))
 		
 		# include outcome name as first col
 		if (coxph)  res = res |> dplyr::mutate(outcome=!!y2) |> dplyr::relocate(outcome)
 		if (!coxph) res = res |> dplyr::mutate(outcome=!!y)  |> dplyr::relocate(outcome)
-	
+		
 		# exposure categorical?
 		if (af)  {
-	
+			
 			x_vals = as.vector(fit$xlevels[[1]])
-	
+			
 			# categorical exposure - add reference group
 			res = rbind(res[1,], res)
 			res[1,3:ncol(res)] = NA
 			res[1,2] = paste0(x, "-", x_vals[1])
-	
+			
 			# get sample size - categorical exposure
 			if (!coxph)  {
 				n = x_vals_n = d |> dplyr::select(!!x, !!y) |> na.omit() |> dplyr::select(!!x) |> table()
@@ -249,7 +251,7 @@ get_assoc1 = function(
 				}
 				res = res |> dplyr::mutate(n=as.numeric(n))
 			}
-	
+			
 			# if model is logistic, get the cases too
 			if (logistic)  {
 				n_cases = x_vals_n_cases = d |> dplyr::select(!!x, !!y) |> na.omit() |> dplyr::filter(.data[[y]]==1) |> dplyr::select(!!x) |> table()
@@ -261,7 +263,7 @@ get_assoc1 = function(
 				}
 				res = res |> dplyr::mutate(n_cases=as.numeric(n_cases))
 			}
-	
+			
 			# if model is coxph, get the cases too
 			if (coxph)  {
 				n = x_vals_n = d |> dplyr::select(!!x, !!y1, !!y2) |> na.omit() |> dplyr::select(!!x) |> table()
@@ -276,9 +278,9 @@ get_assoc1 = function(
 				}
 				res = res |> dplyr::mutate(n=as.numeric(n), n_cases=as.numeric(n_cases))
 			}
-	
+			
 		} else {  # exposure is not categorical
-	
+			
 			# get sample size - continuous exposure
 			if (!coxph)  {
 				n = length(fit$y)
@@ -290,16 +292,16 @@ get_assoc1 = function(
 				n_cases = length(fit$y[fit$y==1])
 				res = res |> dplyr::mutate(n_cases)
 			}
-	
+			
 			# if model is coxph, get the cases too
 			if (coxph)  {
 				n = fit$n
 				n_cases = fit$nevent
 				res = res |> dplyr::mutate(n, n_cases)
 			}
-	
+			
 		}
-	
+		
 		# get model fit?
 		if (get_fit)  {
 			if (verbose)  cat("Getting fit statistic\n")
@@ -326,12 +328,12 @@ get_assoc1 = function(
 			}
 			res = res |> dplyr::mutate(fit_stat)
 		}
-	
+		
 		# modify final bits
 		res = res |> dplyr::rename(exposure=term)
 		res = res |> dplyr::mutate(model)
 		if (nchar(note)>0)  res = res |> dplyr::mutate(note=!!note)
-	
+		
 		res
 	} else {
 		if (verbose)  cat("x == y :. skipping (", x, " == ", y, ")\n")
