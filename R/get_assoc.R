@@ -173,7 +173,7 @@ get_assoc1 = function(
 	scale_y = FALSE,
 	inv_norm_x = FALSE, 
 	inv_norm_y = FALSE,
-	return_all_covars = FALSE,
+	return_all_terms = FALSE,
 	get_fit = FALSE,
 	verbose = FALSE,
 	...
