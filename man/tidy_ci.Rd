@@ -26,7 +26,7 @@ tidy_ci(
 
 \item{ci}{Logical. Default is TRUE. Calculate CIs using 1.96*SE method - where 1.96 can be modified using `ci_denominator`.}
 
-\item{ci_denominator}{Numeric. Default is 1.96. The standard error of the sample mean (default actually 1.959964 :: from `get_z(0.05)`).}
+\item{ci_denominator}{Numeric. Default is 1.96  (actually 1.959964). The standard error of the sample mean.}
 
 \item{exp}{Logical. Default is FALSE. Exponentiate estimate and CIs -- also see `check_model`.}
 
@@ -57,7 +57,7 @@ For GLMs this calculates confidence intervals via profile likelihood by default.
 When using large datasets this takes a long time and does not meaningfully alter the CIs 
 compared to simply calculating using 1.96*SE.
 This function `tidy_ci()` runs `broom::tidy()` and returns the tidy estimates with CIs 
-calculated as EST +/- 1.96*SE. (Well, actually 1.959964 :: from `lukesRlib::get_z(0.05)`)
+calculated as EST +/- 1.96*SE. (Well, actually 1.959964)
 
 The function also does a few other nice/useful things to the output: hides the intercept by 
 default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, 

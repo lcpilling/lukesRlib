@@ -35,8 +35,8 @@
 #'        \code{default=FALSE}
 #' @param inv_norm_y Logical. Apply inv_norm() function to outcome?
 #'        \code{default=FALSE}
-#' @param subset_d Logical. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used).
-#'        \code{default=TRUE}
+#' @param return_all_terms Logical. Return estimates for all independent variables (terms) in the model? If TRUE, includes an adddition column 'term'
+#'        \code{default=FALSE}
 #' @param progress Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
 #'        \code{default=TRUE}
 #' @param beep Logical. Beep when done,
@@ -61,6 +61,10 @@
 #' y_vars = c("event","sex")
 #' get_assoc(x=x_vars, y=y_vars, z="+age", d=example_data, model="logistic", get_fit=TRUE)  |> print(width=500)
 #'
+#' # if desired, can also return estimates for other independent variables (terms) in the model
+#' x_vars = c("bmi","sbp","dbp")
+#' get_assoc(x=x_vars, y="event", z="+age+sex", d=example_data, model="logistic", return_all_terms=TRUE)  |> print(width=500)
+#'
 #' @export
 #'
 get_assoc = function(
@@ -77,7 +81,7 @@ get_assoc = function(
 	scale_y = FALSE,
 	inv_norm_x = FALSE, 
 	inv_norm_y = FALSE,
-	subset_d = TRUE,
+	return_all_terms = FALSE,
 	progress = TRUE,
 	beep = FALSE,
 	beep_sound = 3,
@@ -118,10 +122,8 @@ get_assoc = function(
 	if (verbose)  cat("All x, y and z variables are in d\n")
 	
 	# subset d to just variables used - makes processing much quicker
-	if (subset_d)  {
-		all_vars = c(x,yy,z_vars)
-		d = d[,colnames(d) %in% all_vars]
-	}
+	all_vars = c(x,yy,z_vars)
+	d = d |> dplyr::select(dplyr::all_of(all_vars))
 	if (verbose)  cat("Subsetted data\n")
 	
 	# check z formula starts with a "+" - if not, add one (unless string is empty)
@@ -136,7 +138,7 @@ get_assoc = function(
 	                  lukesRlib:::yv(x,y), 
 	                  \(x,y) lukesRlib:::get_assoc1(x=x, y=y, z=z, d=d, 
 	                                                model=model, af=af, note=note, get_fit=get_fit,
-	                                                scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y,
+	                                                scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y, return_all_terms=return_all_terms,
 	                                                verbose=verbose), 
 	                 .progress = progress) |> 
 	                 purrr::list_rbind()
@@ -171,6 +173,7 @@ get_assoc1 = function(
 	scale_y = FALSE,
 	inv_norm_x = FALSE, 
 	inv_norm_y = FALSE,
+	return_all_covars = FALSE,
 	get_fit = FALSE,
 	verbose = FALSE,
 	...
@@ -195,7 +198,7 @@ get_assoc1 = function(
 			y2  = y12[2]
 			
 			# if time variable is not numeric try to convert (and give warning)
-			if ( ! d |> dplyr::select(!!y1) |> dplyr::pull() |> is.numeric() )  {
+			if ( ! d |> dplyr::select(dplyr::all_of(y1)) |> dplyr::pull() |> is.numeric() )  {
 				warning("Time variable not numeric -- attempting conversion with `as.numeric()`")
 				d = d |> dplyr::mutate(!! rlang::sym(y1) := as.numeric(!! rlang::sym(y1)) )
 			}
@@ -224,7 +227,8 @@ get_assoc1 = function(
 		if (coxph)               fit = survival::coxph(as.formula(reg_formula), data=d)
 		
 		# get tidy output
-		res = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, get_r2=FALSE, ...) |> dplyr::filter(grepl(!!x, term))
+		res_all = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, get_r2=FALSE, ...)
+		res = dplyr::filter(res_all, grepl(!!x, term))
 		
 		# include outcome name as first col
 		if (coxph)  res = res |> dplyr::mutate(outcome=!!y2) |> dplyr::relocate(outcome)
@@ -317,7 +321,9 @@ get_assoc1 = function(
 				         stringr::str_split_1(stringr::fixed("+")) |> 
 				         purrr::keep(\(x) stringr::str_length(x)>0)
 				if (length(z_vars)==0)  z_vars = yy
-				fit_null = glm(paste0(yy, " ~ 1"), data=d |> dplyr::select(yy, x, z_vars) |> na.omit(), family=binomial(link="logit"))
+				fit_null = glm(paste0(yy, " ~ 1"), 
+				               data=d |> dplyr::select(dplyr::all_of(c(stringr::str_replace_all(yy, "`", ""), x, z_vars))) |> na.omit(), 
+				               family=binomial(link="logit"))
 				fit_stat = 1-logLik(fit)/logLik(fit_null)
 				fit_stat = fit_stat[1]
 			}
@@ -329,8 +335,34 @@ get_assoc1 = function(
 			res = res |> dplyr::mutate(fit_stat)
 		}
 		
-		# modify final bits
+		# rename 'term' to 'exposure'
 		res = res |> dplyr::rename(exposure=term)
+		
+		# include other independent variables in output?
+		if (return_all_terms)  {
+			
+			# add 'term' to `res` - replace var in 'exposure' with just variable name
+			res = res |> dplyr::mutate(term=exposure, exposure=!!x) |> dplyr::relocate(term, .after=exposure)
+			
+			# remove exposure from `res_all`
+			res_all = dplyr::filter(res_all, ! grepl(!!x, term))
+			
+			# make sure includes other relevant cols (blank, as required)
+			res_all = res_all |> 
+				dplyr::mutate(exposure=!!x) |> 
+				dplyr::relocate(exposure, .before=term) |>
+				dplyr::mutate(outcome=unique(res$outcome)) |>
+				dplyr::relocate(outcome) |>
+				dplyr::mutate(n=NA)
+			if ("n_cases" %in% colnames(res))  res_all = dplyr::mutate(res_all, n_cases=NA)
+			if (get_fit)  res_all = dplyr::mutate(res_all, fit_stat=NA)
+			
+			# append to `res`
+			res = rbind(res, res_all)
+			
+		}
+		
+		# add 'model' and 'note' columns, as required
 		res = res |> dplyr::mutate(model)
 		if (nchar(note)>0)  res = res |> dplyr::mutate(note=!!note)
 		

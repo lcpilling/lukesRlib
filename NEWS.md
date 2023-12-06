@@ -1,5 +1,7 @@
 # lukesRlib 0.2.6.9000 (21 Nov 2023)
 
+* `get_assoc()` - add `return_all_terms` argument. Default is false. If TRUE, adds a new col `terms` and returns the estimates for all independent variables in the models.
+* `get_assoc()` - remove `subset_d` argument
 * `get_assoc()` - fixed if exposure or outcome needs to be protected by backticks (previously failed if variable was something like "bmi-1")
 
 # lukesRlib 0.2.6 (13 Nov 2023)

@@ -8,7 +8,7 @@ get_assoc(
   d,
   x,
   y,
-  z,
+  z = "",
   model = "lm",
   af = FALSE,
   note = "",
@@ -18,7 +18,7 @@ get_assoc(
   scale_y = FALSE,
   inv_norm_x = FALSE,
   inv_norm_y = FALSE,
-  subset_d = TRUE,
+  return_all_terms = FALSE,
   progress = TRUE,
   beep = FALSE,
   beep_sound = 3,
@@ -63,8 +63,8 @@ get_assoc(
 \item{inv_norm_y}{Logical. Apply inv_norm() function to outcome?
 \code{default=FALSE}}
 
-\item{subset_d}{Logical. Subset `d` before passing to analysis (much quicker when multiple exposures/outcomes used).
-\code{default=TRUE}}
+\item{return_all_terms}{Logical. Return estimates for all independent variables (terms) in the model? If TRUE, includes an adddition column 'term'
+\code{default=FALSE}}
 
 \item{progress}{Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
 \code{default=TRUE}}
@@ -103,6 +103,10 @@ example_data |> dplyr::filter(sex==1) |>
 x_vars = c("bmi","sbp","dbp","scl")
 y_vars = c("event","sex")
 get_assoc(x=x_vars, y=y_vars, z="+age", d=example_data, model="logistic", get_fit=TRUE)  |> print(width=500)
+
+# if desired, can also return estimates for other independent variables (terms) in the model
+x_vars = c("bmi","sbp","dbp")
+get_assoc(x=x_vars, y="event", z="+age+sex", d=example_data, model="logistic", return_all_terms=TRUE)  |> print(width=500)
 
 }
 \author{
