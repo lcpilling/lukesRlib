@@ -228,7 +228,15 @@ get_assoc1 = function(
 		
 		# get tidy output
 		res_all = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, get_r2=FALSE, ...)
-		res = dplyr::filter(res_all, grepl(!!x, term))
+		
+		# Filter to just the exposure variable 
+		if (x %in% res_all$term)  {
+			res = dplyr::filter(res_all, term == !!x)
+		}  else  {
+			# need to make sure not capturing covariates with similar names (e.g., if x="age" do not get covariate "percentage")
+			# if no exact matches then it is categorical or scaled. Grep for x"-"
+			res = dplyr::filter(res_all, grepl(stringr::str_c(!!x, "-"), term))
+		}
 		
 		# include outcome name as first col
 		if (coxph)  res = res |> dplyr::mutate(outcome=!!y2) |> dplyr::relocate(outcome)
