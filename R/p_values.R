@@ -13,7 +13,6 @@
 #' @examples
 #' z = 10
 #' get_p(z)
-#' #>  [1] 1.523971e-23
 #'
 #' @export
 
@@ -40,7 +39,6 @@ get_p = function(z) {
 #' @examples
 #' p = 1e-10
 #' get_z(p)
-#' #>  [1] 6.466951
 #'
 #' @export
 
@@ -68,7 +66,6 @@ get_z = function(p,
 #' @examples
 #' z = 50
 #' get_p_extreme(z)
-#' #>  [1] "2.16e-545"
 #'
 #' @export
 #'
@@ -100,7 +97,6 @@ get_p_extreme = function(z)  {
 #' @examples
 #' z = 50
 #' get_p_neglog10(z)
-#' #>  [1] 544.0977
 #'
 #' @export
 #'
@@ -132,7 +128,6 @@ get_p_neglog10 = function(z,
 #' z = 50
 #' n = 100000
 #' get_p_neglog10_n(z, n)
-#' #>  [1] 537.9851
 #'
 #' @export
 #'
@@ -167,7 +162,6 @@ get_p_neglog10_n = function(z,
 #' lci = 0.1
 #' uci = 0.3
 #' get_se(lci, uci)
-#' #>  [1] 0.05102041
 #'
 #' @export
 

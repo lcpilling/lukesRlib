@@ -18,7 +18,6 @@ Return p-value for any z (or t) statistic as a string
 \examples{
 z = 50
 get_p_extreme(z)
-#>  [1] "2.16e-545"
 
 }
 \author{

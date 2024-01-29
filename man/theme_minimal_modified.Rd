@@ -16,14 +16,14 @@ https://github.com/AlbertRapp/3mw_newsletters/blob/master/37_Jul_19_2023/37_Jul_
 }
 \examples{
 penguins = palmerpenguins::penguins |> 
-  filter(!is.na(sex))
+  dplyr::filter(!is.na(sex))
 
 basic_plot = penguins |> 
-  ggplot(aes(x = bill_length_mm, y = body_mass_g, fill = species)) +
-  geom_point(shape = 21, size = 5, alpha = 0.85, color = 'grey10') +
-  labs(
+  ggplot2::ggplot(ggplot2::aes(x = bill_length_mm, y = body_mass_g, fill = species)) +
+  ggplot2::geom_point(shape = 21, size = 5, alpha = 0.85, color = 'grey10') +
+  ggplot2::labs(
     x = 'Bill length (in mm)',
-    y = element_blank(),
+    y = ggplot2::element_blank(),
     fill = 'Species',
     title = 'Penguins from the Palmer Archipelago',
     subtitle = 'Penguin weights (in g)',
@@ -31,8 +31,8 @@ basic_plot = penguins |>
   )
 
 basic_plot +
-  theme_minimal(base_size = 16, base_family = 'Source Sans Pro') +
-  scale_fill_manual(values = c('Adelie'= '#da2c38', 'Chinstrap'= '#FED18C', 'Gentoo'= '#30C5FF')) +
+  ggplot2::theme_minimal(base_size = 16, base_family = 'Source Sans Pro') +
+  ggplot2::scale_fill_manual(values = c('Adelie'= '#da2c38', 'Chinstrap'= '#FED18C', 'Gentoo'= '#30C5FF')) +
   theme_minimal_modified()
 
 }

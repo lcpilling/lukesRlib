@@ -16,7 +16,9 @@ Returns a vector
 Inverse normalize a variable (force a normal distribution)
 }
 \examples{
-inv_norm(x)
+summary(example_data$sbp)
+sbp_in = inv_norm(example_data$sbp)
+summary(sbp_in)
 
 }
 \author{

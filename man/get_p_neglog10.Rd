@@ -20,7 +20,6 @@ Get -log10 p-value from a provided z statistic (or p-value)
 \examples{
 z = 50
 get_p_neglog10(z)
-#>  [1] 544.0977
 
 }
 \author{

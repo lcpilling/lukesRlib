@@ -18,31 +18,32 @@
 #' @param alpha Numeric. Transparency (0:1). Default=NA
 #'
 #' @examples
-#' qplot(1:10,1:10) + annotate_textp('Text annotation\nx=1, y=0, hjust=1', x=1, y=0, hjust=1)
-#' qplot(1:10,1:10) + annotate_textp('Text annotation\nx=0.1, y=0.9, hjust=0', x=0, y=1, hjust=0)
-#' qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5))
-#' qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)\nsize=14, alpha=0.5', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5), size=14, alpha=0.5)
+#' p1 = ggplot2::ggplot(data.frame(x=1:10,y=1:10), ggplot2::aes(x,y)) + ggplot2::geom_point()
+#' p1 + annotate_textp('Text annotation\nx=1, y=0, hjust=1', x=1, y=0, hjust=1)
+#' p1 + annotate_textp('Text annotation\nx=0.1, y=0.9, hjust=0', x=0, y=1, hjust=0)
+#' p1 + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5))
+#' p1 + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)\nsize=14, alpha=0.5', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5), size=14, alpha=0.5)
 #'
 #' @export
 #'
 
 annotate_textp = function(label, x, y, facets=NULL, hjust=0, vjust=0, color='black', alpha=NA,
                           family=thm$text$family, size=thm$text$size, fontface=1, lineheight=1.0,
-                          box_just=ifelse(c(x,y)<0.5,0,1), margin=unit(size/2, 'pt'), thm=theme_get()) {
+                          box_just=ifelse(c(x,y)<0.5,0,1), margin=unit(size/2, 'pt'), thm=ggplot2::theme_get()) {
   x = scales::squish_infinite(x)
   y = scales::squish_infinite(y)
   data = if (is.null(facets)) data.frame(x=NA) else data.frame(x=NA, facets)
 
   tg = grid::textGrob(
     label, x=0, y=0, hjust=hjust, vjust=vjust,
-    gp=grid::gpar(col=alpha(color, alpha), fontsize=size, fontfamily=family, fontface=fontface, lineheight=lineheight)
+    gp=grid::gpar(col=scales::alpha(color, alpha), fontsize=size, fontfamily=family, fontface=fontface, lineheight=lineheight)
   )
   ts = grid::unit.c(grid::grobWidth(tg), grid::grobHeight(tg))
   vp = grid::viewport(x=x, y=y, width=ts[1], height=ts[2], just=box_just)
   tg = grid::editGrob(tg, x=ts[1]*hjust, y=ts[2]*vjust, vp=vp)
   inner = grid::grobTree(tg, vp=grid::viewport(width=unit(1, 'npc')-margin*2, height=unit(1, 'npc')-margin*2))
 
-  layer(
+  ggplot2::layer(
     data = NULL,
     stat = StatIdentity,
     position = PositionIdentity,

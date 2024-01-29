@@ -4,7 +4,7 @@
 My library of R functions I sometimes find useful
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/version-0.2.6.9000-informational.svg)](https://github.com/lukepilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.2.7-informational.svg)](https://github.com/lukepilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 [![DOI](https://zenodo.org/badge/590063045.svg)](https://zenodo.org/badge/latestdoi/590063045)
@@ -14,18 +14,9 @@ My library of R functions I sometimes find useful
 
 ## List of functions
   - [Hypothesis testing](#hypothesis-testing)
-    - [tidy_ci()](#tidy_ci)
-    - [get_assoc()](#get_assoc)
   - [Data Transformation](#data-transformation)
-    - [carrec()](#carrec)
-    - [inv_norm()](#inv_norm)
-    - [z_trans()](#z_trans)
   - [Working with test statistics](#working-with-test-statistics)
-    - [get_se()](#get_se), [get_z()](#get_z), [get_p()](#get_p)
-    - [get_p_extreme()](#get_p_extreme), [get_p_neglog10()](#get_p_neglog10), [get_p_neglog10_n()](#get_p_neglog10_n)
   - [Plotting-related](#plotting-related)
-    - [annotate_textp()](#annotate_textp)
-    - [theme_minimal_modified()](#theme_minimal_modified)
 
 ## Installation
 To install the development version from GitHub use the `remotes` package:
@@ -88,37 +79,23 @@ Automatically identified the input as from a coxph model and exponentiated estim
 
 ### get_assoc()
 
-`get_assoc()` (phonetically: "get-a-sock") makes PheWAS in R easy and fast, utilizing the {purrr} `map2()` function. It gets the tidy model output for categorical or continuous exposures, from linear, logistic, or CoxPH models: includes N and N cases, outcome, and model info. User can provide multiples exposures and outcomes. 
+`get_assoc()` (phonetically: "get-a-sock") makes PheWAS in R easy and fast. It gets the tidy model output for categorical or continuous exposures, from linear, logistic, or CoxPH models. Output includes N and N cases, outcome, and model info. User can provide multiples exposures and outcomes. 
 
-See the [`get_assoc()` Wiki](https://github.com/lukepilling/lukesRlib/wiki/get_assoc()) details 
+#### Example: Categorical exposure in logistic regression
 
-#### Examples
-
-##### Get tidy model output for an exposure/outcome combination
 ```r
-get_assoc(x="height", y="weight", z="+age+sex", d=ukb)
-#> A tibble: 1 x 10
-#>   outcome exposure estimate std.error statistic   p.value conf.low conf.high     n model
-#>   <chr>   <chr>       <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl> <int> <chr>
-#> 1 weight  height      0.762    0.0296      25.7 3.36e-137    0.704     0.820  4981 lm
-```
-
-The above example is equivalent to `tidy_ci(glm(weight~height+age+sex, data=ukb))` with added `n`
-
-##### Categorical exposure in logistic regression - stratified analysis
-```r
-get_assoc(x="smoking_status", y="chd", z="+age", d=ukb |> filter(sex==1), model="logistic", af=TRUE, note="Males")
+get_assoc(x="smoking_status", y="chd", z="+age", d=ukb, model="logistic", af=TRUE)
 #> A tibble: 3 x 12
-#>   outcome exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model    note 
-#>   <chr>   <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>    <chr>
-#> 1 chd     smoking_status-0    NA       NA         NA    NA        NA         NA     1073     146 logistic Males
-#> 2 chd     smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic Males
-#> 3 chd     smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic Males
+#>   outcome exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model   
+#>   <chr>   <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>   
+#> 1 chd     smoking_status-0    NA       NA         NA    NA        NA         NA     1073     146 logistic
+#> 2 chd     smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic
+#> 3 chd     smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic
 ```
 
-In the above example, the `estimate` is the Odds Ratio from a logistic regression model. The `n` and `n_cases` are directly from the model object and reflect those included in the model after excluding missing participants. The exposure is categorical, and a reference category line has been added to include the N and Ncases for that group. 
+The `estimate` is the Odds Ratio from a logistic regression model, and `n` and `n_cases` show the numbers for each category of the exposure (here `af=TRUE` i.e., treat as factor), including the reference group. 
 
-##### Multiple exposures on single outcome (i.e., a "PheWAS")
+#### Example: Multiple exposures on single outcome (i.e., a "PheWAS")
 ```r
 x_vars = c("bmi","ldl","sbp")
 get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
@@ -130,9 +107,9 @@ get_assoc(x=x_vars, y="chd", z="+age+sex", d=ukb, model="logistic")
 #> 3 chd     sbp         1.01    0.00333     3.53  4.2e- 4    1.01       1.02  4561     316 logistic
 ```
 
-Multiple exposures and outcomes can be provided simultaneously.
+Multiple exposures and outcomes can be provided simultaneously. Here, the exposures are continuous.
 
-##### Tidyverse formatted. Data is first argument. `get_assoc()` can be on the right-side of other `dplyr` functions
+#### Example: stratified analyses
 ```r
 res_all     = ukb |> 
                 get_assoc(x=x_vars, y="chd", z="+age+sex", model="logistic", note="All")
@@ -146,6 +123,7 @@ res_females = ukb |>
 res = list_rbind(list(res_all, res_males, res_females))
 ```
 
+Data is first argument. `get_assoc()` can be on the right-side of other `dplyr` functions. Stratified models can be therefore easily performed. The `note` argument means output is labelled and can be combined into a single data frame easily.
 
 
 ## Data Transformation

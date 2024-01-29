@@ -25,7 +25,6 @@ Return SE from CIs
 lci = 0.1
 uci = 0.3
 get_se(lci, uci)
-#>  [1] 0.05102041
 
 }
 \author{

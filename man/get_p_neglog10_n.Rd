@@ -23,7 +23,6 @@ Get -log10 p-value from a provided z statistic (or p-value) and n
 z = 50
 n = 100000
 get_p_neglog10_n(z, n)
-#>  [1] 537.9851
 
 }
 \author{

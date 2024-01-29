@@ -16,7 +16,9 @@ Returns a vector
 Z-transform a variable. Mean=0, SD=1. Maintains original distribution.
 }
 \examples{
-z_trans(x)
+summary(example_data$sbp)
+sbp_in = z_trans(example_data$sbp)
+summary(sbp_in)
 
 }
 \author{

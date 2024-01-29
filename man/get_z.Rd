@@ -20,7 +20,6 @@ Return a z-statistic from a given p-value
 \examples{
 p = 1e-10
 get_z(p)
-#>  [1] 6.466951
 
 }
 \author{

@@ -11,7 +11,9 @@
 #' @param x a numeric vector to be inverse normalized
 #'
 #' @examples
-#' inv_norm(x)
+#' summary(example_data$sbp)
+#' sbp_in = inv_norm(example_data$sbp)
+#' summary(sbp_in)
 #'
 #' @export
 #'
@@ -36,7 +38,9 @@ inv_norm = function(x) {
 #' @param x a numeric vector to be z-transformed
 #'
 #' @examples
-#' z_trans(x)
+#' summary(example_data$sbp)
+#' sbp_in = z_trans(example_data$sbp)
+#' summary(sbp_in)
 #'
 #' @export
 #'

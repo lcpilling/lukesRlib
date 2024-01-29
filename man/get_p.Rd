@@ -18,7 +18,6 @@ Return p-value for a z (or t) statistic
 \examples{
 z = 10
 get_p(z)
-#>  [1] 1.523971e-23
 
 }
 \author{
