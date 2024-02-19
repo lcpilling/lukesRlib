@@ -37,6 +37,8 @@
 #'        \code{default=FALSE}
 #' @param return_all_terms Logical. Return estimates for all independent variables (terms) in the model? If TRUE, includes an adddition column 'term'
 #'        \code{default=FALSE}
+#' @param interacts_with A string. A variable found in `d`. Will add to regression formula like `x*i` and catch output
+#'        \code{default=""} (character)
 #' @param progress Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
 #'        \code{default=TRUE}
 #' @param beep Logical. Beep when done,
@@ -82,6 +84,7 @@ get_assoc = function(
 	inv_norm_x = FALSE, 
 	inv_norm_y = FALSE,
 	return_all_terms = FALSE,
+	interacts_with = "",
 	progress = TRUE,
 	beep = FALSE,
 	beep_sound = 3,
@@ -121,8 +124,15 @@ get_assoc = function(
 	if (any(! z_vars %in% colnames(d)))  stop("Not all covariate variables are in the provided data")
 	if (verbose)  cat("All x, y and z variables are in d\n")
 	
+	# doing interactions?
+	if (stringr::str_length(interacts_with)>0)  {
+		if (any(! interacts_with %in% colnames(d)))  stop("Interaction variable is not in the provided data")
+		if (verbose)  cat("Getting interactions with `", interacts_with, "`\n")
+	}
+	
 	# subset d to just variables used - makes processing much quicker
 	all_vars = c(x,yy,z_vars)
+	if (stringr::str_length(interacts_with)>0)  all_vars = c(all_vars, interacts_with)
 	d = d |> dplyr::select(dplyr::all_of(all_vars))
 	if (verbose)  cat("Subsetted data\n")
 	
@@ -133,19 +143,19 @@ get_assoc = function(
 	}
 	
 	# use {purrr} function map2() for analysis -- allows for any combination of exposure/outcome numbers
-	if (verbose)  cat("Beginning analysis:\n\n")
+	if (verbose)  cat("Beginning analysis:\n")
 	ret = purrr::map2(lukesRlib:::xv(x,y), 
 	                  lukesRlib:::yv(x,y), 
 	                  \(x,y) lukesRlib:::get_assoc1(x=x, y=y, z=z, d=d, 
 	                                                model=model, af=af, note=note, get_fit=get_fit,
-	                                                scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y, return_all_terms=return_all_terms,
+	                                                scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y, return_all_terms=return_all_terms, interacts_with=interacts_with,
 	                                                verbose=verbose), 
 	                 .progress = progress) |> 
 	                 purrr::list_rbind()
 	
 	# Get extreme p-values if any p-values rounded to zero? 
 	if (extreme_ps)  {
-		if (verbose)  cat("Getting extreme p-values\n")
+		if (verbose)  cat("\nGetting extreme p-values\n")
 		if (any(ret$p.value==0, na.rm=TRUE))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 	}
 	
@@ -174,12 +184,13 @@ get_assoc1 = function(
 	inv_norm_x = FALSE, 
 	inv_norm_y = FALSE,
 	return_all_terms = FALSE,
+	interacts_with = "",
 	get_fit = FALSE,
 	verbose = FALSE,
 	...
 )  {
 	
-	if (verbose)  cat("Doing analysis of x (", x, ") on y (", y, ")\n")
+	if (verbose)  cat("\nDoing analysis of x (", x, ") on y (", y, ")\n")
 	
 	# if x == y skip this
 	if (x != y)  {
@@ -219,15 +230,21 @@ get_assoc1 = function(
 		if (inv_norm_y & !logistic & !coxph) d = d |> dplyr::mutate( !! rlang::sym(y) := lukesRlib::inv_norm( !! rlang::sym(y) ) )
 		
 		# run model
-		reg_formula <- paste0(yy, " ~ ", xx, z)
+		reg_formula <- paste0(yy, " ~ ", xx)
+		if (stringr::str_length(interacts_with)>0)  reg_formula <- paste0(reg_formula, "*", interacts_with)
+		reg_formula <- paste0(reg_formula, z)
+		if (coxph)  reg_formula <- paste0("survival::", reg_formula)
 		if (verbose)  cat("Data checked, running model\n - formula:", reg_formula, "\n")
 		
 		if (!logistic & !coxph)  fit = glm(as.formula(reg_formula), data=d)
 		if (logistic)            fit = glm(as.formula(reg_formula), data=d, family=binomial(link="logit"))
 		if (coxph)               fit = survival::coxph(as.formula(reg_formula), data=d)
 		
+		if (verbose)  cat("Model finished - processing\n")
+		
 		# get tidy output
 		res_all = lukesRlib::tidy_ci(fit, extreme_ps=FALSE, quiet=TRUE, get_r2=FALSE, ...)
+		if (verbose)  cat("Got tidy output\n")
 		
 		# Filter to just the exposure variable 
 		if (x %in% res_all$term)  {
@@ -235,7 +252,9 @@ get_assoc1 = function(
 		}  else  {
 			# need to make sure not capturing covariates with similar names (e.g., if x="age" do not get covariate "percentage")
 			# if no exact matches then it is categorical or scaled. Grep for x"-"
-			res = dplyr::filter(res_all, grepl(stringr::str_c(!!x, "-"), term))
+			res = dplyr::filter(res_all, stringr::str_detect(term, stringr::str_c(!!x, "-")))
+			# exclude if contains ":" as this is an interaction term and will be caught later
+			res = dplyr::filter(res, stringr::str_detect(term, stringr::fixed(":"), negate=TRUE))
 		}
 		
 		# include outcome name as first col
@@ -244,6 +263,8 @@ get_assoc1 = function(
 		
 		# exposure categorical?
 		if (af)  {
+			
+			if (verbose)  cat("Categorical exposure\n")
 			
 			x_vals = as.vector(fit$xlevels[[1]])
 			
@@ -255,7 +276,7 @@ get_assoc1 = function(
 			# get sample size - categorical exposure
 			if (!coxph)  {
 				n = x_vals_n = d |> dplyr::select(!!x, !!y) |> na.omit() |> dplyr::select(!!x) |> table()
-				
+
 				# make sure values line up with x labels
 				for (ii in 1:length(x_vals))  {
 					n[ii] = x_vals_n[x_vals[ii]]
@@ -292,6 +313,8 @@ get_assoc1 = function(
 			}
 			
 		} else {  # exposure is not categorical
+			
+			if (verbose)  cat("Continuous exposure\n")
 			
 			# get sample size - continuous exposure
 			if (!coxph)  {
@@ -353,7 +376,7 @@ get_assoc1 = function(
 			res = res |> dplyr::mutate(term=exposure, exposure=!!x) |> dplyr::relocate(term, .after=exposure)
 			
 			# remove exposure from `res_all`
-			res_all = dplyr::filter(res_all, ! grepl(!!x, term))
+			res_all = dplyr::filter(res_all, ! term %in% res$term)
 			
 			# make sure includes other relevant cols (blank, as required)
 			res_all = res_all |> 
@@ -370,6 +393,30 @@ get_assoc1 = function(
 			
 		}
 		
+		# include interaction term as output? Not required if including all output
+		if (!return_all_terms & stringr::str_length(interacts_with)>0)  {
+			
+			# add 'term' to `res` - replace var in 'exposure' with just variable name
+			res = res |> dplyr::mutate(term=exposure, exposure=!!x) |> dplyr::relocate(term, .after=exposure)
+			
+			# identify interaction rows
+			res_sub = dplyr::filter(res_all, stringr::str_detect(term, !!x) & stringr::str_detect(term, !!interacts_with))
+			
+			# make sure includes other relevant cols (blank, as required)
+			res_sub = res_sub |> 
+				dplyr::mutate(exposure=!!x) |> 
+				dplyr::relocate(exposure, .before=term) |>
+				dplyr::mutate(outcome=unique(res$outcome)) |>
+				dplyr::relocate(outcome) |>
+				dplyr::mutate(n=NA)
+			if ("n_cases" %in% colnames(res))  res_sub = dplyr::mutate(res_sub, n_cases=NA)
+			if (get_fit)  res_sub = dplyr::mutate(res_sub, fit_stat=NA)
+			
+			# append to `res`
+			res = rbind(res, res_sub)
+			
+		}
+		
 		# add 'model' and 'note' columns, as required
 		res = res |> dplyr::mutate(model)
 		if (nchar(note)>0)  res = res |> dplyr::mutate(note=!!note)
@@ -379,6 +426,7 @@ get_assoc1 = function(
 		if (verbose)  cat("x == y :. skipping (", x, " == ", y, ")\n")
 	}
 }
+
 
 
 #' Get exposure variables for using with `purrr::map2()`

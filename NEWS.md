@@ -1,3 +1,8 @@
+# lukesRlib 0.2.8 (19th Feb 2024)
+
+* `get_assoc()` - add `interacts_with` argument. Default is "". User can provide a variable name (string) to also get interaction terms
+* Fixed bug in `return_all_terms` when exposure was factor
+
 # lukesRlib 0.2.7 (29th Jan 2024)
 
 * `get_assoc()` - add `return_all_terms` argument. Default is false. If TRUE, adds a new col `terms` and returns the estimates for all independent variables in the models.

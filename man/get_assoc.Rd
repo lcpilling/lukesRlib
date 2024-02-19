@@ -19,6 +19,7 @@ get_assoc(
   inv_norm_x = FALSE,
   inv_norm_y = FALSE,
   return_all_terms = FALSE,
+  interacts_with = "",
   progress = TRUE,
   beep = FALSE,
   beep_sound = 3,
@@ -65,6 +66,9 @@ get_assoc(
 
 \item{return_all_terms}{Logical. Return estimates for all independent variables (terms) in the model? If TRUE, includes an adddition column 'term'
 \code{default=FALSE}}
+
+\item{interacts_with}{A string. A variable found in `d`. Will add to regression formula like `x*i` and catch output
+\code{default=""} (character)}
 
 \item{progress}{Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
 \code{default=TRUE}}

@@ -19,7 +19,7 @@ annotate_textp(
   lineheight = 1,
   box_just = ifelse(c(x, y) < 0.5, 0, 1),
   margin = unit(size/2, "pt"),
-  thm = theme_get()
+  thm = ggplot2::theme_get()
 )
 }
 \arguments{
