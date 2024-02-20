@@ -1,7 +1,9 @@
 # lukesRlib 0.2.8 (19th Feb 2024)
 
-* `get_assoc()` - add `interacts_with` argument. Default is "". User can provide a variable name (string) to also get interaction terms
-* Fixed bug in `return_all_terms` when exposure was factor
+* `get_assoc()` 
+  * add `interacts_with` argument. Default is "". User can provide a variable name (string) to also get interaction terms
+  * Fixed bug in `return_all_terms` when exposure was factor
+  * Include SE for C-statistic if returning `fit_stat` for coxph() models
 
 # lukesRlib 0.2.7 (29th Jan 2024)
 

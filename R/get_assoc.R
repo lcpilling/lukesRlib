@@ -361,9 +361,10 @@ get_assoc1 = function(
 			if (coxph)  {
 				# CoxPH model - get C-statistic
 				fit_stat = concordance(fit)
+				fit_stat_se = sqrt(fit_stat$var)
 				fit_stat = fit_stat$concordance
 			}
-			res = res |> dplyr::mutate(fit_stat)
+			res = res |> dplyr::mutate(fit_stat, fit_stat_se)
 		}
 		
 		# rename 'term' to 'exposure'
@@ -386,7 +387,7 @@ get_assoc1 = function(
 				dplyr::relocate(outcome) |>
 				dplyr::mutate(n=NA)
 			if ("n_cases" %in% colnames(res))  res_all = dplyr::mutate(res_all, n_cases=NA)
-			if (get_fit)  res_all = dplyr::mutate(res_all, fit_stat=NA)
+			if (get_fit)  res_all = dplyr::mutate(res_all, fit_stat=NA, fit_stat_se=NA)
 			
 			# append to `res`
 			res = rbind(res, res_all)
@@ -410,7 +411,7 @@ get_assoc1 = function(
 				dplyr::relocate(outcome) |>
 				dplyr::mutate(n=NA)
 			if ("n_cases" %in% colnames(res))  res_sub = dplyr::mutate(res_sub, n_cases=NA)
-			if (get_fit)  res_sub = dplyr::mutate(res_sub, fit_stat=NA)
+			if (get_fit)  res_sub = dplyr::mutate(res_sub, fit_stat=NA, fit_stat_se=NA)
 			
 			# append to `res`
 			res = rbind(res, res_sub)
