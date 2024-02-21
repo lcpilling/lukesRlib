@@ -341,6 +341,7 @@ get_assoc1 = function(
 		if (get_fit)  {
 			if (verbose)  cat("Getting fit statistic\n")
 			fit_stat = NA
+			fit_stat_se = NA
 			if (!logistic & !coxph)  {
 				# linear model - get R^2
 				fit_stat = cor(fit$y,predict(fit))^2
