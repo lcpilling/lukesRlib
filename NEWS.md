@@ -1,3 +1,9 @@
+# lukesRlib 0.2.8.9000 (23rd Feb 2024)
+
+### Bug fixes
+* `get_assoc()` - Fix `fit_stat_se` if missing 
+
+
 # lukesRlib 0.2.8 (19th Feb 2024)
 
 * `get_assoc()` 
