@@ -119,7 +119,7 @@ get_assoc = function(
 	if (any(! x  %in% colnames(d)))  stop("Not all exposure variables are in the provided data")
 	if (any(! yy %in% colnames(d)))  stop("Not all outcome variables are in the provided data")
 	z_vars = stringr::str_replace_all(z, " |as.factor\\(|\\)", "") |> 
-	         stringr::str_split_1(stringr::fixed("+")) |> 
+	         stringr::str_split_1("\\+|\\*") |> 
 	         purrr::keep(\(x) stringr::str_length(x)>0)
 	if (any(! z_vars %in% colnames(d)))  stop("Not all covariate variables are in the provided data")
 	if (verbose)  cat("All x, y and z variables are in d\n")

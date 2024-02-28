@@ -1,7 +1,8 @@
-# lukesRlib 0.2.8.9000 (23rd Feb 2024)
+# lukesRlib 0.2.8.9000 (28th Feb 2024)
 
 ### Bug fixes
 * `get_assoc()` - Fix `fit_stat_se` if missing 
+* `get_assoc()` - Fix covariate checking if interaction included in formula. Resolving issue #1 
 
 
 # lukesRlib 0.2.8 (19th Feb 2024)
