@@ -1,6 +1,5 @@
-<img align="right" src="https://github.com/lukepilling/lukesRlib/raw/master/images/lukesRlib.png" width="200" />
+# lukesRlib <a href="https://lukepilling.github.io/lukesRlib/"><img src="images/lukesRlib.png" align="right" width="150" /></a>
 
-# lukesRlib
 My library of R functions I sometimes find useful
 
 <!-- badges: start -->
