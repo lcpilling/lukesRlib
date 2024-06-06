@@ -1,4 +1,4 @@
-# lukesRlib <a href="https://lcpilling.github.io/lukesRlib/"><img src="images/lukesRlib.png" align="right" width="150" /></a>
+# lukesRlib <a href="https://lcpilling.github.io/lukesRlib/"><img src="man/figures/lukesRlib.png" align="right" width="150" /></a>
 
 My library of R functions I sometimes find useful
 
@@ -256,7 +256,7 @@ qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nb
 qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)\nsize=14, alpha=0.5', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5), size=13, alpha=0.5)
 ```
 
-<img align="center" src="https://github.com/lcpilling/lukesRlib/raw/master/images/annotate_textp.png" />
+<img align="center" src="man/figures/annotate_textp.png" />
 
 ### theme_minimal_modified()
 
@@ -285,4 +285,4 @@ basic_plot +
   theme_minimal_modified()
 ```
 
-<img align="center" src="https://github.com/lcpilling/lukesRlib/raw/master/images/theme_minimal_modified.png" width="600" />
+<img align="center" src="man/figures/theme_minimal_modified.png" width="600" />
