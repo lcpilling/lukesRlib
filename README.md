@@ -3,7 +3,7 @@
 My library of R functions I sometimes find useful
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/version-0.2.9-informational.svg)](https://github.com/lcpilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.2.10-informational.svg)](https://github.com/lcpilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lcpilling/lukesRlib.svg)](https://github.com/lcpilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 [![DOI](https://zenodo.org/badge/590063045.svg)](https://zenodo.org/badge/latestdoi/590063045)
