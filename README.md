@@ -1,10 +1,10 @@
-# lukesRlib <a href="https://lukepilling.github.io/lukesRlib/"><img src="images/lukesRlib.png" align="right" width="150" /></a>
+# lukesRlib <a href="https://lcpilling.github.io/lukesRlib/"><img src="images/lukesRlib.png" align="right" width="150" /></a>
 
 My library of R functions I sometimes find useful
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/version-0.2.9-informational.svg)](https://github.com/lukepilling/lukesRlib)
-[![](https://img.shields.io/github/last-commit/lukepilling/lukesRlib.svg)](https://github.com/lukepilling/lukesRlib/commits/master)
+[![](https://img.shields.io/badge/version-0.2.9-informational.svg)](https://github.com/lcpilling/lukesRlib)
+[![](https://img.shields.io/github/last-commit/lcpilling/lukesRlib.svg)](https://github.com/lcpilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 [![DOI](https://zenodo.org/badge/590063045.svg)](https://zenodo.org/badge/latestdoi/590063045)
 <!-- badges: end -->
@@ -42,7 +42,7 @@ remotes::install_github("lukepilling/lukesRlib@v0.2.0")
 
 Motivation: by default the [{broom}](https://broom.tidymodels.org/) package uses `confint()` to estimate CIs. For GLMs this calculates CIs via the profile likelihood method. When using large datasets this takes a long time and does not meaningfully alter the CIs compared to calculating using 1.96*SE
 
-`tidy_ci()` does a few other nice things: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, and if p==0 returns the 'extreme p' as a string. Other options include -log10 p-values. See the [`tidy_ci()` Wiki](https://github.com/lukepilling/lukesRlib/wiki/tidy_ci()) page for more details 
+`tidy_ci()` does a few other nice things: hides the intercept by default, automatically detects logistic/CoxPH/CRR models and exponentiates the estimates, and if p==0 returns the 'extreme p' as a string. Other options include -log10 p-values. See the [`tidy_ci()` Wiki](https://github.com/lcpilling/lukesRlib/wiki/tidy_ci()) page for more details 
 
 #### Examples
 
@@ -256,7 +256,7 @@ qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nb
 qplot(1:10,1:10) + annotate_textp('Text annotation\nx = 0.5, y=0.5, hjust=0.5\nbox_just=c(0.5,0.5)\nsize=14, alpha=0.5', x=0.5, y=0.5, hjust=0.5, box_just=c(0.5,0.5), size=13, alpha=0.5)
 ```
 
-<img align="center" src="https://github.com/lukepilling/lukesRlib/raw/master/images/annotate_textp.png" />
+<img align="center" src="https://github.com/lcpilling/lukesRlib/raw/master/images/annotate_textp.png" />
 
 ### theme_minimal_modified()
 
@@ -285,4 +285,4 @@ basic_plot +
   theme_minimal_modified()
 ```
 
-<img align="center" src="https://github.com/lukepilling/lukesRlib/raw/master/images/theme_minimal_modified.png" width="600" />
+<img align="center" src="https://github.com/lcpilling/lukesRlib/raw/master/images/theme_minimal_modified.png" width="600" />

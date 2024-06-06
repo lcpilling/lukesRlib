@@ -18,11 +18,12 @@ get_assoc(
   scale_y = FALSE,
   inv_norm_x = FALSE,
   inv_norm_y = FALSE,
+  winsorize_x = FALSE,
+  winsorize_y = FALSE,
+  winsorize_n = 5,
   return_all_terms = FALSE,
   interacts_with = "",
   progress = TRUE,
-  beep = FALSE,
-  beep_sound = 3,
   verbose = FALSE,
   ...
 )
@@ -64,6 +65,15 @@ get_assoc(
 \item{inv_norm_y}{Logical. Apply inv_norm() function to outcome?
 \code{default=FALSE}}
 
+\item{winsorize_x}{Logical. Apply Winzorization to exposure?
+\code{default=FALSE}}
+
+\item{winsorize_y}{Logical. Apply Winzorization to outcome?
+\code{default=FALSE}}
+
+\item{winsorize_n}{Numeric. Standard deviations from the mean to Winzorize. I.e., participants with values beyond this N will be set to N.
+\code{default=5}}
+
 \item{return_all_terms}{Logical. Return estimates for all independent variables (terms) in the model? If TRUE, includes an adddition column 'term'
 \code{default=FALSE}}
 
@@ -72,12 +82,6 @@ get_assoc(
 
 \item{progress}{Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
 \code{default=TRUE}}
-
-\item{beep}{Logical. Beep when done,
-\code{default=FALSE}}
-
-\item{beep_sound}{Numeric. Which sound to use? See `beepr` docs,
-\code{default=3}}
 
 \item{verbose}{Logical. Be verbose,
 \code{default=FALSE}}

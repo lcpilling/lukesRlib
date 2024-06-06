@@ -1,3 +1,15 @@
+# lukesRlib 0.2.10 (6th June 2024)
+
+### Changes
+* Change URL to reflect my GitHub username change from `lukepilling` to `lcpilling` to be more consistent between different logins, websites, and social media
+ - https://lcpilling.github.io/lukesRlib
+ - https://github.com/lcpilling/lukesRlib
+* `get_assoc()` 
+ - Add options to Winsorize the exposure or outcome
+ - Remove `beep`
+ - Improved `verbose` reporting
+
+
 # lukesRlib 0.2.9 (28th Feb 2024)
 
 ### Bug fixes

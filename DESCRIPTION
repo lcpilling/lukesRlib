@@ -1,13 +1,13 @@
 Package: lukesRlib
 Title: My library of R functions I sometimes find useful
-Version: 0.2.9
+Version: 0.2.10
 Authors@R: c(person("Luke", "Pilling", 
                     email = "L.Pilling@exeter.ac.uk", 
                     role = c("aut", "cre"),
                     comment = c(ORCID = "0000-0002-3332-8454")))
 Description: My library of R functions I sometimes find useful. Some shamelessly borrowed from other packages and the internet generally.
 License: GPL-3
-URL: https://lukepilling.github.io/lukesRlib, https://github.com/lukepilling/lukesRlib
+URL: https://lcpilling.github.io/lukesRlib, https://github.com/lcpilling/lukesRlib
 Depends: 
   R (>= 4.1.1)
 Imports:
@@ -17,9 +17,7 @@ Imports:
   rlang (>= 1.0.0), 
   broom (>= 1.0.0), 
   survival (>= 2.37-2)
-Suggests:
-  beepr (>= 1.3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
-BugReports: https://github.com/lukepilling/lukesRlib/issues
+BugReports: https://github.com/lcpilling/lukesRlib/issues

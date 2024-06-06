@@ -35,16 +35,18 @@
 #'        \code{default=FALSE}
 #' @param inv_norm_y Logical. Apply inv_norm() function to outcome?
 #'        \code{default=FALSE}
+#' @param winsorize_x Logical. Apply Winzorization to exposure?
+#'        \code{default=FALSE}
+#' @param winsorize_y Logical. Apply Winzorization to outcome?
+#'        \code{default=FALSE}
+#' @param winsorize_n Numeric. Standard deviations from the mean to Winzorize. I.e., participants with values beyond this N will be set to N.
+#'        \code{default=5}
 #' @param return_all_terms Logical. Return estimates for all independent variables (terms) in the model? If TRUE, includes an adddition column 'term'
 #'        \code{default=FALSE}
 #' @param interacts_with A string. A variable found in `d`. Will add to regression formula like `x*i` and catch output
 #'        \code{default=""} (character)
 #' @param progress Logical. Show progress bar from {purrr} `map()` function (useful when multiple exposures/outcomes provided).
 #'        \code{default=TRUE}
-#' @param beep Logical. Beep when done,
-#'        \code{default=FALSE}
-#' @param beep_sound Numeric. Which sound to use? See `beepr` docs,
-#'        \code{default=3}
 #' @param verbose Logical. Be verbose,
 #'        \code{default=FALSE}
 #' @param ... Other `tidy_ci()` options
@@ -83,11 +85,12 @@ get_assoc = function(
 	scale_y = FALSE,
 	inv_norm_x = FALSE, 
 	inv_norm_y = FALSE,
+	winsorize_x = FALSE, 
+	winsorize_y = FALSE,
+	winsorize_n = 5,
 	return_all_terms = FALSE,
 	interacts_with = "",
 	progress = TRUE,
-	beep = FALSE,
-	beep_sound = 3,
 	verbose = FALSE,
 	...
 )  {
@@ -106,6 +109,13 @@ get_assoc = function(
 		cat("N outcomes = ", length(y), "\n")
 		cat("Exposures categorical? ", af, "\n")
 		cat("Note: ", note, "\n")
+		
+		if (scale_x) cat("Scaling X values\n")
+		if (scale_y) cat("Scaling Y values\n")
+		if (inv_norm_x) cat("Rank-based inverse normal transforming X values\n")
+		if (inv_norm_y) cat("Rank-based inverse normal transforming Y values\n")
+		if (winsorize_x) cat("Winsorizing X values (values >", winsorize_n, " SDs from mean are truncated)\n")
+		if (winsorize_y) cat("Winsorizing Y values (values >", winsorize_n, " SDs from mean are truncated)\n")
 	}
 	
 	# if doing coxph, extract variable names for checking:
@@ -148,7 +158,10 @@ get_assoc = function(
 	                  lukesRlib:::yv(x,y), 
 	                  \(x,y) lukesRlib:::get_assoc1(x=x, y=y, z=z, d=d, 
 	                                                model=model, af=af, note=note, get_fit=get_fit,
-	                                                scale_x=scale_x, scale_y=scale_y, inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y, return_all_terms=return_all_terms, interacts_with=interacts_with,
+	                                                scale_x=scale_x, scale_y=scale_y, 
+	                                                inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y, 
+	                                                winsorize_x=winsorize_x, winsorize_y=winsorize_y, winsorize_n=winsorize_n,
+	                                                return_all_terms=return_all_terms, interacts_with=interacts_with,
 	                                                verbose=verbose), 
 	                 .progress = progress) |> 
 	                 purrr::list_rbind()
@@ -158,9 +171,6 @@ get_assoc = function(
 		if (verbose)  cat("\nGetting extreme p-values\n")
 		if (any(ret$p.value==0, na.rm=TRUE))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 	}
-	
-	# try to beep?
-	if (beep)  try(beepr::beep(beep_sound), silent=TRUE)
 	
 	# return results
 	ret
@@ -183,6 +193,9 @@ get_assoc1 = function(
 	scale_y = FALSE,
 	inv_norm_x = FALSE, 
 	inv_norm_y = FALSE,
+	winsorize_x = FALSE, 
+	winsorize_y = FALSE,
+	winsorize_n = 5,
 	return_all_terms = FALSE,
 	interacts_with = "",
 	get_fit = FALSE,
@@ -228,6 +241,28 @@ get_assoc1 = function(
 		# inverse normalize exposure or outcome?
 		if (inv_norm_x & !af)                d = d |> dplyr::mutate( !! rlang::sym(x) := lukesRlib::inv_norm( !! rlang::sym(x) ) )
 		if (inv_norm_y & !logistic & !coxph) d = d |> dplyr::mutate( !! rlang::sym(y) := lukesRlib::inv_norm( !! rlang::sym(y) ) )
+		
+		# winsorizing exposure or outcome?
+		if (winsorize_x & !af)  {
+			v = d |> dplyr::select( !! rlang::sym(x) ) |> dplyr::pull()
+			min = mean(v, na.rm=T) - winsorize_n*sd(v, na.rm=T)
+			max = mean(v, na.rm=T) + winsorize_n*sd(v, na.rm=T)
+			d = d |> dplyr::mutate( !! rlang::sym(x) := dplyr::case_when( 
+				!! rlang::sym(x) > max ~ max,
+				!! rlang::sym(x) < min ~ min,
+				TRUE ~ !! rlang::sym(x)
+			) )
+		}
+		if (winsorize_y & !logistic & !coxph)  {
+			v = d |> dplyr::select( !! rlang::sym(y) ) |> dplyr::pull()
+			min = mean(v, na.rm=T) - winsorize_n*sd(v, na.rm=T)
+			max = mean(v, na.rm=T) + winsorize_n*sd(v, na.rm=T)
+			d = d |> dplyr::mutate( !! rlang::sym(y) := dplyr::case_when( 
+				!! rlang::sym(y) > max ~ max,
+				!! rlang::sym(y) < min ~ min,
+				TRUE ~ !! rlang::sym(y)
+			) )
+		}
 		
 		# run model
 		reg_formula <- paste0(yy, " ~ ", xx)
