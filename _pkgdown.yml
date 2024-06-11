@@ -1,7 +1,49 @@
-url: ~
+url: https://lcpilling.github.io/lukesRlib/
 template:
   bootstrap: 5
 
 authors:
   Luke Pilling:
     href: "https://lcpilling.github.io"
+
+reference:
+- title: "PheWAS"
+  desc: >
+    Get associations between a number of exposures and outcomes.
+  contents: 
+  - get_assoc
+- title: "Get summary statistics"
+  desc: "'Tidy' model output with confidence intervals and other useful information."
+  contents:
+  - tidy_ci
+- title: "Working with test statistics"
+  desc: "Derived p-value, standard error (etc.) from other test statistics."
+  contents:
+  - get_p
+  - get_p_extreme
+  - get_p_neglog10
+  - get_p_neglog10_n
+  - get_se
+  - get_z
+- title: "Transform data"
+  desc: "Manipulate variables."
+  contents:
+  - carrec
+  - inv_norm
+  - z_trans
+- title: "Plotting related"
+  desc: "For working with plots."
+  contents:
+  - annotate_textp
+  - theme_minimal_modified
+- title: "Example data"
+  desc: "Small dataset used in examples."
+  contents:
+  - example_data
+
+
+
+
+
+
+

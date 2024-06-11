@@ -21,17 +21,10 @@ My library of R functions I sometimes find useful
 To install the development version from GitHub use the `remotes` package:
 
 ```r
-remotes::install_github("lukepilling/lukesRlib")
-```
+remotes::install_github("lcpilling/lukesRlib")
 
-I periodically "release" a version number once it works as expected. The development version may contain things that do not yet "work"
-
-```r
-# To install the latest release, use:
-remotes::install_github("lukepilling/lukesRlib@*release")
-
-# To install a specific version (see tags), use:
-remotes::install_github("lukepilling/lukesRlib@v0.2.0")
+remotes::install_github("lcpilling/lukesRlib@*release") # To install the latest release
+remotes::install_github("lcpilling/lukesRlib@v0.2.0")   # To install a specific version (see tags)
 ```
 
 
