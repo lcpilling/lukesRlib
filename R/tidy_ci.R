@@ -84,8 +84,16 @@ tidy_ci = function(
 	# tidy factor names?
 	if (tidy_factors)  {
 		ret = ret |> dplyr::mutate(
+		  
+		  # standard "as.factor()"
 			term=dplyr::if_else(grepl("as.factor(", term, fixed=TRUE), stringr::str_replace(term, stringr::fixed(")"), "-"), term),
-			term=stringr::str_replace(term, stringr::fixed("as.factor("), "")
+			term=stringr::str_replace(term, stringr::fixed("as.factor("), ""),
+			
+			# haven "as_factor()"
+			term=dplyr::if_else(grepl("as_factor(", term, fixed=TRUE), stringr::str_replace(term, stringr::fixed(")"), "-"), term),
+			term=stringr::str_replace(term, stringr::fixed("haven::as_factor("), ""),
+			term=stringr::str_replace(term, stringr::fixed("as_factor("), "")
+			
 		)
 	}
 	

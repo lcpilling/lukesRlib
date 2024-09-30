@@ -1,13 +1,20 @@
+# lukesRlib 0.2.11 (30th Sept 2024)
+
+### Changes
+ * `tidy_ci()` now recognises and tidies factor naming if `haven::as_factor()` is used instead of the base R `as.factor()`
+ * Update dependencies to be more explicit which tidyverse packages are desired
+ * Fix NEWS
+
 # lukesRlib 0.2.10 (6th June 2024)
 
 ### Changes
-- Change URL to reflect my GitHub username change from `lukepilling` to `lcpilling` to be more consistent between different logins, websites, and social media
- -- https://lcpilling.github.io/lukesRlib
- -- https://github.com/lcpilling/lukesRlib
-- `get_assoc()` 
- -- Add options to Winsorize the exposure or outcome
- -- Remove `beep`
- -- Improved `verbose` reporting
+ * Change URL to reflect my GitHub username change from `lukepilling` to `lcpilling` to be more consistent between different logins, websites, and social media
+   * https://lcpilling.github.io/lukesRlib
+   * https://github.com/lcpilling/lukesRlib
+ * `get_assoc()` 
+   * Add options to Winsorize the exposure or outcome
+   * Remove `beep`
+   * Improved `verbose` reporting
 
 
 # lukesRlib 0.2.9 (28th Feb 2024)
