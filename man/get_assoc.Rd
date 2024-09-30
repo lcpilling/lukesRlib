@@ -11,6 +11,7 @@ get_assoc(
   z = "",
   model = "lm",
   af = FALSE,
+  af_base = FALSE,
   note = "",
   get_fit = FALSE,
   extreme_ps = FALSE,
@@ -41,7 +42,11 @@ get_assoc(
 \item{model}{A string. The type of model to perform. Can be "lm", "logistic" or "coxph".
 \code{default="lm"} (character)}
 
-\item{af}{Logical. Is `x` categorical? I.e., include in formula as `as.factor(x)`.
+\item{af}{Logical. Is `x` categorical? I.e., include in formula like `haven::as_factor(x)`.
+To use base R `as.factor()` instead set option "af_base" to TRUE
+\code{default=FALSE}}
+
+\item{af_base}{Logical. Use base R `as.factor()` instead of `haven::as_factor(x)`?
 \code{default=FALSE}}
 
 \item{note}{A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.

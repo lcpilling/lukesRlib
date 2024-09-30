@@ -19,7 +19,10 @@
 #'        \code{default=""} (character)
 #' @param model A string. The type of model to perform. Can be "lm", "logistic" or "coxph".
 #'        \code{default="lm"} (character)
-#' @param af Logical. Is `x` categorical? I.e., include in formula as `as.factor(x)`.
+#' @param af Logical. Is `x` categorical? I.e., include in formula like `haven::as_factor(x)`.
+#'        To use base R `as.factor()` instead set option "af_base" to TRUE
+#'        \code{default=FALSE}
+#' @param af_base Logical. Use base R `as.factor()` instead of `haven::as_factor(x)`?
 #'        \code{default=FALSE}
 #' @param note A string. If you want to include a note like "All", "Males", "C282Y homozygotes" to describe the model or sample.
 #'        \code{default=""} (character)
@@ -78,6 +81,7 @@ get_assoc = function(
 	z = "", 
 	model = "lm", 
 	af = FALSE, 
+	af_base = FALSE, 
 	note = "", 
 	get_fit = FALSE,
 	extreme_ps = FALSE,
@@ -157,7 +161,7 @@ get_assoc = function(
 	ret = purrr::map2(lukesRlib:::xv(x,y), 
 	                  lukesRlib:::yv(x,y), 
 	                  \(x,y) lukesRlib:::get_assoc1(x=x, y=y, z=z, d=d, 
-	                                                model=model, af=af, note=note, get_fit=get_fit,
+	                                                model=model, af=af, af_base=af_base, note=note, get_fit=get_fit,
 	                                                scale_x=scale_x, scale_y=scale_y, 
 	                                                inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y, 
 	                                                winsorize_x=winsorize_x, winsorize_y=winsorize_y, winsorize_n=winsorize_n,
@@ -188,6 +192,7 @@ get_assoc1 = function(
 	d, 
 	model = "lm", 
 	af = FALSE, 
+	af_base = FALSE, 
 	note = "", 
 	scale_x = FALSE, 
 	scale_y = FALSE,
@@ -230,8 +235,12 @@ get_assoc1 = function(
 			yy = stringr::str_c("`", yy, "`")  # add backticks to protect variable name in regression formula
 		}
 		
+		# add backticks to protect variable name in regression formula
+		xx = stringr::str_c("`", x, "`")  
+
 		# exposure variable - categorical?
-		xx = stringr::str_c("`", x, "`")  # add backticks to protect variable name in regression formula
+		#   if using haven, mutate the actual data
+		if (af & !af_base)  d = d |> dplyr::mutate( !! rlang::sym(x) := haven::as_factor( !! rlang::sym(x) ) )
 		if (af)  xx = paste0("as.factor(",xx,")")
 		
 		# scale exposure or outcome?

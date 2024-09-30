@@ -2,8 +2,10 @@
 
 ### Changes
  * `tidy_ci()` now recognises and tidies factor naming if `haven::as_factor()` is used instead of the base R `as.factor()`
- * Update dependencies to be more explicit which tidyverse packages are desired
- * Fix NEWS
+ * `get_assoc()` now uses `haven::as_factor()` instead of base R `as.factor()` for categorical exposures so that labels are shown nicely
+ * Update dependencies to include {haven} and be more explicit which tidyverse packages are desired
+ * Update example data categorical variables to include labels
+ * Fix NEWS formatting
 
 # lukesRlib 0.2.10 (6th June 2024)
 

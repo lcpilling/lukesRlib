@@ -66,7 +66,7 @@ tidy_ci(fit_coxph)
 #> 4 smoking_status-2    1.03   0.0149        2.16 3.08e- 2    1.00      1.06 
 ```
 
-Automatically identified the input as from a coxph model and exponentiated estimate/CIs. Also provided N and Nevents. Also, tidied "as.factor()" variable names.
+Automatically identified the input as from a coxph model and exponentiated estimate/CIs. Also provided N and Nevents. Also, tidied "as.factor()" variable names. If `haven::as_factor()` is used then any labels are shown correctly.
 
 
 ### get_assoc()
@@ -78,14 +78,14 @@ Automatically identified the input as from a coxph model and exponentiated estim
 ```r
 get_assoc(x="smoking_status", y="chd", z="+age", d=ukb, model="logistic", af=TRUE)
 #> A tibble: 3 x 12
-#>   outcome exposure         estimate std.error statistic p.value conf.low conf.high     n n_cases model   
-#>   <chr>   <chr>               <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>   
-#> 1 chd     smoking_status-0    NA       NA         NA    NA        NA         NA     1073     146 logistic
-#> 2 chd     smoking_status-1     1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic
-#> 3 chd     smoking_status-2     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic
+#>   outcome exposure               estimate std.error statistic p.value conf.low conf.high     n n_cases model   
+#>   <chr>   <chr>                     <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl> <dbl>   <dbl> <chr>   
+#> 1 chd     smoking_status-Never       NA       NA         NA    NA        NA         NA    1073     146 logistic
+#> 2 chd     smoking_status-Former      1.24     0.126      1.72  0.0852    0.970      1.59   918     180 logistic
+#> 3 chd     smoking_status-Current     1.48     0.181      2.16  0.0311    1.04       2.11   285      52 logistic
 ```
 
-The `estimate` is the Odds Ratio from a logistic regression model, and `n` and `n_cases` show the numbers for each category of the exposure (here `af=TRUE` i.e., treat as factor), including the reference group. 
+The `estimate` is the Odds Ratio from a logistic regression model, and `n` and `n_cases` show the numbers for each category of the exposure (here `af=TRUE` i.e., treat as factor), including the reference group. Note that labels from `haven::labelled()` are shown correctly.
 
 #### Example: Multiple exposures on single outcome (i.e., a "PheWAS")
 ```r
