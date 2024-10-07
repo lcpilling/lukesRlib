@@ -132,7 +132,7 @@ get_assoc = function(
 	# check variables are all in d
 	if (any(! x  %in% colnames(d)))  stop("Not all exposure variables are in the provided data")
 	if (any(! yy %in% colnames(d)))  stop("Not all outcome variables are in the provided data")
-	z_vars = stringr::str_replace_all(z, " |as.factor\\(|\\)", "") |> 
+	z_vars = stringr::str_replace_all(z, " |as.factor\\(|haven::|\\)", "") |> 
 	         stringr::str_split_1("\\+|\\*") |> 
 	         purrr::keep(\(x) stringr::str_length(x)>0)
 	if (any(! z_vars %in% colnames(d)))  stop("Not all covariate variables are in the provided data")
@@ -240,7 +240,7 @@ get_assoc1 = function(
 
 		# exposure variable - categorical?
 		#   if using haven, mutate the actual data
-		if (af & !af_base)  d = d |> dplyr::mutate( !! rlang::sym(x) := haven::as_factor( !! rlang::sym(x) ) )
+		if (af & !af_base)  d = d |> dplyr::mutate( !! rlang::sym(x) := droplevels( haven::as_factor( !! rlang::sym(x) ) ) )
 		if (af)  xx = paste0("as.factor(",xx,")")
 		
 		# scale exposure or outcome?

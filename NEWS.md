@@ -1,3 +1,13 @@
+# lukesRlib 0.2.12 (7th Oct 2024)
+
+### Bug fixes
+* `get_assoc()` - Drop empty factor levels if using haven::as_factor()
+* `get_assoc()` - Correctly identify covariate variable names when using haven::as_factor()
+
+### Changes
+* Add light switch to pkgdown site 
+
+
 # lukesRlib 0.2.11 (30th Sept 2024)
 
 ### Changes
@@ -6,6 +16,7 @@
  * Update dependencies to include {haven} and be more explicit which tidyverse packages are desired
  * Update example data categorical variables to include labels
  * Fix NEWS formatting
+
 
 # lukesRlib 0.2.10 (6th June 2024)
 
