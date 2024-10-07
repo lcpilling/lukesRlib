@@ -18,7 +18,7 @@ annotate_textp(
   fontface = 1,
   lineheight = 1,
   box_just = ifelse(c(x, y) < 0.5, 0, 1),
-  margin = unit(size/2, "pt"),
+  margin = grid::unit(size/2, "pt"),
   thm = ggplot2::theme_get()
 )
 }
