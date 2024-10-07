@@ -41,13 +41,13 @@ annotate_textp = function(label, x, y, facets=NULL, hjust=0, vjust=0, color='bla
   ts = grid::unit.c(grid::grobWidth(tg), grid::grobHeight(tg))
   vp = grid::viewport(x=x, y=y, width=ts[1], height=ts[2], just=box_just)
   tg = grid::editGrob(tg, x=ts[1]*hjust, y=ts[2]*vjust, vp=vp)
-  inner = grid::grobTree(tg, vp=grid::viewport(width=unit(1, 'npc')-margin*2, height=unit(1, 'npc')-margin*2))
+  inner = grid::grobTree(tg, vp=grid::viewport(width=grid::unit(1, 'npc')-margin*2, height=grid::unit(1, 'npc')-margin*2))
 
   ggplot2::layer(
     data = NULL,
-    stat = StatIdentity,
-    position = PositionIdentity,
-    geom = GeomCustomAnn,
+    stat = ggplot2::StatIdentity,
+    position = ggplot2::PositionIdentity,
+    geom = ggplot2::GeomCustomAnn,
     inherit.aes = TRUE,
     params = list(
       grob=grid::grobTree(inner), 
