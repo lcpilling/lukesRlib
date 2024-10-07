@@ -29,7 +29,7 @@
 
 annotate_textp = function(label, x, y, facets=NULL, hjust=0, vjust=0, color='black', alpha=NA,
                           family=thm$text$family, size=thm$text$size, fontface=1, lineheight=1.0,
-                          box_just=ifelse(c(x,y)<0.5,0,1), margin=unit(size/2, 'pt'), thm=ggplot2::theme_get()) {
+                          box_just=ifelse(c(x,y)<0.5,0,1), margin=grid::unit(size/2, 'pt'), thm=ggplot2::theme_get()) {
   x = scales::squish_infinite(x)
   y = scales::squish_infinite(y)
   data = if (is.null(facets)) data.frame(x=NA) else data.frame(x=NA, facets)
