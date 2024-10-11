@@ -15,6 +15,7 @@ get_assoc(
   note = "",
   get_fit = FALSE,
   extreme_ps = FALSE,
+  include_formula = FALSE,
   scale_x = FALSE,
   scale_y = FALSE,
   inv_norm_x = FALSE,
@@ -56,6 +57,9 @@ To use base R `as.factor()` instead set option "af_base" to TRUE
 \code{default=FALSE}}
 
 \item{extreme_ps}{Logical. Default is FALSE. If p==0 then return "extreme p-values" as strings.
+\code{default=FALSE}}
+
+\item{include_formula}{Logical. Default is FALSE. Include the regression formula in the output?
 \code{default=FALSE}}
 
 \item{scale_x}{Logical. Default is FALSE. Apply scale() function to exposure?

@@ -30,6 +30,8 @@
 #'        \code{default=FALSE}
 #' @param extreme_ps Logical. Default is FALSE. If p==0 then return "extreme p-values" as strings.
 #'        \code{default=FALSE}
+#' @param include_formula Logical. Default is FALSE. Include the regression formula in the output?
+#'        \code{default=FALSE}
 #' @param scale_x Logical. Default is FALSE. Apply scale() function to exposure?
 #'        \code{default=FALSE}
 #' @param scale_y Logical. Default is FALSE. Apply scale() function to outcome?
@@ -85,6 +87,7 @@ get_assoc = function(
 	note = "", 
 	get_fit = FALSE,
 	extreme_ps = FALSE,
+	include_formula = FALSE,
 	scale_x = FALSE, 
 	scale_y = FALSE,
 	inv_norm_x = FALSE, 
@@ -161,7 +164,7 @@ get_assoc = function(
 	ret = purrr::map2(lukesRlib:::xv(x,y), 
 	                  lukesRlib:::yv(x,y), 
 	                  \(x,y) lukesRlib:::get_assoc1(x=x, y=y, z=z, d=d, 
-	                                                model=model, af=af, af_base=af_base, note=note, get_fit=get_fit,
+	                                                model=model, af=af, af_base=af_base, note=note, get_fit=get_fit, include_formula=include_formula,
 	                                                scale_x=scale_x, scale_y=scale_y, 
 	                                                inv_norm_x=inv_norm_x, inv_norm_y=inv_norm_y, 
 	                                                winsorize_x=winsorize_x, winsorize_y=winsorize_y, winsorize_n=winsorize_n,
@@ -194,6 +197,8 @@ get_assoc1 = function(
 	af = FALSE, 
 	af_base = FALSE, 
 	note = "", 
+	get_fit = FALSE,
+	include_formula=FALSE,
 	scale_x = FALSE, 
 	scale_y = FALSE,
 	inv_norm_x = FALSE, 
@@ -203,7 +208,6 @@ get_assoc1 = function(
 	winsorize_n = 5,
 	return_all_terms = FALSE,
 	interacts_with = "",
-	get_fit = FALSE,
 	verbose = FALSE,
 	...
 )  {
@@ -238,18 +242,29 @@ get_assoc1 = function(
 		# add backticks to protect variable name in regression formula
 		xx = stringr::str_c("`", x, "`")  
 
-		# exposure variable - categorical?
-		#   if using haven, mutate the actual data
-		if (af & !af_base)  d = d |> dplyr::mutate( !! rlang::sym(x) := droplevels( haven::as_factor( !! rlang::sym(x) ) ) )
-		if (af)  xx = paste0("as.factor(",xx,")")
+		# start formula
+		this_formula_y <- yy
+		this_formula_x <- xx
 		
-		# scale exposure or outcome?
-		if (scale_x & !af)                 xx = paste0("scale(",xx,")")
-		if (scale_y & !logistic & !coxph)  yy = paste0("scale(",yy,")")
+		# outcome: scale or inverse normalize?
+		if (scale_y & !logistic & !coxph)  {
+			yy <- paste0("scale(",yy,")")
+			this_formula_y <- yy
+		}
+		if (inv_norm_y & !logistic & !coxph)  {
+			d <- d |> dplyr::mutate( !! rlang::sym(y) := lukesRlib::inv_norm( !! rlang::sym(y) ) )
+			this_formula_y <- stringr::str_c("lukesRlib::inv_norm(", yy, ")")
+		}
 		
-		# inverse normalize exposure or outcome?
-		if (inv_norm_x & !af)                d = d |> dplyr::mutate( !! rlang::sym(x) := lukesRlib::inv_norm( !! rlang::sym(x) ) )
-		if (inv_norm_y & !logistic & !coxph) d = d |> dplyr::mutate( !! rlang::sym(y) := lukesRlib::inv_norm( !! rlang::sym(y) ) )
+		# exposure: scale or inverse normalize?
+		if (scale_x & !af)  {
+			xx = paste0("scale(",xx,")")
+			this_formula_x <- xx
+		}
+		if (inv_norm_x & !af)  {
+			d = d |> dplyr::mutate( !! rlang::sym(x) := lukesRlib::inv_norm( !! rlang::sym(x) ) )
+			this_formula_x <- stringr::str_c("lukesRlib::inv_norm(", xx, ")")
+		}
 		
 		# winsorizing exposure or outcome?
 		if (winsorize_x & !af)  {
@@ -273,13 +288,40 @@ get_assoc1 = function(
 			) )
 		}
 		
-		# run model
-		reg_formula <- paste0(yy, " ~ ", xx)
-		if (stringr::str_length(interacts_with)>0)  reg_formula <- paste0(reg_formula, "*", interacts_with)
-		reg_formula <- paste0(reg_formula, z)
-		if (coxph)  reg_formula <- paste0("survival::", reg_formula)
-		if (verbose)  cat("Data checked, running model\n - formula:", reg_formula, "\n")
+		# exposure variable - categorical?
+		#   if using haven, mutate the actual data
+		if (af & af_base)  {
+			xx = stringr::str_c("as.factor(",xx,")")
+			this_formula_x <- xx
+		}
+		if (af & !af_base)  {
+			d = d |> dplyr::mutate( !! rlang::sym(x) := droplevels( haven::as_factor( !! rlang::sym(x) ) ) )
+			xx = stringr::str_c("haven::as_factor(",xx,")")
+			this_formula_x <- xx
+		}
 		
+		# put together actual regression formula
+		reg_formula <- stringr::str_c(yy, " ~ ", xx)
+		if (stringr::str_length(interacts_with)>0)  reg_formula <- stringr::str_c(reg_formula, "*", interacts_with)
+		reg_formula <- stringr::str_c(reg_formula, z)
+		if (coxph)  reg_formula <- stringr::str_c("survival::", reg_formula)
+		
+		# put together dummy formula if required for output
+		if (include_formula)  {
+			this_formula <- stringr::str_c(this_formula_y, " ~ ", this_formula_x)
+			if (coxph)  this_formula <- stringr::str_c("survival::", this_formula)
+			if (stringr::str_length(interacts_with)>0)  this_formula <- stringr::str_c(this_formula, "*", interacts_with)
+			this_formula <- stringr::str_c(this_formula, z)
+			this_formula <- stringr::str_replace_all(this_formula, stringr::fixed("+"), " + ")
+		}
+
+		if (verbose)  {
+			cat("Data checked, running model\n")
+			cat("- real formula:", reg_formula, "\n")
+			cat("- dummy formula:", this_formula, "\n")
+		}
+		
+		# run model
 		if (!logistic & !coxph)  fit = glm(as.formula(reg_formula), data=d)
 		if (logistic)            fit = glm(as.formula(reg_formula), data=d, family=binomial(link="logit"))
 		if (coxph)               fit = survival::coxph(as.formula(reg_formula), data=d)
@@ -311,6 +353,10 @@ get_assoc1 = function(
 			if (verbose)  cat("Categorical exposure\n")
 			
 			x_vals = as.vector(fit$xlevels[[1]])
+			if (verbose)  {
+				cat("x_vals\n")
+				print(x_vals)
+			}
 			
 			# categorical exposure - add reference group
 			res = rbind(res[1,], res)
@@ -463,9 +509,10 @@ get_assoc1 = function(
 			
 		}
 		
-		# add 'model' and 'note' columns, as required
+		# add 'model', 'note' columns and 'formula' cols as required
 		res = res |> dplyr::mutate(model)
-		if (nchar(note)>0)  res = res |> dplyr::mutate(note=!!note)
+		if (nchar(note)>0)    res = res |> dplyr::mutate(note=!!note)
+		if (include_formula)  res = res |> dplyr::mutate(formula=!!this_formula)
 		
 		res
 	} else {

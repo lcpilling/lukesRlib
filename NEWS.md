@@ -1,10 +1,11 @@
-# lukesRlib 0.2.11.9000 (7th Oct 2024)
+# lukesRlib 0.2.11.9000 (11th Oct 2024)
 
 ### Bug fixes
 * `get_assoc()` - Drop empty factor levels if using haven::as_factor()
 * `get_assoc()` - Correctly identify covariate variable names when using haven::as_factor()
 
 ### Changes
+* `get_assoc()` - New option "include_formula" allows user to request that the full regression formula (with covariates) is included in the output
 * Add light switch to pkgdown site 
 
 
