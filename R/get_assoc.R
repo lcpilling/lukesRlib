@@ -134,29 +134,38 @@ get_assoc = function(
 	
 	# check variables are all in d
 	if (any(! x  %in% colnames(d)))  {
-		cat("!! Not all exposure variables are in the provided data")
-		missing <- x[!x %in% colnames(ukb)]
+		cat("!! Not all exposure variables are in the provided data\n")
+		missing <- x[!x %in% colnames(d)]
 		if (!verbose & length(missing>6))  {
-			cat("Here are the first 6...\n")
-			print(missing)
+			cat("Here are the first 6 that are missing...\n")
+			return(missing[1:6])
 		}
 		if (verbose)  print(missing)
 		stop()
 	}
 	if (any(! yy %in% colnames(d)))  {
-		cat("!! Not all outcome variables are in the provided data")
-		missing <- yy[!yy %in% colnames(ukb)]
+		cat("!! Not all outcome variables are in the provided data\n")
+		missing <- yy[!yy %in% colnames(d)]
 		if (!verbose & length(missing>6))  {
-			cat("Here are the first 6...\n")
-			print(missing)
+			cat("Here are the first 6 that are missing...\n")
+			return(missing[1:6])
 		}
-		if (verbose)  print(missing)
+		if (verbose)  return(missing)
 		stop()
 	}
 	z_vars = stringr::str_replace_all(z, " |as.factor\\(|haven::|\\)", "") |> 
 	         stringr::str_split_1("\\+|\\*") |> 
 	         purrr::keep(\(x) stringr::str_length(x)>0)
-	if (any(! z_vars %in% colnames(d)))  stop("Not all covariate variables are in the provided data")
+	if (any(! z_vars %in% colnames(d)))  {
+		cat("!! Not all covariate variables are in the provided data\n")
+		missing <- z_vars[!z_vars %in% colnames(d)]
+		if (!verbose & length(missing>6))  {
+			cat("Here are the first 6 that are missing...\n")
+			return(missing[1:6])
+		}
+		if (verbose)  print(missing)
+		stop()
+	}
 	if (verbose)  cat("All x, y and z variables are in d\n")
 	
 	# doing interactions?

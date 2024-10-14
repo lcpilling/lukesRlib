@@ -6,7 +6,7 @@
 
 ### Changes
 * `get_assoc()` - New option "include_formula" allows user to request that the full regression formula (with covariates) is included in the output
-* `get_assoc()` - Outputs all exposure/outcome variables not in data.frame when `verbose=TRUE`
+* `get_assoc()` - Outputs exposure/outcome/covariate variables not in data.frame when `verbose=TRUE` (shows first 6 when FALSE)
 * Add light switch to pkgdown site 
 
 
