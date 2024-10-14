@@ -133,8 +133,26 @@ get_assoc = function(
 	                            purrr::list_c()
 	
 	# check variables are all in d
-	if (any(! x  %in% colnames(d)))  stop("Not all exposure variables are in the provided data")
-	if (any(! yy %in% colnames(d)))  stop("Not all outcome variables are in the provided data")
+	if (any(! x  %in% colnames(d)))  {
+		cat("!! Not all exposure variables are in the provided data")
+		missing <- x[!x %in% colnames(ukb)]
+		if (!verbose & length(missing>6))  {
+			cat("Here are the first 6...\n")
+			print(missing)
+		}
+		if (verbose)  print(missing)
+		stop()
+	}
+	if (any(! yy %in% colnames(d)))  {
+		cat("!! Not all outcome variables are in the provided data")
+		missing <- yy[!yy %in% colnames(ukb)]
+		if (!verbose & length(missing>6))  {
+			cat("Here are the first 6...\n")
+			print(missing)
+		}
+		if (verbose)  print(missing)
+		stop()
+	}
 	z_vars = stringr::str_replace_all(z, " |as.factor\\(|haven::|\\)", "") |> 
 	         stringr::str_split_1("\\+|\\*") |> 
 	         purrr::keep(\(x) stringr::str_length(x)>0)
