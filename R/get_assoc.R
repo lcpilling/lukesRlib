@@ -358,7 +358,7 @@ get_assoc1 = function(
 		if (verbose)  {
 			cat("Data checked, running model\n")
 			cat("- real formula:", reg_formula, "\n")
-			cat("- dummy formula:", this_formula, "\n")
+			if (include_formula)  cat("- dummy formula:", this_formula, "\n")
 		}
 		
 		# run model
