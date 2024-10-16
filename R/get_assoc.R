@@ -102,6 +102,10 @@ get_assoc = function(
 	...
 )  {
 	
+	v <- packageVersion("lukesRlib")
+	cli::cli_alert_info("lukesRlib v{v}")
+	start_time <- Sys.time()
+	
 	# check inputs
 	if (class(x) != "character")  stop("x needs to be a string or character vector")
 	if (class(y) != "character")  stop("y needs to be a string or character vector")
@@ -188,8 +192,14 @@ get_assoc = function(
 	
 	# use {purrr} function map2() for analysis -- allows for any combination of exposure/outcome numbers
 	if (verbose)  cat("Beginning analysis:\n")
-	ret = purrr::map2(lukesRlib:::xv(x,y), 
-	                  lukesRlib:::yv(x,y), 
+	
+	# get x and y var lists
+	xv_vars <- lukesRlib:::xv(x,y)
+	yv_vars <- lukesRlib:::yv(x,y)
+	xv_vars_n <- length(xv_vars)
+	cli::cli_alert("Getting {xv_vars_n} association{?s}")
+	ret = purrr::map2(xv_vars, 
+	                  yv_vars, 
 	                  \(x,y) lukesRlib:::get_assoc1(x=x, y=y, z=z, d=d, 
 	                                                model=model, af=af, af_base=af_base, note=note, get_fit=get_fit, include_formula=include_formula,
 	                                                scale_x=scale_x, scale_y=scale_y, 
@@ -205,6 +215,9 @@ get_assoc = function(
 		if (verbose)  cat("\nGetting extreme p-values\n")
 		if (any(ret$p.value==0, na.rm=TRUE))  ret = ret |> dplyr::mutate(p.extreme=dplyr::if_else(p.value==0, lukesRlib::get_p_extreme(statistic), NA_character_))
 	}
+	
+	# finished!
+	cli::cli_alert_success(c("Finished. Time taken: ", "{prettyunits::pretty_sec(as.numeric(difftime(Sys.time(), start_time, units=\"secs\")))}."))
 	
 	# return results
 	ret
