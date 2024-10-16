@@ -1,4 +1,4 @@
-# lukesRlib 0.2.11.9000 (11th Oct 2024)
+# lukesRlib 0.2.12 (16th Oct 2024)
 
 ### Bug fixes
 * `get_assoc()` - Drop empty factor levels if using haven::as_factor()
