@@ -137,7 +137,7 @@ tidy_ci = function(
 			model = "CoxPH model (estimate=Hazard Ratio)"
 			text_out = paste0(text_out, ", Nevents=", x$nevent)
 			if (get_r2)  {
-				c_stat = concordance(x)
+				c_stat = survival::concordance(x)
 				text_out = paste0(text_out, " :: C-statistic=", signif(c_stat$concordance,2))
 			}
 			exp = TRUE

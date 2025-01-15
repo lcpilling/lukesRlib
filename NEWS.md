@@ -1,3 +1,9 @@
+# lukesRlib 0.2.12.9000 (15th Jan 2025)
+
+### Bug fixes
+* Fix tidy_ci() where concordance() from survival was not explicitly referenced properly
+
+
 # lukesRlib 0.2.12 (16th Oct 2024)
 
 ### Bug fixes
