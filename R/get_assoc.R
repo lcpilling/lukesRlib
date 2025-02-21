@@ -141,12 +141,12 @@ get_assoc = function(
 		cat("!! Not all exposure variables are in the provided data\n")
 		missing <- x[!x %in% colnames(d)]
 		if (verbose)  {
-			return(missing)
+			print(missing)
 		} else if (!verbose & length(missing)>6)  {
 			cat("Here are the first 6 that are missing... use with verbose=TRUE to return them all\n")
-			return(missing[1:6])
+			print(missing[1:6])
 		} else {
-			return(missing)
+			print(missing)
 		}
 		stop()
 	}
@@ -154,14 +154,13 @@ get_assoc = function(
 		cat("!! Not all outcome variables are in the provided data\n")
 		missing <- yy[!yy %in% colnames(d)]
 		if (verbose)  {
-			return(missing)
+			print(missing)
 		} else if (!verbose & length(missing)>6)  {
 			cat("Here are the first 6 that are missing... use with verbose=TRUE to return them all\n")
-			return(missing[1:6])
+			print(missing[1:6])
 		} else {
-			return(missing)
+			print(missing)
 		}
-		if (verbose)  return(missing)
 		stop()
 	}
 	z_vars = stringr::str_replace_all(z, " |as.factor\\(|haven::|\\)", "") |> 
@@ -171,14 +170,13 @@ get_assoc = function(
 		cat("!! Not all covariate variables are in the provided data\n")
 		missing <- z_vars[!z_vars %in% colnames(d)]
 		if (verbose)  {
-			return(missing)
+			print(missing)
 		} else if (!verbose & length(missing)>6)  {
 			cat("Here are the first 6 that are missing... use with verbose=TRUE to return them all\n")
-			return(missing[1:6])
+			print(missing[1:6])
 		} else {
-			return(missing)
+			print(missing)
 		}
-		if (verbose)  print(missing)
 		stop()
 	}
 	if (verbose)  cat("All x, y and z variables are in d\n")
