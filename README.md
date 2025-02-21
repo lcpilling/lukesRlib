@@ -3,7 +3,7 @@
 My library of R functions I sometimes find useful
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/version-0.2.12-informational.svg)](https://github.com/lcpilling/lukesRlib)
+[![](https://img.shields.io/badge/version-0.2.13-informational.svg)](https://github.com/lcpilling/lukesRlib)
 [![](https://img.shields.io/github/last-commit/lcpilling/lukesRlib.svg)](https://github.com/lcpilling/lukesRlib/commits/master)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange)](https://www.tidyverse.org/lifecycle/#experimental)
 [![DOI](https://zenodo.org/badge/590063045.svg)](https://zenodo.org/badge/latestdoi/590063045)
@@ -22,9 +22,6 @@ To install the development version from GitHub use the `remotes` package:
 
 ```r
 remotes::install_github("lcpilling/lukesRlib")
-
-remotes::install_github("lcpilling/lukesRlib@*release") # To install the latest release
-remotes::install_github("lcpilling/lukesRlib@v0.2.0")   # To install a specific version (see tags)
 ```
 
 

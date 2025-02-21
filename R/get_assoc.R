@@ -140,19 +140,26 @@ get_assoc = function(
 	if (any(! x  %in% colnames(d)))  {
 		cat("!! Not all exposure variables are in the provided data\n")
 		missing <- x[!x %in% colnames(d)]
-		if (!verbose & length(missing>6))  {
-			cat("Here are the first 6 that are missing...\n")
+		if (verbose)  {
+			return(missing)
+		} else if (!verbose & length(missing)>6)  {
+			cat("Here are the first 6 that are missing... use with verbose=TRUE to return them all\n")
 			return(missing[1:6])
+		} else {
+			return(missing)
 		}
-		if (verbose)  print(missing)
 		stop()
 	}
 	if (any(! yy %in% colnames(d)))  {
 		cat("!! Not all outcome variables are in the provided data\n")
 		missing <- yy[!yy %in% colnames(d)]
-		if (!verbose & length(missing>6))  {
-			cat("Here are the first 6 that are missing...\n")
+		if (verbose)  {
+			return(missing)
+		} else if (!verbose & length(missing)>6)  {
+			cat("Here are the first 6 that are missing... use with verbose=TRUE to return them all\n")
 			return(missing[1:6])
+		} else {
+			return(missing)
 		}
 		if (verbose)  return(missing)
 		stop()
@@ -163,9 +170,13 @@ get_assoc = function(
 	if (any(! z_vars %in% colnames(d)))  {
 		cat("!! Not all covariate variables are in the provided data\n")
 		missing <- z_vars[!z_vars %in% colnames(d)]
-		if (!verbose & length(missing>6))  {
-			cat("Here are the first 6 that are missing...\n")
+		if (verbose)  {
+			return(missing)
+		} else if (!verbose & length(missing)>6)  {
+			cat("Here are the first 6 that are missing... use with verbose=TRUE to return them all\n")
 			return(missing[1:6])
+		} else {
+			return(missing)
 		}
 		if (verbose)  print(missing)
 		stop()
